@@ -15,7 +15,7 @@ We will add more in the future, including:
   - Android Installation/Package Framework
   - Android Activity Manager
   - Android Runtime
-  - Android WindowManager  
+  - Android WindowManager    
 
 
 <img src="multimedia.png" alt="Android Multimedia Framework Architecture"/>
