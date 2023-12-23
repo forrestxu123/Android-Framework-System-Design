@@ -1,3 +1,3 @@
 # getHubTutorial
 This is for tutorial purpose
-![Android Multimedia Framework Architecture](multimedia.png)
+<img src="multimedia.png" alt="Android Multimedia Framework Architecture" width="500"/>
