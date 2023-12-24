@@ -51,7 +51,7 @@ and Signals. These mechanisms offer valuable means of communication, they come w
     - *Access Regulation:* They may not provide effective mechanisms to regulate which processes can access shared resources, potentially leading to security vulnerabilities.
     - *Permissions Management:* The listed IPC mechanisms may not manage permissions effectively, raising concerns about data security and unauthorized access.
 
-Security issues may lead to data leakage or deadlock, especially when using semaphore mechanisms. For preinstalled apps or daemons, a viable solution is to utilize SELinux, ensuring that specific apps can access designated IPC mechanisms, safeguarding app data. However, for regular apps running in an untrusted app domain, SELinux may face limitations in distinguishing between them.
+Security issues may lead to data leakage or deadlock. For preinstalled apps or daemons, a viable solution is to utilize SELinux, ensuring that specific apps can access designated IPC mechanisms, safeguarding app data. However, for regular apps running in an untrusted app domain, SELinux may face limitations in distinguishing between them.
 
 To address these challenges, the Android system provides the Binder IPC mechanism. We will introduce widely used IPC mechanisms in Android, including Unix Sockets, Shared Memory, and Binder IPC.
 ### 1.1 SharedMemory
