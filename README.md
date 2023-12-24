@@ -46,7 +46,7 @@ and Signals. These mechanisms offer valuable means of communication, they come w
 - **Functionality:**
     The listed IPC mechanisms are primarily designed for local communication between processes on the same machine. However, they are not specialized for remote method calls and Object-Oriented Communication.
   
-    - **Security:**
+- **Security:**
     - *Fine-Grained Security Controls:* The listed IPC mechanisms lack fine-grained security controls, making it challenging to regulate access to shared resources.
     - *Access Regulation:* They may not provide effective mechanisms to regulate which processes can access shared resources, potentially leading to security vulnerabilities.
     - *Permissions Management:* The listed IPC mechanisms may not manage permissions effectively, raising concerns about data security and unauthorized access.
