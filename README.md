@@ -56,7 +56,7 @@ Security issues may lead to data leakage or deadlock. For preinstalled apps or d
 To address these challenges, the Android system provides the Binder IPC mechanism. We will introduce widely used IPC mechanisms in Android, including Unix Sockets, Shared Memory, and Binder IPC.
 ### 1.1 SharedMemory
 Shared memory facilitates fast and efficient communication between processes, enabling direct data sharing without the overhead of copying. It provides low-latency, high-performance communication, making it suitable for scenarios involving frequent and large data transfers. The memory-mapped nature of shared memory simplifies data manipulation and enhances memory efficiency, allowing processes to access shared data as if it were regular memory. To ensure proper concurrency and avoid race conditions when accessing shared memory, synchronization mechanisms like semaphores are required. 
-#### 1.2 Shared Memory example code
+#### 1.1.1 Shared Memory example code
 See example code for creating shared memory, accesimg memory and semaphores based synchronization mechanisms below:\
 Program A
 
@@ -134,7 +134,7 @@ int main() {
 ```
 In this example, Program A writes to shared memory, and Program B reads from shared memory. Both programs use semaphores for synchronization. 
 
-#### 1.3 Shared Memory Architeture
+#### 1.1.2 Shared Memory Architeture
 The shared memory has the following lifecycle:
 - Processes in user space use the mmap system call to map a portion of virtual memory into their respective address spaces, creating a shared memory region.
 - When a process calls mmap, the /dev/ashmem driver, acting as an intermediary between user space and the kernel, facilitates communication with the kernel's memory management module.
