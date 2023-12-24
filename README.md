@@ -1,7 +1,7 @@
 # Exploring the Depths: A Comprehensive Dive into Android Framework Architecture
 This document serves as a comprehensive guide, delving into the intricate details of the key components of the Android system. By demystifying the fundamental principles inherent to the Android Framework System, it aims to empower readers with practical knowledge. Whether you're a seasoned developer or a job seeker preparing for interviews, the insights provided here are crafted to be both informative and highly applicable to your daily tasks. The purpose of this document is to  explore the inner workings of Android, unravel complexities, and gain a deeper understanding of the framework that powers millions of devices worldwide.  
 The key components we are going to introduce include:
- - Android Inter-Process Communication (IPC):  <a name="a"></a>
+ [- Android Inter-Process Communication (IPC):](#A) 
       Introducing IPC mechanisms in Linux and Android, addressing the limitations of traditional IPC methods and presenting the Binder IPC mechanism in Android, with a focus on its efficiency, security, and support for object-oriented communication..
 - Android Security Framework:  
       Explore the robust security measures implemented in Android, covering aspects such as permission systems, secure booting, and protection against various threats, ensuring the integrity and confidentiality of the entire system.
@@ -34,7 +34,7 @@ The key components we are going to introduce include:
 - Jetpack Compose
 - 
 (Note: This document is a work in progress and will be continually updated.)
-## [Android Inter-Process Communication (IPC)](#a)
+## Android Inter-Process Communication (IPC)  <a name="a"></a>
 IPC mechanisms that involves communication of one process with another process. In Linux, various IPC mechanisms are available, including Pipes, FIFO, Message Queues, Unix Sockets, Shared Memory, Semaphores, 
 and Signals. These mechanisms offer valuable means of communication, they come with certain limitations:
 - Functionality:
