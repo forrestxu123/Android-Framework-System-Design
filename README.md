@@ -44,10 +44,10 @@ and Signals. These mechanisms offer valuable means of communication, they come w
 - Functionality:
     The listed IPC mechanisms are primarily designed for local communication between processes on the same machine. However, they are not specialized for remote method calls and Object-Oriented Communication.
 - Security:
-    Fine-Grained Security Controls: The listed IPC mechanisms lack fine-grained security controls, making it challenging to regulate access to shared resources.
-Access Regulation: They may not provide effective mechanisms to regulate which processes can access shared resources, potentially leading to security vulnerabilities.
-Permissions Management: The listed IPC mechanisms may not manage permissions effectively, raising concerns about data security and unauthorized access.
-Security issues may lead to data leakage or deadlock, especially when using semaphore mechanisms. For preinstalled apps or daemons, a viable solution is to utilize SELinux, ensuring that specific apps can access designated IPC mechanisms, safeguarding app data. However, for regular apps running in an untrusted app domain, SELinux may face limitations in distinguishing between them.
+    Fine-Grained Security Controls: The listed IPC mechanisms lack fine-grained security controls, making it challenging to regulate access to shared resources.\
+Access Regulation: They may not provide effective mechanisms to regulate which processes can access shared resources, potentially leading to security vulnerabilities.\
+Permissions Management: The listed IPC mechanisms may not manage permissions effectively, raising concerns about data security and unauthorized access.\
+Security issues may lead to data leakage or deadlock, especially when using semaphore mechanisms. For preinstalled apps or daemons, a viable solution is to utilize SELinux, ensuring that specific apps can access designated IPC mechanisms, safeguarding app data. However, for regular apps running in an untrusted app domain, SELinux may face limitations in distinguishing between them.\
 To address these challenges, the Android system provides the Binder IPC mechanism. We will introduce widely used IPC mechanisms in Android, including Unix Sockets, Shared Memory, and Binder IPC.
 ### 1.1 SharedMemory
 Shared memory facilitates fast and efficient communication between processes, enabling direct data sharing without the overhead of copying. It provides low-latency, high-performance communication, making it suitable for scenarios involving frequent and large data transfers. The memory-mapped nature of shared memory simplifies data manipulation and enhances memory efficiency, allowing processes to access shared data as if it were regular memory. To ensure proper concurrency and avoid race conditions when accessing shared memory, synchronization mechanisms like semaphores are required. 
