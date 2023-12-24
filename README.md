@@ -142,7 +142,8 @@ The shared memory has the following lifecycle:
 - With the memory successfully mapped, processes can read from or write to the shared memory region. Synchronization mechanisms like semaphores may be employed to coordinate access.
 - When processes are done with the shared memory, they use the munmap system call to unmap the memory.
 - During the memory mapping process, the page table is updated to reflect the mapping of virtual memory to physical memory, ensuring proper address translation for subsequent access.
-See shared memory archtecture diagram for more information:\
+
+  See shared memory archtecture diagram for more information:
 
 <img src="sharedmemory.png" alt="Shared Memory Architecture"/>
 
