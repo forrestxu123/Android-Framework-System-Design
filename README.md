@@ -34,7 +34,7 @@ The key components we are going to introduce include:
 - Jetpack Compose
 - 
 (Note: This document is a work in progress and will be continually updated.)
-##Android Inter-Process Communication (IPC)
+## Android Inter-Process Communication (IPC)
 IPC mechanisms that involves communication of one process with another process. In Linux, various IPC mechanisms are available, including Pipes, FIFO, Message Queues, Unix Sockets, Shared Memory, Semaphores, 
 and Signals. These mechanisms offer valuable means of communication, they come with certain limitations:
 - Functionality:
@@ -50,6 +50,7 @@ To address these challenges, the Android system provides the Binder IPC mechanis
 #### Shared Memory example code
 See example code for creating shared memory, accesimg memory and semaphores based synchronization mechanisms below:
 Program A
+
 ```c
 int main() {
     size_t size = sizeof(int);
@@ -86,7 +87,9 @@ int main() {
     return 0;
 }
 ```
+
 Program B
+
 ```c
 int main() {
     size_t size = sizeof(int);
@@ -121,7 +124,8 @@ int main() {
 
     return 0;
 }
-```c
+```
+
 In this example, Program A writes to shared memory, and Program B reads from shared memory. Both programs use semaphores for synchronization. 
 <img src="sharedmemory.png" alt="Shared Memory Architecture"/>
 <img src="multimedia.png" alt="Android Multimedia Framework Architecture"/>
