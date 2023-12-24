@@ -128,6 +128,5 @@ int main() {
 
 In this example, Program A writes to shared memory, and Program B reads from shared memory. Both programs use semaphores for synchronization. 
 
-```markdown
 <img src="sharedmemory.png" alt="Shared Memory Architecture"/>
 <img src="multimedia.png" alt="Android Multimedia Framework Architecture"/>
