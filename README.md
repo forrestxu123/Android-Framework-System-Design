@@ -32,12 +32,13 @@ The key components we are going to introduce include:\
 - Resource Management:  
      Discuss how Android manages system resources such as memory, CPU, and storage. This could encompass topics like garbage collection, memory allocation, and file system management.
 - Jetpack Compose
-- 
+- Coroutine
+- ViewModel
 (Note: This document is a work in progress and will be continually updated.)
 
  <a name="a"></a>
  
-## Android Inter-Process Communication (IPC)
+## 1. Android Inter-Process Communication (IPC)
 IPC mechanisms that involves communication of one process with another process. In Linux, various IPC mechanisms are available, including Pipes, FIFO, Message Queues, Unix Sockets, Shared Memory, Semaphores, 
 and Signals. These mechanisms offer valuable means of communication, they come with certain limitations:
 - Functionality:
@@ -48,45 +49,43 @@ Access Regulation: They may not provide effective mechanisms to regulate which p
 Permissions Management: The listed IPC mechanisms may not manage permissions effectively, raising concerns about data security and unauthorized access.
 Security issues may lead to data leakage or deadlock, especially when using semaphore mechanisms. For preinstalled apps or daemons, a viable solution is to utilize SELinux, ensuring that specific apps can access designated IPC mechanisms, safeguarding app data. However, for regular apps running in an untrusted app domain, SELinux may face limitations in distinguishing between them.
 To address these challenges, the Android system provides the Binder IPC mechanism. We will introduce widely used IPC mechanisms in Android, including Unix Sockets, Shared Memory, and Binder IPC.
-### SharedMemory
+### 1.1 SharedMemory
 Shared memory facilitates fast and efficient communication between processes, enabling direct data sharing without the overhead of copying. It provides low-latency, high-performance communication, making it suitable for scenarios involving frequent and large data transfers. The memory-mapped nature of shared memory simplifies data manipulation and enhances memory efficiency, allowing processes to access shared data as if it were regular memory. To ensure proper concurrency and avoid race conditions when accessing shared memory, synchronization mechanisms like semaphores are required. 
-#### Shared Memory example code
+#### 1.2 Shared Memory example code
 See example code for creating shared memory, accesimg memory and semaphores based synchronization mechanisms below:\
 Program A
 
 ```c
+#define SHARED_MEMORY_SIZE 1024
+#define SEMAPHORE_NAME "/my_semaphore"
 int main() {
-    size_t size = sizeof(int);
-    const char *filename = "/tmp/shared_memory_example";
-    const char *writeSemaphoreName = "/shared_write_semaphore_example";
-    // Open the existing file
-    int fd = open(filename, O_RDWR);
-    if (fd == -1) {
-        perror("open");
-        exit(1);
+    int fd;
+    void *shared_memory;
+    sem_t *semaphore;
+    // Open the /dev/ashmem device file
+    fd = open("/dev/ashmem", O_RDWR);
+    if (fd < 0) {
+        perror("Error opening /dev/ashmem");
+        return 1;
     }
-    // Map the file into memory
-    int *data = mmap(NULL, size, PROT_READ | PROT_WRITE, MAP_SHARED, fd, 0);
-    if (data == MAP_FAILED) {
-        perror("mmap");
-        exit(1);
+    // Set the size of the shared memory region
+    ioctl(fd, ASHMEM_SET_SIZE, SHARED_MEMORY_SIZE);
+    // Map the shared memory region into the process address space
+    shared_memory = mmap(NULL, SHARED_MEMORY_SIZE, PROT_READ | PROT_WRITE, MAP_SHARED, fd, 0);
+    // Create or open the semaphore
+    semaphore = sem_open(SEMAPHORE_NAME, O_CREAT, 0666, 1);
+    if (semaphore == SEM_FAILED) {
+        perror("Error creating/opening semaphore");
+        return 1;
     }
-    // Open the existing write semaphore
-    sem_t *writeSem = sem_open(writeSemaphoreName, 0);
-    if (writeSem == SEM_FAILED) {
-        perror("sem_open");
-        exit(1);
-    }
-    // Write to shared memory
-    sem_wait(writeSem);  // Wait for write semaphore
-    *data =100;
-    printf("Write Process wrote to shared memory: %d\n", *data);
-    sem_post(writeSem);  // Release write semaphore
-
-    // Cleanup
-    sem_close(writeSem);
-    munmap(data, size);
+    // Write data to shared memory
+    strcpy((char *)shared_memory, "Hello, Shared Memory!");
+    // Post the semaphore to signal completion of writing
+    sem_post(semaphore);
+    // Clean up
+    munmap(shared_memory, SHARED_MEMORY_SIZE);
     close(fd);
+    sem_close(semaphore);
     return 0;
 }
 ```
@@ -94,42 +93,52 @@ int main() {
 Program B
 
 ```c
-int main() {
-    size_t size = sizeof(int);
-    const char *filename = "/tmp/shared_memory_example";
-    const char *readSemaphoreName = "/shared_read_semaphore_example";
-    // Open the existing file
-    int fd = open(filename, O_RDWR);
-    if (fd == -1) {
-        perror("open");
-        exit(1);
-    }
-    // Map the file into memory
-    int *data = mmap(NULL, size, PROT_READ | PROT_WRITE, MAP_SHARED, fd, 0);
-    if (data == MAP_FAILED) {
-        perror("mmap");
-        exit(1);
-    }
-    // Open the existing read semaphore
-    sem_t *readSem = sem_open(readSemaphoreName, 0);
-    if (readSem == SEM_FAILED) {
-        perror("sem_open");
-        exit(1);
-    }
-    // Read from shared memory
-    sem_wait(readSem);  // Wait for read semaphore
-    printf("Read Process read from shared memory: %d\n", *data);
-    sem_post(readSem);  // Release read semaphore
-    // Cleanup
-    sem_close(readSem);
-    munmap(data, size);
-    close(fd);
+#define SHARED_MEMORY_SIZE 1024
+#define SEMAPHORE_NAME "/my_semaphore"
 
+int main() {
+    int fd;
+    void *shared_memory;
+    sem_t *semaphore;
+    // Open the /dev/ashmem device file
+    fd = open("/dev/ashmem", O_RDWR);
+    if (fd < 0) {
+        perror("Error opening /dev/ashmem");
+        return 1;
+    }
+    // Set the size of the shared memory region
+    ioctl(fd, ASHMEM_SET_SIZE, SHARED_MEMORY_SIZE);
+    // Map the shared memory region into the process address space
+    shared_memory = mmap(NULL, SHARED_MEMORY_SIZE, PROT_READ | PROT_WRITE, MAP_SHARED, fd, 0);
+    // Create or open the semaphore
+    semaphore = sem_open(SEMAPHORE_NAME, O_CREAT, 0666, 1);
+    if (semaphore == SEM_FAILED) {
+        perror("Error creating/opening semaphore");
+        return 1;
+    }
+    // Wait on the semaphore before reading from shared memory
+    sem_wait(semaphore);
+    // Read and print data from shared memory
+    printf("Reader process read from shared memory: %s\n", (char *)shared_memory);
+    // Clean up
+    munmap(shared_memory, SHARED_MEMORY_SIZE);
+    close(fd);
+    sem_close(semaphore);
     return 0;
 }
 ```
-
 In this example, Program A writes to shared memory, and Program B reads from shared memory. Both programs use semaphores for synchronization. 
 
+#### 1.3 Shared Memory Architeture
+The shared memory has the following lifecycle:
+- Processes in user space use the mmap system call to map a portion of virtual memory into their respective address spaces, creating a shared memory region.
+- When a process calls mmap, the /dev/ashmem driver, acting as an intermediary between user space and the kernel, facilitates communication with the kernel's memory management module.
+- The kernel's memory management module interacts with the page table to map the requested virtual memory region to physical memory, ensuring accessibility for the processes. 
+- With the memory successfully mapped, processes can read from or write to the shared memory region. Synchronization mechanisms like semaphores may be employed to coordinate access.
+- When processes are done with the shared memory, they use the munmap system call to unmap the memory.
+- During the memory mapping process, the page table is updated to reflect the mapping of virtual memory to physical memory, ensuring proper address translation for subsequent access.
+See shared memory archtecture diagram for more information:\
+
 <img src="sharedmemory.png" alt="Shared Memory Architecture"/>
+
 <img src="multimedia.png" alt="Android Multimedia Framework Architecture"/>
