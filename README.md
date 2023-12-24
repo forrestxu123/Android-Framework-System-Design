@@ -34,7 +34,7 @@ The key components we are going to introduce include:
 - Jetpack Compose
 - 
 (Note: This document is a work in progress and will be continually updated.)
-## [Android Inter-Process Communication (IPC)](a)
+## [Android Inter-Process Communication (IPC)](#a)
 IPC mechanisms that involves communication of one process with another process. In Linux, various IPC mechanisms are available, including Pipes, FIFO, Message Queues, Unix Sockets, Shared Memory, Semaphores, 
 and Signals. These mechanisms offer valuable means of communication, they come with certain limitations:
 - Functionality:
