@@ -1,8 +1,9 @@
 # Exploring the Depths: A Comprehensive Dive into Android Framework Architecture
-This document serves as a comprehensive guide, delving into the intricate details of the key components of the Android system. By demystifying the fundamental principles inherent to the Android Framework System, it aims to empower readers with practical knowledge. Whether you're a seasoned developer or a job seeker preparing for interviews, the insights provided here are crafted to be both informative and highly applicable to your daily tasks. The purpose of this document is to  explore the inner workings of Android, unravel complexities, and gain a deeper understanding of the framework that powers millions of devices worldwide.  
-The key components we are going to introduce include:\
+This document serves as a comprehensive guide, delving into the details of the key components of the Android system. By explaining the fundamental principles inherent to the Android Framework System, it aims to empower readers with practical knowledge. Whether you're a seasoned developer or a job seeker preparing for interviews, the document provided here is crafted to be both informative and highly applicable to your daily tasks. The purpose of this document is to explore the inner workings of Android, unravel complexities, and gain a deeper understanding of the Android framework."
+The key components we are going to introduce include:
+
 [- Android Inter-Process Communication (IPC):](#a)
-      Introducing IPC mechanisms in Linux and Android, addressing the limitations of traditional IPC methods and presenting the Binder IPC mechanism in Android, with a focus on its efficiency, security, and support for object-oriented communication
+      Introducing IPC mechanisms in Linux and Android, this section addresses the limitations of traditional IPC methods and presents the Binder IPC mechanism, with a focus on its efficiency, security, and support for object-oriented communication. Additionally, the section covers widely used IPC mechanisms in the Android system, including Shared Memory and Unix Domain Socket.
 - Android Security Framework:  
       Explore the robust security measures implemented in Android, covering aspects such as permission systems, secure booting, and protection against various threats, ensuring the integrity and confidentiality of the entire system.
 - Android Multimedia Framework:  
@@ -266,6 +267,8 @@ In the Unix Domain Socket (UDS) design diagram, the workflow includes the follow
    - Socket Closure: Call close() to remove entries from the process FD table and the system open FD table.
 This workflow ensures a seamless and synchronized interaction between the server and client, leveraging shared file descriptors for efficient data transfer and maintaining proper cleanup procedures during socket closure.
 
+### 1.3 Binder IPC
+Binder IPC is a key mechanism in the Android system, enabling efficient communication among different components. It overcomes limitations found in traditional IPC methods, focusing on efficiency with shared memory supported, security, and support for object-oriented communication. The Binder IPC allows seamless exchange of data and messages between applications, services, and the Android system and HAL layer , ensuring optimal resource utilization. Its fine-grained security controls provide precise access regulation to shared resources, enhancing overall system security. With its integral role in Android's architecture, a solid understanding of Binder IPC is essential for developers to craft robust and high-performance applications. 
 
 
 <img src="multimedia.png" alt="Android Multimedia Framework Architecture"/>
