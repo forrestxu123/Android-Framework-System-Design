@@ -4,7 +4,7 @@ The key components we are going to introduce include:
 
 [- Android Inter-Process Communication (IPC):](#a)
       Introducing IPC mechanisms in Linux and Android, this section addresses the limitations of traditional IPC methods and presents the Binder IPC mechanism, with a focus on its efficiency, security, and support for object-oriented communication. Additionally, the section covers widely used IPC mechanisms in the Android system, including Shared Memory and Unix Domain Socket.
-- Android Security Framework:  
+[- Android Security Framework:](#b)  
       Explore the robust security measures implemented in Android, covering aspects such as permission systems, secure booting, and protection against various threats, ensuring the integrity and confidentiality of the entire system.
 - Android Security Model Analysis:  
       Delve into the core of multimedia handling in Android, including audio and video playback, recording, and the coordination of media-related functionalities across the framework, influencing both app and system behavior.
@@ -394,32 +394,33 @@ public class MainActivity extends AppCompatActivity {
     }
 }
 ```
+ <a name="b"></a>
+
 ## 2 Android Security Model Analysis
 
-In the constantly changing world of mobile technology, the Android Security Model serves as a strong defense, protecting user data, system integrity, and overall device security. This comprehensive security framework includes different layers of protection to address various threats. Let's explore specific threat models and how Android enhances its security.
+In the constantly changing world of mobile technology, the Android Security Model serves as a strong defense, protecting user data, system integrity, and overall device security. This comprehensive security framework includes different layers of protection to address various threats. Let's explore specific threat models,security model and how Android enhances its security.
 
-- Threat Model:
--- Hacker can get physical access to Android devices.
--- Network communication is untrusted 
--- Untrusted code is executed on the device. (Device Image, bootloader, kernel, daemon, system server, app)
--- Privacy protection for Mutiple party computationer experience.
+### Threat Model:
+      Hacker can get physical access to Android devices.
+      Network communication is untrusted 
+      Untrusted code is executed on the device. (Device Image, bootloader, kernel, daemon, system server, app)
+      Privacy protection for Mutiple party computationer experience.
 
-- Security Model: 
--- Multi-party consent: No action should be executed unless all main parties agree — in the standard case, these are user, platform, and developer.
--- Security is a compatibility requirement. Devices that do not conform to CDD and do not pass CTS are not Android compatiable devices. 
--- Factory reset restores the device to a safe state. 
--- Applications are security principals. T
+[### Security Model: ](#https://arxiv.org/pdf/1904.05572.pdf)
+    Multi-party consent: No action should be executed unless all main parties agree — in the standard case, these are user, platform, and developer.
+    Security is a compatibility requirement. Devices that do not conform to CDD and do not pass CTS are not Android compatiable devices. 
+    Factory reset restores the device to a safe state. 
+    Applications are security principals. T
 
-- Security Model design
-Android's architecture is designed with multiple layers of security to provide a robust and comprehensive defense against various threats. The advantages of having multiple layers of security in Android include:
-
--- Defense in Depth:
+### Security Model design
+    Android's architecture is designed with multiple layers of security to provide a robust and comprehensive defense against various threats. The advantages of having multiple layers of security in Android include:
+- Defense in Depth:
 Android employs a defense-in-depth strategy by implementing security measures at multiple layers. This means that if one layer is compromised, there are additional layers of protection to prevent further exploitation.
--- Comprehensive Protection:
+- Comprehensive Protection:
 Each security layer in Android addresses specific aspects of security, such as access control, data encryption, network security, and more. This comprehensive approach ensures that various attack vectors are covered.
--- Isolation of Components:
+- Isolation of Components:
 Different layers in Android are designed to operate independently and are isolated from each other.
--- Adaptability to Evolving Threats:
+- Adaptability to Evolving Threats:
 The use of multiple security layers allows Android to adapt to evolving security threats. As new threats emerge, Android's architecture can be updated to incorporate additional security measures without disrupting the entire system.
 
 Android's security architecture includes the following features:
@@ -435,11 +436,11 @@ Android's security architecture includes the following features:
 - Permission Framework: Apps request specific permissions to access certain device resources. Users can grant or deny these permissions, providing control over app capabilities and enhancing user privacy.
 - TrustZone Root of Trust: TrustZone technology establishes a secure execution environment separate from the normal operating system. It enhances the security of critical functions and protects sensitive operations.
 - File-Based Encryption (FBE): Devices using FBE offer two kinds of storage locations to apps:
-  -- Device Encrypted (DE) storage is available once the device boots, before the user unlocks thedevice. This storage is protected by a hardware secret and software running in the TEE that checks that Verified Boot is successful before decrypting data.
-  -- Credential Encrypted (CE) storage is available only after the user has unlocked the device. In addition to the protections on DE storage, CE storage keys can only be derived after unlocking the device, with protection against brute force attacks in hardware
+  Device Encrypted (DE) storage is available once the device boots, before the user unlocks thedevice. This storage is protected by a hardware secret and software running in the TEE that checks that Verified Boot is successful before decrypting data.
+  Credential Encrypted (CE) storage is available only after the user has unlocked the device. In addition to the protections on DE storage, CE storage keys can only be derived after unlocking the device, with protection against brute force attacks in hardware
 Google Private Computer Core also provide following mechanism:
 - App Sandbox:  Apps operate within sandboxed environments, isolating them from apps outside of sanbox to protect user privacy when the app invloves mutiple party computation sucha as Federal AI or mutiple party computuaion
-See more information for more information about Android Security Model.
+See more information below about Android Security Model analysis.
 <img src="securitymodel.png" alt="Android Security Model"/>
 
 
