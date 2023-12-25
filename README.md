@@ -404,16 +404,16 @@ public class MainActivity extends AppCompatActivity {
 In the constantly changing world of mobile technology, the Android Security Model serves as a strong defense, protecting user data, system integrity, and overall device security. This comprehensive security framework includes different layers of protection to address various threats. Let's explore specific threat models,security model and how Android enhances its security.
 
 - Threat Model:
-  Hacker can get physical access to Android devices.
-  Network communication is untrusted 
-  Untrusted code is executed on the device. (Device Image, bootloader, kernel, daemon, system server, app)
-  Privacy protection for Mutiple party computationer experience.
+   - Hacker can get physical access to Android devices.
+   - Network communication is untrusted 
+   - Untrusted code is executed on the device. (Device Image, bootloader, kernel, daemon, system server, app)
+   - Privacy protection for Mutiple party computationer experience.
 
-[- Security Model: ](#https://arxiv.org/pdf/1904.05572.pdf)
-    Multi-party consent: No action should be executed unless all main parties agree — in the standard case, these are user, platform, and developer.
-    Security is a compatibility requirement. Devices that do not conform to CDD and do not pass CTS are not Android compatiable devices. 
-    Factory reset restores the device to a safe state. 
-    Applications are security principals. T
+- Security Model:
+  - Multi-party consent: No action should be executed unless all main parties agree — in the standard case, these are user, platform, and developer.
+  - Security is a compatibility requirement. Devices that do not conform to CDD and do not pass CTS are not Android compatiable devices. 
+  - Factory reset restores the device to a safe state. 
+  - Applications are security principals. T
 
   - Security Model design
     Android's architecture is designed with multiple layers of security to provide a robust and comprehensive defense against various threats. The advantages of having multiple layers of security in Android include:
@@ -439,8 +439,8 @@ Android's security architecture includes the following features:
 - Permission Framework: Apps request specific permissions to access certain device resources. Users can grant or deny these permissions, providing control over app capabilities and enhancing user privacy.
 - TrustZone Root of Trust: TrustZone technology establishes a secure execution environment separate from the normal operating system. It enhances the security of critical functions and protects sensitive operations.
 - File-Based Encryption (FBE): Devices using FBE offer two kinds of storage locations to apps:
-  Device Encrypted (DE) storage is available once the device boots, before the user unlocks thedevice. This storage is protected by a hardware secret and software running in the TEE that checks that Verified Boot is successful before decrypting data.
-  Credential Encrypted (CE) storage is available only after the user has unlocked the device. In addition to the protections on DE storage, CE storage keys can only be derived after unlocking the device, with protection against brute force attacks in hardware.
+   - Device Encrypted (DE) storage is available once the device boots, before the user unlocks thedevice. This storage is protected by a hardware secret and software running in the TEE that checks that Verified Boot is successful before decrypting data.
+   - Credential Encrypted (CE) storage is available only after the user has unlocked the device. In addition to the protections on DE storage, CE storage keys can only be derived after unlocking the device, with protection against brute force attacks in hardware.
 
 Google Private Computer Core also provide following mechanism:
 - App Sandbox:  Apps operate within sandboxed environments, isolating them from apps outside of sanbox to protect user privacy when the app invloves mutiple party computation sucha as Federal AI or mutiple party computuaion.
