@@ -273,7 +273,7 @@ int main() {
 ### 1.3 Binder IPC
 Binder IPC is a key mechanism in the Android system, enabling efficient communication among different components. It overcomes limitations found in traditional IPC methods, focusing on efficiency with shared memory supported, security, and support for object-oriented communication. The Binder IPC allows seamless exchange of data and messages between applications, services, and the Android system and HAL layer , ensuring optimal resource utilization. Its fine-grained security controls provide precise access regulation to shared resources, enhancing overall system security. With its integral role in Android's architecture, a solid understanding of Binder IPC is essential for developers to craft robust and high-performance applications. 
 #### 1.3.1 Binder IPC Design Diagram
-This design diagram outlines the key steps involved in Binder IPC with a System Service, highlighting the interactions between different components. The workflow includes:
+This design diagram below outlines the key steps involved in Binder IPC with a System Service, highlighting the interactions between different components. The workflow includes:
  - Define Binder Interface:
 Define the Binder interface through an AIDL (Android Interface Definition Language) file, specifying the methods that will be remotely accessible.
 
@@ -297,7 +297,7 @@ The /dev/binder driver, a key component of Binder IPC, maps a portion of the Sys
  - Call Method in System Service:
 Upon completing its tasks, the /dev/binder driver triggers the onTransaction() method in the System Service. This method handles deserialization, selects a thread from the thread pool, and calls the corresponding function requested by the client app.
 This comprehensive workflow ensures seamless and efficient communication between the client app and the System Service using Binder IPC, leveraging shared memory and the essential components of the Binder framework.
-/ 
+\   
 <img src="binderipc.png" alt="Binder IPC tArchitecture"/>
 
 #### 1.3.2 Binder IPC Sample Code:
