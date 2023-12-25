@@ -2,7 +2,7 @@
 This document serves as a comprehensive guide, delving into the intricate details of the key components of the Android system. By demystifying the fundamental principles inherent to the Android Framework System, it aims to empower readers with practical knowledge. Whether you're a seasoned developer or a job seeker preparing for interviews, the insights provided here are crafted to be both informative and highly applicable to your daily tasks. The purpose of this document is to  explore the inner workings of Android, unravel complexities, and gain a deeper understanding of the framework that powers millions of devices worldwide.  
 The key components we are going to introduce include:\
 [- Android Inter-Process Communication (IPC):](#a)
-      Introducing IPC mechanisms in Linux and Android, addressing the limitations of traditional IPC methods and presenting the Binder IPC mechanism in Android, with a focus on its efficiency, security, and support for object-oriented communication..
+      Introducing IPC mechanisms in Linux and Android, addressing the limitations of traditional IPC methods and presenting the Binder IPC mechanism in Android, with a focus on its efficiency, security, and support for object-oriented communication
 - Android Security Framework:  
       Explore the robust security measures implemented in Android, covering aspects such as permission systems, secure booting, and protection against various threats, ensuring the integrity and confidentiality of the entire system.
 - Android Multimedia Framework:  
@@ -40,7 +40,7 @@ The key components we are going to introduce include:\
  
 ## 1. Android Inter-Process Communication (IPC)
 
-IPC mechanisms that involves communication of one process with another process. In Linux, various IPC mechanisms are available, including Pipes, FIFO, Message Queues, Unix Sockets, Shared Memory, Semaphores, 
+IPC mechanisms that involves communication of one process with another process. In Linux, various IPC mechanisms are available, including Pipes, FIFO, Message Queues, Unix Domain Sockets, Shared Memory, Semaphores, 
 and Signals. These mechanisms offer valuable means of communication, they come with certain limitations:
 
 - **Functionality:**
@@ -134,7 +134,7 @@ int main() {
 ```
 In this example, Program A writes to shared memory, and Program B reads from shared memory. Both programs use semaphores for synchronization. 
 
-#### 1.1.2 Shared Memory Architeture
+#### 1.1.2 Shared Memory Design Diagram
 The shared memory has the following lifecycle:
 - Processes in user space use the mmap system call to map a portion of virtual memory into their respective address spaces, creating a shared memory region.
 - When a process calls mmap, the /dev/ashmem driver, acting as an intermediary between user space and the kernel, facilitates communication with the kernel's memory management module.
@@ -143,8 +143,129 @@ The shared memory has the following lifecycle:
 - When processes are done with the shared memory, they use the munmap system call to unmap the memory.
 - During the memory mapping process, the page table is updated to reflect the mapping of virtual memory to physical memory, ensuring proper address translation for subsequent access.
 
-  See shared memory archtecture diagram below for more information:
+  See shared memory Design diagram below for more information:
 
 <img src="sharedmemory.png" alt="Shared Memory Architecture"/>
+
+### 1.2 Unix Domain Socket(UDS)
+UDS facilitate efficient and bidirectional communication between processes on the same host, operating locally for minimal latency and enhanced performance. UDS supports zero-copy mechanisms, pointing processes to the same file descriptor in the global file table, reducing data duplication during exchange. Through access modes that define permissions, UDS offer a secure and reliable means for seamless collaboration among local processes.
+Unix Domain Sockets (UDS) play a crucial role in the Android system. For instance, Android utilizes BitTube mechanism whcih is based on UDS to transmit VSYNC information from the Hardware Abstraction Layer (HAL) to SurfaceFlinger, as well as from SurfaceFlinger to the calling applications. This demonstrates the versatility and significance of UDS in facilitating inter-process communication within the Android framework.
+
+#### 1.2.1 UDS Sample Code
+Server Program
+
+```c
+
+#define SOCKET_PATH "/tmp/example_socket"
+void error(const char *msg) {
+    perror(msg);
+    exit(EXIT_FAILURE);
+}
+int main() {
+      /*Create a Unix domain socket
+       SOCK_SEQPACKET is a socket type that provides a reliable, connection-oriented, and sequenced
+      communication channel. It preserves message boundaries and delivers data as a sequence of
+       complete packets.*/
+    int sockfd = socket(AF_UNIX, SOCK_SEQPACKET, 0);
+    if (sockfd == -1) {
+        error("Error creating socket");
+    }
+    struct sockaddr_un addr;
+    addr.sun_family = AF_UNIX;
+    strncpy(addr.sun_path, SOCKET_PATH, sizeof(addr.sun_path) - 1);
+    // Bind the socket to a file path
+    if (bind(sockfd, (struct sockaddr*)&addr, sizeof(addr)) == -1) {
+        error("Error binding socket");
+    }
+    // Listen for connections
+    if (listen(sockfd, 5) == -1) {
+        error("Error listening for connections");
+    }
+    printf("Server is listening on %s\n", SOCKET_PATH);
+    while (1) {
+        // Accept incoming connections
+        int clientfd = accept(sockfd, NULL, NULL);
+        if (clientfd == -1) {
+            error("Error accepting connection");
+        }
+        printf("Received a connection from a client\n");
+        // Send multiple messages to the client
+        for (int i = 1; i <= 3; ++i) {
+            char message[20];
+            snprintf(message, sizeof(message), "Message %d", i);
+            // Send the message
+            if (send(clientfd, message, sizeof(message), 0) == -1) {
+                error("Error sending message");
+            }
+            printf("Sent: %s\n", message);
+        }
+        // Close the connection
+        close(clientfd);
+        printf("Connection closed\n");
+    }
+    // Close the server socket
+    close(sockfd);
+    // Remove the socket file
+    unlink(SOCKET_PATH);
+    return 0;
+}
+```
+Client Program
+
+```c
+
+#define SOCKET_PATH "/tmp/example_socket"
+void error(const char *msg) {
+    perror(msg);
+    exit(EXIT_FAILURE);
+}
+int main() {
+    // Create a Unix domain socket
+    int sockfd = socket(AF_UNIX, SOCK_SEQPACKET, 0);
+    if (sockfd == -1) {
+        error("Error creating socket");
+    }
+    struct sockaddr_un addr;
+    addr.sun_family = AF_UNIX;
+    strncpy(addr.sun_path, SOCKET_PATH, sizeof(addr.sun_path) - 1);
+    // Connect to the server
+    if (connect(sockfd, (struct sockaddr*)&addr, sizeof(addr)) == -1) {
+        error("Error connecting to the server");
+    }
+    printf("Connected to the server\n");
+    // Receive messages from the server
+    for (int i = 1; i <= 3; ++i) {
+        char message[20];
+        ssize_t bytesRead = recv(sockfd, message, sizeof(message), 0);
+        if (bytesRead == -1) {
+            error("Error receiving message");
+        } else if (bytesRead == 0) {
+            printf("Server closed the connection\n");
+            break;
+        } else {
+            printf("Received: %s\n", message);
+        }
+    }
+    // Close the client socket
+    close(sockfd);
+    return 0;
+}
+```
+#### 1.1.2 UDS Design Diagram
+See UDS Design diagram below for more information:
+
+<img src="unixsocket.png" alt="Unix Domain SocketArchitecture"/>
+
+In the Unix Domain Socket (UDS) design diagram, the workflow includes the following steps:
+   - Socket Creation: Use socket() to create a socket.
+   - Binding: Use bind() to associate the socket with a specific local address or file name.
+   - Listening: Call listen() to transition the socket into the listening state, allowing it to accept incoming connections.
+   - Accept: Call accept() to create an incoming connection on a listening socket, obtaining a new file descriptor. Synchronize with the client to ensure both server and client file descriptors point to the same file description in the open file description table.
+   - Connection Establishment: Call connect() to establish a connection with the server. Synchronize with the server to make its file descriptor point to the same file description in the open file description table.
+   - Data Transfer: Use send() and recv() for communication. The file descriptors in both client and server point to the same file description in the open file description table, facilitating zero-copy operations.
+   - Socket Closure: Call close() to remove entries from the process FD table and the system open FD table.
+This workflow ensures a seamless and synchronized interaction between the server and client, leveraging shared file descriptors for efficient data transfer and maintaining proper cleanup procedures during socket closure.
+
+
 
 <img src="multimedia.png" alt="Android Multimedia Framework Architecture"/>
