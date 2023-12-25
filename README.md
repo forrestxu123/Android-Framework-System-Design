@@ -57,8 +57,24 @@ Security issues may lead to data leakage or deadlock. For preinstalled apps or d
 To address these challenges, the Android system provides the Binder IPC mechanism. We will introduce widely used IPC mechanisms in Android, including Unix Sockets, Shared Memory, and Binder IPC.
 ### 1.1 SharedMemory
 Shared memory facilitates fast and efficient communication between processes, enabling direct data sharing without the overhead of copying. It provides low-latency, high-performance communication, making it suitable for scenarios involving frequent and large data transfers. The memory-mapped nature of shared memory simplifies data manipulation and enhances memory efficiency, allowing processes to access shared data as if it were regular memory. To ensure proper concurrency and avoid race conditions when accessing shared memory, synchronization mechanisms like semaphores are required. 
-#### 1.1.1 Shared Memory example code
-See example code for creating shared memory, accesimg memory and semaphores based synchronization mechanisms below:\
+
+#### 1.1.1 Shared Memory Design Diagram
+The shared memory has the following lifecycle:
+- Processes in user space use the mmap system call to map a portion of virtual memory into their respective address spaces, creating a shared memory region.
+- When a process calls mmap, the /dev/ashmem driver, acting as an intermediary between user space and the kernel, facilitates communication with the kernel's memory management module.
+- The kernel's memory management module interacts with the page table to map the requested virtual memory region to physical memory, ensuring accessibility for the processes. 
+- With the memory successfully mapped, processes can read from or write to the shared memory region. Synchronization mechanisms like semaphores may be employed to coordinate access.
+- When processes are done with the shared memory, they use the munmap system call to unmap the memory.
+- During the memory mapping process, the page table is updated to reflect the mapping of virtual memory to physical memory, ensuring proper address translation for subsequent access.
+
+  See shared memory Design diagram below for more information:
+
+<img src="sharedmemory.png" alt="Shared Memory Architecture"/>
+
+
+#### 1.1.2 Shared Memory example code
+See example code for creating shared memory, accesimg memory and semaphores based synchronization mechanisms below:
+
 Program A
 
 ```c
@@ -135,24 +151,25 @@ int main() {
 ```
 In this example, Program A writes to shared memory, and Program B reads from shared memory. Both programs use semaphores for synchronization. 
 
-#### 1.1.2 Shared Memory Design Diagram
-The shared memory has the following lifecycle:
-- Processes in user space use the mmap system call to map a portion of virtual memory into their respective address spaces, creating a shared memory region.
-- When a process calls mmap, the /dev/ashmem driver, acting as an intermediary between user space and the kernel, facilitates communication with the kernel's memory management module.
-- The kernel's memory management module interacts with the page table to map the requested virtual memory region to physical memory, ensuring accessibility for the processes. 
-- With the memory successfully mapped, processes can read from or write to the shared memory region. Synchronization mechanisms like semaphores may be employed to coordinate access.
-- When processes are done with the shared memory, they use the munmap system call to unmap the memory.
-- During the memory mapping process, the page table is updated to reflect the mapping of virtual memory to physical memory, ensuring proper address translation for subsequent access.
-
-  See shared memory Design diagram below for more information:
-
-<img src="sharedmemory.png" alt="Shared Memory Architecture"/>
 
 ### 1.2 Unix Domain Socket(UDS)
 UDS facilitate efficient and bidirectional communication between processes on the same host, operating locally for minimal latency and enhanced performance. UDS supports zero-copy mechanisms, pointing processes to the same file descriptor in the global file table, reducing data duplication during exchange. Through access modes that define permissions, UDS offer a secure and reliable means for seamless collaboration among local processes.
 Unix Domain Sockets (UDS) play a crucial role in the Android system. For instance, Android utilizes BitTube mechanism whcih is based on UDS to transmit VSYNC information from the Hardware Abstraction Layer (HAL) to SurfaceFlinger, as well as from SurfaceFlinger to the calling applications. This demonstrates the versatility and significance of UDS in facilitating inter-process communication within the Android framework.
 
-#### 1.2.1 UDS Sample Code
+#### 1.2.1 UDS Design Diagram
+In the Unix Domain Socket (UDS) design diagram below, the workflow includes the following steps:
+   - Socket Creation: Use socket() to create a socket.
+   - Binding: Use bind() to associate the socket with a specific local address or file name.
+   - Listening: Call listen() to transition the socket into the listening state, allowing it to accept incoming connections.
+   - Accept: Call accept() to create an incoming connection on a listening socket, obtaining a new file descriptor. Synchronize with the client to ensure both server and client file descriptors point to the same file description in the open file description table.
+   - Connection Establishment: Call connect() to establish a connection with the server. Synchronize with the server to make its file descriptor point to the same file description in the open file description table.
+   - Data Transfer: Use send() and recv() for communication. The file descriptors in both client and server point to the same file description in the open file description table, facilitating zero-copy operations.
+   - Socket Closure: Call close() to remove entries from the process FD table and the system open FD table.
+This workflow ensures a seamless and synchronized interaction between the server and client, leveraging shared file descriptors for efficient data transfer and maintaining proper cleanup procedures during socket closure.
+
+<img src="unixsocket.png" alt="Unix Domain Socket Architecture"/>
+
+#### 1.2.2 UDS Sample Code
 Server Program
 
 ```c
@@ -252,23 +269,41 @@ int main() {
     return 0;
 }
 ```
-#### 1.2.2 UDS Design Diagram
-In the Unix Domain Socket (UDS) design diagram below, the workflow includes the following steps:
-   - Socket Creation: Use socket() to create a socket.
-   - Binding: Use bind() to associate the socket with a specific local address or file name.
-   - Listening: Call listen() to transition the socket into the listening state, allowing it to accept incoming connections.
-   - Accept: Call accept() to create an incoming connection on a listening socket, obtaining a new file descriptor. Synchronize with the client to ensure both server and client file descriptors point to the same file description in the open file description table.
-   - Connection Establishment: Call connect() to establish a connection with the server. Synchronize with the server to make its file descriptor point to the same file description in the open file description table.
-   - Data Transfer: Use send() and recv() for communication. The file descriptors in both client and server point to the same file description in the open file description table, facilitating zero-copy operations.
-   - Socket Closure: Call close() to remove entries from the process FD table and the system open FD table.
-This workflow ensures a seamless and synchronized interaction between the server and client, leveraging shared file descriptors for efficient data transfer and maintaining proper cleanup procedures during socket closure.
-
-<img src="unixsocket.png" alt="Unix Domain SocketArchitecture"/>
 
 ### 1.3 Binder IPC
 Binder IPC is a key mechanism in the Android system, enabling efficient communication among different components. It overcomes limitations found in traditional IPC methods, focusing on efficiency with shared memory supported, security, and support for object-oriented communication. The Binder IPC allows seamless exchange of data and messages between applications, services, and the Android system and HAL layer , ensuring optimal resource utilization. Its fine-grained security controls provide precise access regulation to shared resources, enhancing overall system security. With its integral role in Android's architecture, a solid understanding of Binder IPC is essential for developers to craft robust and high-performance applications. 
+#### 1.3.1 Binder IPC Design Diagram
+This design diagram outlines the key steps involved in Binder IPC with a System Service, highlighting the interactions between different components. The workflow includes:
+ - Define Binder Interface:
+Define the Binder interface through an AIDL (Android Interface Definition Language) file, specifying the methods that will be remotely accessible.
 
-####1.3.1 Binder IPC Sample Code:
+ - Implement Binder Interface:
+Implement the Binder interface in the System Service Stub, providing the concrete implementation for each method defined in the interface.
+
+ - Register with Service Manager:
+Register the System Service with the Service Manager by calling ServiceManager.addService(service) as soon as the System Server is launched. This step allows clients to discover and access the System Service.
+ - Allocate Shared Memory for Binder IPC:
+Allocate approximately 1 megabyte of shared memory for Binder IPC. This shared memory facilitates efficient data exchange between the client app and the System Service.
+
+ - Client App Interaction:
+The client app calls ServiceManager.getService() to obtain an instance of the System Service, allowing access to its remote functions.
+
+- Remote Function Invocation:
+Utilize the System Service instance in the client app to invoke remote functions defined in the Binder interface. This initiates the communication between the client app and the System Service.
+Data Serialization:
+
+Serialize the data related to the method call in the client app. This serialized data is then placed into the shared memory allocated for Binder IPC.
+ - /dev/binder Driver Interaction:
+The /dev/binder driver, a key component of Binder IPC, maps a portion of the System Server's memory to the shared memory in the client app. This mapping facilitates efficient data transfer.
+ - Call Method in System Service:
+Upon completing its tasks, the /dev/binder driver triggers the onTransaction() method in the System Service. This method handles deserialization, selects a thread from the thread pool, and calls the corresponding function requested by the client app.
+This comprehensive workflow ensures seamless and efficient communication between the client app and the System Service using Binder IPC, leveraging shared memory and the essential components of the Binder framework.
+
+<img src="binderipc.png" alt="Binder IPC tArchitecture"/>
+
+
+####1.3.2 Binder IPC Sample Code:
+In Section 1.3.1, we focused on system service discussion. For application service, the logic is similar to the system service. However, we use bindService() and onConnection() mechanisms to find the service, rather than ServiceManager used by the system service. To see example code on how a client interacts with the application service, refer to the code snippet below:
 
 Below is an example of application service.
 
@@ -363,8 +398,6 @@ public class MainActivity extends AppCompatActivity {
     }
 }
 ```
-
-#### 1.3.2 Binder IPC Design Diagram
 
 <img src="binderipc.png" alt="Android Multimedia Framework Architecture"/>
 
