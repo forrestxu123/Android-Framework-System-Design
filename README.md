@@ -415,7 +415,7 @@ In the constantly changing world of mobile technology, the Android Security Mode
   - Factory reset restores the device to a safe state. 
   - Applications are security principals. T
 
-  - Security Model design
+- Security Model design
     Android's architecture is designed with multiple layers of security to provide a robust and comprehensive defense against various threats. The advantages of having multiple layers of security in Android include:
      - Defense in Depth:
 Android employs a defense-in-depth strategy by implementing security measures at multiple layers. This means that if one layer is compromised, there are additional layers of protection to prevent further exploitation.
@@ -444,7 +444,7 @@ Android's security architecture includes the following features:
 
 Google Private Computer Core also provide following mechanism:
 - App Sandbox:  Apps operate within sandboxed environments, isolating them from apps outside of sanbox to protect user privacy when the app invloves mutiple party computation sucha as Federal AI or mutiple party computuaion.
-- 
+
 See more information below about Android Security Model analysis.
 
 <img src="securitymodel.png" alt="Android Security Model"/>
