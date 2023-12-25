@@ -443,7 +443,8 @@ Android's security architecture includes the following features:
   Credential Encrypted (CE) storage is available only after the user has unlocked the device. In addition to the protections on DE storage, CE storage keys can only be derived after unlocking the device, with protection against brute force attacks in hardware.
 
 Google Private Computer Core also provide following mechanism:
-- App Sandbox:  Apps operate within sandboxed environments, isolating them from apps outside of sanbox to protect user privacy when the app invloves mutiple party computation sucha as Federal AI or mutiple party computuaion
+- App Sandbox:  Apps operate within sandboxed environments, isolating them from apps outside of sanbox to protect user privacy when the app invloves mutiple party computation sucha as Federal AI or mutiple party computuaion.
+- 
 See more information below about Android Security Model analysis.
 
 <img src="securitymodel.png" alt="Android Security Model"/>
