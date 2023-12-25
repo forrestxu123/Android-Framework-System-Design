@@ -3,9 +3,11 @@ This document serves as a comprehensive guide, delving into the details of the k
 The key components we are going to introduce include:
 
 [- Android Inter-Process Communication (IPC):](#a)
+
       Introducing IPC mechanisms in Linux and Android, this section addresses the limitations of traditional IPC methods and presents the Binder IPC mechanism, with a focus on its efficiency, security, and support for object-oriented communication. Additionally, the section covers widely used IPC mechanisms in the Android system, including Shared Memory and Unix Domain Socket.
       
-[- Android Security Framework:](#b)
+[- Android Security Model Analysis:](#b)
+
       Explore the robust security measures implemented in Android, covering aspects such as permission systems, secure booting, and protection against various threats, ensuring the integrity and confidentiality of the entire system.
 - Android Security Model Analysis:  
       Delve into the core of multimedia handling in Android, including audio and video playback, recording, and the coordination of media-related functionalities across the framework, influencing both app and system behavior.
@@ -438,10 +440,12 @@ Android's security architecture includes the following features:
 - TrustZone Root of Trust: TrustZone technology establishes a secure execution environment separate from the normal operating system. It enhances the security of critical functions and protects sensitive operations.
 - File-Based Encryption (FBE): Devices using FBE offer two kinds of storage locations to apps:
   Device Encrypted (DE) storage is available once the device boots, before the user unlocks thedevice. This storage is protected by a hardware secret and software running in the TEE that checks that Verified Boot is successful before decrypting data.
-  Credential Encrypted (CE) storage is available only after the user has unlocked the device. In addition to the protections on DE storage, CE storage keys can only be derived after unlocking the device, with protection against brute force attacks in hardware
+  Credential Encrypted (CE) storage is available only after the user has unlocked the device. In addition to the protections on DE storage, CE storage keys can only be derived after unlocking the device, with protection against brute force attacks in hardware.
+
 Google Private Computer Core also provide following mechanism:
 - App Sandbox:  Apps operate within sandboxed environments, isolating them from apps outside of sanbox to protect user privacy when the app invloves mutiple party computation sucha as Federal AI or mutiple party computuaion
 See more information below about Android Security Model analysis.
+
 <img src="securitymodel.png" alt="Android Security Model"/>
 
 
