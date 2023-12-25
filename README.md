@@ -8,8 +8,10 @@ Introducing IPC mechanisms in Linux and Android, this section addresses the limi
       
 [- Android Security Model Analysis:](#b)
 
-Explore the robust security measures implemented in Android, covering aspects such as permission systems, secure booting, and protection against various threats, ensuring the integrity and confidentiality of the entire system.
-- Android Multimedia framework:  
+Delve into Android's Security Model, examining multi-party consent, compatibility requirements, and robust defense mechanisms. Explore layers like Secure Bootloader, SELinux, and comprehensive protection strategies, ensuring integrity, adaptability, and secure user experiences.
+
+[- Android Multimedia framework: ](#c) 
+
       Delve into the core of multimedia handling in Android, including audio and video playback, recording, and the coordination of media-related functionalities across the framework, influencing both app and system behavior.
 - Android Graphic Framework:  
       Discover the graphic rendering and display capabilities of Android, encompassing UI rendering, graphics acceleration, and the overall visual presentation of applications, extending its impact to the system's visual interface.
@@ -449,5 +451,7 @@ See more information below about Android Security Model analysis.
 
 <img src="securitymodel.png" alt="Android Security Model"/>
 
+ <a name="b"></a>
+## 3 Android Multimedia framework
 
 <img src="multimedia.png" alt="Android Multimedia Framework Architecture"/>
