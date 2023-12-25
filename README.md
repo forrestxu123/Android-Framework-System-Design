@@ -290,15 +290,14 @@ The client app calls ServiceManager.getService() to obtain an instance of the Sy
 
 - Remote Function Invocation:
 Utilize the System Service instance in the client app to invoke remote functions defined in the Binder interface. This initiates the communication between the client app and the System Service.
-Data Serialization:
-
+ - Data Serialization:
 Serialize the data related to the method call in the client app. This serialized data is then placed into the shared memory allocated for Binder IPC.
  - /dev/binder Driver Interaction:
 The /dev/binder driver, a key component of Binder IPC, maps a portion of the System Server's memory to the shared memory in the client app. This mapping facilitates efficient data transfer.
  - Call Method in System Service:
 Upon completing its tasks, the /dev/binder driver triggers the onTransaction() method in the System Service. This method handles deserialization, selects a thread from the thread pool, and calls the corresponding function requested by the client app.
 This comprehensive workflow ensures seamless and efficient communication between the client app and the System Service using Binder IPC, leveraging shared memory and the essential components of the Binder framework.
-
+/ 
 <img src="binderipc.png" alt="Binder IPC tArchitecture"/>
 
 #### 1.3.2 Binder IPC Sample Code:
