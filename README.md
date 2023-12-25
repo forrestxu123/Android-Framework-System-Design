@@ -45,7 +45,7 @@ Discuss how Android manages system resources such as memory, CPU, and storage. T
 
  <a name="a"></a>
  
-## 1. Android Inter-Process Communication (IPC)
+## 1 Android Inter-Process Communication (IPC)
 
 IPC mechanisms that involves communication of one process with another process. In Linux, various IPC mechanisms are available, including Pipes, FIFO, Message Queues, Unix Domain Sockets, Shared Memory, Semaphores, 
 and Signals. These mechanisms offer valuable means of communication, they come with certain limitations:
