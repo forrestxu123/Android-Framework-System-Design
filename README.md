@@ -301,13 +301,10 @@ This comprehensive workflow ensures seamless and efficient communication between
 
 <img src="binderipc.png" alt="Binder IPC tArchitecture"/>
 
-
-####1.3.2 Binder IPC Sample Code:
+#### 1.3.2 Binder IPC Sample Code:
 In Section 1.3.1, we focused on system service discussion. For application service, the logic is similar to the system service. However, we use bindService() and onConnection() mechanisms to find the service, rather than ServiceManager used by the system service. To see example code on how a client interacts with the application service, refer to the code snippet below:
 
-Below is an example of application service.
-
-Define the AIDL interface (IRemoteService.aidl):
+ - AIDL interface (IRemoteService.aidl):
 
 ```c
 
@@ -316,7 +313,7 @@ interface IRemoteService {
 }
 ```
 
-Implement the application service (RemoteService.java):
+ - Tthe Application Service (RemoteService.java):
 
 ```c
 public class RemoteService extends Service {
@@ -340,7 +337,7 @@ public class RemoteService extends Service {
 
 ```
 
-Implement the server  AndroidManifest file
+ - AndroidManifest file in Application Server
 ```c
 <!-- AndroidManifest.xml -->
 <service
@@ -350,7 +347,7 @@ Implement the server  AndroidManifest file
 </service>
 ```
 
-Implement the client (MainActivity.java):
+ - The client application implemetation :
 ```c
 // MainActivity.java
 public class MainActivity extends AppCompatActivity {
@@ -398,7 +395,5 @@ public class MainActivity extends AppCompatActivity {
     }
 }
 ```
-
-<img src="binderipc.png" alt="Android Multimedia Framework Architecture"/>
 
 <img src="multimedia.png" alt="Android Multimedia Framework Architecture"/>
