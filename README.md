@@ -252,12 +252,8 @@ int main() {
     return 0;
 }
 ```
-#### 1.1.2 UDS Design Diagram
-See UDS Design diagram below for more information:
-
-<img src="unixsocket.png" alt="Unix Domain SocketArchitecture"/>
-
-In the Unix Domain Socket (UDS) design diagram, the workflow includes the following steps:
+#### 1.2.2 UDS Design Diagram
+In the Unix Domain Socket (UDS) design diagram below, the workflow includes the following steps:
    - Socket Creation: Use socket() to create a socket.
    - Binding: Use bind() to associate the socket with a specific local address or file name.
    - Listening: Call listen() to transition the socket into the listening state, allowing it to accept incoming connections.
@@ -267,8 +263,109 @@ In the Unix Domain Socket (UDS) design diagram, the workflow includes the follow
    - Socket Closure: Call close() to remove entries from the process FD table and the system open FD table.
 This workflow ensures a seamless and synchronized interaction between the server and client, leveraging shared file descriptors for efficient data transfer and maintaining proper cleanup procedures during socket closure.
 
+<img src="unixsocket.png" alt="Unix Domain SocketArchitecture"/>
+
 ### 1.3 Binder IPC
 Binder IPC is a key mechanism in the Android system, enabling efficient communication among different components. It overcomes limitations found in traditional IPC methods, focusing on efficiency with shared memory supported, security, and support for object-oriented communication. The Binder IPC allows seamless exchange of data and messages between applications, services, and the Android system and HAL layer , ensuring optimal resource utilization. Its fine-grained security controls provide precise access regulation to shared resources, enhancing overall system security. With its integral role in Android's architecture, a solid understanding of Binder IPC is essential for developers to craft robust and high-performance applications. 
 
+####1.3.1 Binder IPC Sample Code:
+
+Below is an example of application service.
+
+Define the AIDL interface (IRemoteService.aidl):
+
+```c
+
+interface IRemoteService {
+    void sendMessage(String message);
+}
+```
+
+Implement the application service (RemoteService.java):
+
+```c
+public class RemoteService extends Service {
+    
+    private final IBinder binder = new RemoteBinder();
+
+    @Nullable
+    @Override
+    public IBinder onBind(Intent intent) {
+        return binder;
+    }
+
+    public class RemoteBinder extends Binder implements IRemoteService {
+        @Override
+        public void sendMessage(String message) {
+            // Handle the received message
+            Log.d("RemoteService", "Received message: " + message);
+        }
+    }
+}
+
+```
+
+Implement the server  AndroidManifest file
+```c
+<!-- AndroidManifest.xml -->
+<service
+    android:name=".MyService"
+    android:enabled="true"
+    android:exported="true">
+</service>
+```
+
+Implement the client (MainActivity.java):
+```c
+// MainActivity.java
+public class MainActivity extends AppCompatActivity {
+
+    private IRemoteService remoteService;
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+        // Bind to the remote service
+        Intent intent = new Intent(this, RemoteService.class);
+        bindService(intent, serviceConnection, Context.BIND_AUTO_CREATE);
+        // Register a click listener for the button
+        Button sendMessageButton = findViewById(R.id.sendMessageButton);
+        sendMessageButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                sendMessageToRemoteService();
+            }
+        });
+    }
+    private ServiceConnection serviceConnection = new ServiceConnection() {
+        @Override
+        public void onServiceConnected(ComponentName componentName, IBinder iBinder) {
+            remoteService = IRemoteService.Stub.asInterface(iBinder);
+        }
+
+        @Override
+        public void onServiceDisconnected(ComponentName componentName) {
+            remoteService = null;
+        }
+    };
+
+    private void sendMessageToRemoteService() {
+        if (remoteService != null) {
+            try {
+                remoteService.sendMessage("Hello from client!");
+            } catch (RemoteException e) {
+                e.printStackTrace();
+            }
+        } else {
+            // Handle the case where the service is not connected
+            Toast.makeText(this, "Service not connected", Toast.LENGTH_SHORT).show();
+        }
+    }
+}
+```
+
+#### 1.3.2 Binder IPC Design Diagram
+
+<img src="binderipc.png" alt="Android Multimedia Framework Architecture"/>
 
 <img src="multimedia.png" alt="Android Multimedia Framework Architecture"/>
