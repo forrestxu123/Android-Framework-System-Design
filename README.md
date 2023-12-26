@@ -475,7 +475,9 @@ See the Media Recorder state diagram below to understand how to use the Media Re
 <img src="mediarecorderapi.png" alt="MediaRecorder API"/>
 
 - MediaPlayerService:
+  
 MediaPlayerService is responsible for managing and providing audio and video playback capabilities to applications. It acts as a central component for handling media playback and recording requests from various apps.
+
 Key Responsibilities:
   - Audio/Video Playback: The service handles the playback of audio and video content, supporting a variety of formats and streaming protocols.
   - Audio/Video Recording: MediaPlayerService supports recording audio and video from device microphones and cameras, providing functionalities for starting, stopping, and managing the recording process.
@@ -485,7 +487,9 @@ Key Responsibilities:
   - Integration with Audio Framework: MediaPlayerService integrates with the underlying audio framework, allowing efficient and low-level control over audio playback and recording.
 
 - AudioFlingerService
+
 AudioFlingerService is responsible for managing and processing audio streams. It acts as an audio server, handling audio playback and recording requests from various applications.
+
 Key Responsibilities:
   - Audio Mixing: AudioFlingerService combines multiple audio streams from different applications and services, ensuring seamless playback.
   - Hardware Abstraction: Interacts with the Audio Hardware Abstraction Layer (Audio HAL) to communicate with the underlying audio hardwar.
