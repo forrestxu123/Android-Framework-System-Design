@@ -500,11 +500,9 @@ public class MediaCodecExample {
         try {
             // Step 1: Create encoder and decoder instances
             MediaCodec encoder = createEncoder();
-            MediaCodec decoder = createDecoder();
 
             // Step 2: Start encoder and decoder
             encoder.start();
-            decoder.start();
 
             // Step 3: Feed input data to encoder
             FileInputStream inputStream = new FileInputStream("path/to/your/video/file");
@@ -534,8 +532,6 @@ public class MediaCodecExample {
             // Step 5: Stop and release resources
             encoder.stop();
             encoder.release();
-            decoder.stop();
-            decoder.release();
             inputStream.close();
 
         } catch (IOException e) {
@@ -552,13 +548,6 @@ public class MediaCodecExample {
         encoder.configure(format, null, null, MediaCodec.CONFIGURE_FLAG_ENCODE);
         return encoder;
     }
-
-    private MediaCodec createDecoder() throws IOException {
-        MediaCodec decoder = MediaCodec.createDecoderByType(MIME_TYPE);
-        MediaFormat format = MediaFormat.createVideoFormat(MIME_TYPE, WIDTH, HEIGHT);
-        decoder.configure(format, null, null, 0);
-        return decoder;
-     }
 }
 
 ```
