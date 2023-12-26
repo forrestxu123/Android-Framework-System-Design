@@ -454,5 +454,48 @@ See more information below about Android Security Model analysis.
 
  <a name="b"></a>
 ## 3 Android Multimedia framework
+The Android Multimedia Framework provides a versatile and comprehensive solution for handling multimedia content on Android devices. It encompasses various components and APIs that facilitate the playback, recording, and manipulation of audio and video content. The framework ensures a seamless multimedia experience for users and serves as a foundation for multimedia applications.
+Key Components:
+ - Audio Track / Media Player API:
+   - Allows developers to integrate audio / video playback functionality into applications.
+   - Supports various audio/media formats and streaming protocols.
+   - Provides methods for controlling playback, such as play, pause, stop, and seek.
+See the Media Player state diagram below to understand how to use the Media Player API.
+<img src="mediaplayer.png" alt="MediaPlayer API"/>
+   
+ - AudioRecord/ Media Recorder API:
+  - Enables the recording of audio / video from device microphones and cameras.
+  - Supports different recording sources and output formats.
+  - Offers functionalities for starting, stopping, and managing the recording process.
+See the Media Recorder state diagram below to understand how to use the Media Recorder API.
+<img src="mediarecorder.png" alt="MediaRecorder API"/>
 
-<img src="multimedia.png" alt="Android Multimedia Framework Architecture"/>
+- MediaPlayerService:
+MediaPlayerService is responsible for managing and providing audio and video playback capabilities to applications. It acts as a central component for handling media playback and recording requests from various apps.
+Key Responsibilities:
+ - Audio/Video Playback: The service handles the playback of audio and video content, supporting a variety of formats and streaming protocols.
+ - Audio/Video Recording: MediaPlayerService supports recording audio and video from device microphones and cameras, providing functionalities for starting, stopping, and managing the recording process.
+ - Playback Control: Offers methods for controlling playback, including play, pause, stop, seek, and volume adjustments.
+ - Media Session Management: Manages media sessions, allowing multiple apps to interact with media playback and recording simultaneously.
+ - Audio Focus Handling: Coordinates with the audio framework to manage audio focus, ensuring a seamless experience when multiple apps request audio resources.
+ - Integration with Audio Framework: MediaPlayerService integrates with the underlying audio framework, allowing efficient and low-level control over audio playback and recording.
+
+- AudioFlingerService
+AudioFlingerService is responsible for managing and processing audio streams. It acts as an audio server, handling audio playback and recording requests from various applications.
+Key Responsibilities:
+ - Audio Mixing: AudioFlingerService combines multiple audio streams from different applications and services, ensuring seamless playback.
+ - Hardware Abstraction: Interacts with the Audio Hardware Abstraction Layer (Audio HAL) to communicate with the underlying audio hardwar.
+ - Audio Routing: Directs audio streams to the appropriate output sources, such as speakers, headphones, or Bluetooth devices.
+ - Integration with Audio Policy: Collaborates with AudioPolicyService to enforce audio policies and ensure consistent audio behavior across the system.
+
+AudioPolicyService:
+AudioPolicyService defines and enforce audio routing and policy decisions on Android devices.
+Key Responsibilities:
+- Audio Routing Policies: AudioPolicyService defines policies for routing audio streams to various outputs, considering factors like device capabilities and user preferences.
+- Dynamic Audio Routing: Handles dynamic changes in audio routing based on events such as device connections or disconnections and adapts the audio policy accordingly.
+- Audio Stream Management: Categorizes audio streams into different types and applies specific policies for each type, ensuring a balanced and user-friendly audio experience.
+- Policy Enforcement: Enforces policies related to volume levels, audio effects, and other audio parameters, ensuring consistency and compliance with user preferences.
+- Integration with AudioFlinger: Works closely with AudioFlingerService to implement the defined audio policies and communicate them to the underlying audio hardware through the Audio HAL.
+See detail information about Android Multimedia Framework below:
+
+<img src="audio.png" alt="Android Multimedia Framework Architecture"/>
