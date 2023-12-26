@@ -495,6 +495,7 @@ See the Media Recorder state diagram below to understand how to use the Media Re
   - Policy Enforcement: Enforces policies related to volume levels, audio effects, and other audio parameters, ensuring consistency and compliance with user preferences.
   - Integration with AudioFlinger: Works closely with AudioFlingerService to implement the defined audio policies and communicate them to the underlying audio hardware through the Audio HAL.
 
+For details about video display, please refer to the Graphics Framework section.
 See detail information about Android Multimedia Framework below:
 
 <img src="audio.png" alt="Android Multimedia Framework Architecture"/>
