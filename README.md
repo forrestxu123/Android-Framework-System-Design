@@ -481,6 +481,8 @@ See the Media Recorder state diagram below to understand how to use the Media Re
   - Surface Integration: For optimal performance with raw video data, MediaCodec recommends using a Surface. This integration is particularly beneficial for seamless interaction with Android graphic framework, enhancing overall efficiency in multimedia processing.
 See the MediaCodec state diagram and sample code below to understand how to use the Media MediaCodec API.
 
+<img src="mediarecodecapi.png" alt="MediaReCodec API"/>
+
 ```c
 
 public class MediaCodecExample {
