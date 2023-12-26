@@ -455,9 +455,10 @@ See more information below about Android Security Model analysis.
  <a name="c"></a>
  
 ## 3 Android Multimedia framework
-The Android Multimedia Framework provides a versatile and comprehensive solution for handling multimedia content on Android devices. It encompasses various components and APIs that facilitate the playback, recording, and manipulation of audio and video content. The framework ensures a seamless multimedia experience for users and serves as a foundation for multimedia applications.
+The Android Multimedia Framework provides a comprehensive solution for handling multimedia content on Android devices. It encompasses various components and APIs that facilitate the playback, recording, and manipulation of audio and video content. The framework ensures a seamless multimedia experience for users and serves as a foundation for multimedia applications.
+
 Key Components:
-- Audio Track / Media Player API:
+- Audio Track / Media Player API
    - Allows developers to integrate audio / video playback functionality into applications.
    - Supports various audio/media formats and streaming protocols.
    - Provides methods for controlling playback, such as play, pause, stop, and seek.
@@ -465,7 +466,7 @@ See the Media Player state diagram below to understand how to use the Media Play
 
 <img src="mediaplayerapi.png" alt="MediaPlayer API"/>
    
-- AudioRecord/ Media Recorder API:
+- AudioRecord/ Media Recorder API
   
    - Enables the recording of audio / video from device microphones and cameras.
    - Supports different recording sources and output formats.
@@ -474,7 +475,95 @@ See the Media Recorder state diagram below to understand how to use the Media Re
 
 <img src="mediarecorderapi.png" alt="MediaRecorder API"/>
 
-- MediaPlayerService:
+- MediaCodec API
+
+  - Encoding and Decoding: Allows developers to encode and decode multimedia content, leveraging its capabilities to efficiently process different types of data including compressed data, raw audio, and raw video.
+  - Surface Integration: For optimal performance with raw video data, MediaCodec recommends using a Surface. This integration is particularly beneficial for seamless interaction with Android graphic framework, enhancing overall efficiency in multimedia processing.
+See the MediaCodec state diagram and sample code below to understand how to use the Media MediaCodec API.
+
+```c
+
+public class MediaCodecExample {
+
+    // Encoder configuration
+    private static final String MIME_TYPE = "video/avc";
+    private static final int WIDTH = 640;
+    private static final int HEIGHT = 480;
+    private static final int FRAME_RATE = 30;
+    private static final int I_FRAME_INTERVAL = 5;
+    private static final int BIT_RATE = 500000; // 500 kbps
+
+    // Decoder configuration
+    private static final int TIMEOUT_US = 10000;
+
+    public void encodeDecodeVideo() {
+        try {
+            // Step 1: Create encoder and decoder instances
+            MediaCodec encoder = createEncoder();
+            MediaCodec decoder = createDecoder();
+
+            // Step 2: Start encoder and decoder
+            encoder.start();
+            decoder.start();
+
+            // Step 3: Feed input data to encoder
+            FileInputStream inputStream = new FileInputStream("path/to/your/video/file");
+            ByteBuffer[] inputBuffers = encoder.getInputBuffers();
+
+            while (true) {
+                int inputBufferIndex = encoder.dequeueInputBuffer(TIMEOUT_US);
+                if (inputBufferIndex >= 0) {
+                    ByteBuffer inputBuffer = inputBuffers[inputBufferIndex];
+                    inputBuffer.clear();
+
+                    // Read data from file to inputBuffer
+                    int bytesRead = inputStream.read(inputBuffer.array());
+                    if (bytesRead == -1) {
+                        // End of file, signal end of input
+                        encoder.queueInputBuffer(inputBufferIndex, 0, 0, 0, MediaCodec.BUFFER_FLAG_END_OF_STREAM);
+                        break;  // Exit the loop when end of file is reached
+                    } else {
+                        // Queue input buffer for encoding
+                        encoder.queueInputBuffer(inputBufferIndex, 0, bytesRead, 0, 0);
+                    }
+                }
+            }
+
+            // Rest of the code remains the same
+
+            // Step 5: Stop and release resources
+            encoder.stop();
+            encoder.release();
+            decoder.stop();
+            decoder.release();
+            inputStream.close();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private MediaCodec createEncoder() throws IOException {
+        MediaCodec encoder = MediaCodec.createEncoderByType(MIME_TYPE);
+        MediaFormat format = MediaFormat.createVideoFormat(MIME_TYPE, WIDTH, HEIGHT);
+        format.setInteger(MediaFormat.KEY_BIT_RATE, BIT_RATE);
+        format.setInteger(MediaFormat.KEY_FRAME_RATE, FRAME_RATE);
+        format.setInteger(MediaFormat.KEY_I_FRAME_INTERVAL, I_FRAME_INTERVAL);
+        encoder.configure(format, null, null, MediaCodec.CONFIGURE_FLAG_ENCODE);
+        return encoder;
+    }
+
+    private MediaCodec createDecoder() throws IOException {
+        MediaCodec decoder = MediaCodec.createDecoderByType(MIME_TYPE);
+        MediaFormat format = MediaFormat.createVideoFormat(MIME_TYPE, WIDTH, HEIGHT);
+        decoder.configure(format, null, null, 0);
+        return decoder;
+     }
+}
+
+```
+
+- MediaPlayerService
   - Audio/Video Playback: The service handles the playback of audio and video content, supporting a variety of formats and streaming protocols.
   - Audio/Video Recording: MediaPlayerService supports recording audio and video from device microphones and cameras, providing functionalities for starting, stopping, and managing the recording process.
   - Playback Control: Offers methods for controlling playback, including play, pause, stop, seek, and volume adjustments.
