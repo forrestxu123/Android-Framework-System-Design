@@ -479,6 +479,7 @@ See the Media Recorder state diagram below to understand how to use the Media Re
 
   - Encoding and Decoding: Allows developers to encode and decode multimedia content, leveraging its capabilities to efficiently process different types of data including compressed data, raw audio, and raw video.
   - Surface Integration: For optimal performance with raw video data, MediaCodec recommends using a Surface. This integration is particularly beneficial for seamless interaction with Android graphic framework, enhancing overall efficiency in multimedia processing.
+
 See the MediaCodec state diagram and sample code below to understand how to use the Media MediaCodec API.
 
 <img src="mediacodecapi.png" alt="MediaReCodec API"/>
