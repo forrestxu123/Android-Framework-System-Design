@@ -499,6 +499,7 @@ Key Responsibilities:
 - AudioPolicyService:
 
 AudioPolicyService defines and enforce audio routing and policy decisions on Android devices.
+
 Key Responsibilities:
   - Audio Routing Policies: AudioPolicyService defines policies for routing audio streams to various outputs, considering factors like device capabilities and user preferences.
   - Dynamic Audio Routing: Handles dynamic changes in audio routing based on events such as device connections or disconnections and adapts the audio policy accordingly.
