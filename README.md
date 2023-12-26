@@ -461,14 +461,16 @@ Key Components:
    - Supports various audio/media formats and streaming protocols.
    - Provides methods for controlling playback, such as play, pause, stop, and seek.
 See the Media Player state diagram below to understand how to use the Media Player API.
-<img src="mediaplayer.png" alt="MediaPlayer API"/>
+
+<img src="mediaplayerapi.png" alt="MediaPlayer API"/>
    
  - AudioRecord/ Media Recorder API:
   - Enables the recording of audio / video from device microphones and cameras.
   - Supports different recording sources and output formats.
   - Offers functionalities for starting, stopping, and managing the recording process.
 See the Media Recorder state diagram below to understand how to use the Media Recorder API.
-<img src="mediarecorder.png" alt="MediaRecorder API"/>
+
+<img src="mediarecorderapi.png" alt="MediaRecorder API"/>
 
 - MediaPlayerService:
 MediaPlayerService is responsible for managing and providing audio and video playback capabilities to applications. It acts as a central component for handling media playback and recording requests from various apps.
@@ -491,11 +493,12 @@ Key Responsibilities:
 AudioPolicyService:
 AudioPolicyService defines and enforce audio routing and policy decisions on Android devices.
 Key Responsibilities:
-- Audio Routing Policies: AudioPolicyService defines policies for routing audio streams to various outputs, considering factors like device capabilities and user preferences.
-- Dynamic Audio Routing: Handles dynamic changes in audio routing based on events such as device connections or disconnections and adapts the audio policy accordingly.
-- Audio Stream Management: Categorizes audio streams into different types and applies specific policies for each type, ensuring a balanced and user-friendly audio experience.
-- Policy Enforcement: Enforces policies related to volume levels, audio effects, and other audio parameters, ensuring consistency and compliance with user preferences.
-- Integration with AudioFlinger: Works closely with AudioFlingerService to implement the defined audio policies and communicate them to the underlying audio hardware through the Audio HAL.
+ - Audio Routing Policies: AudioPolicyService defines policies for routing audio streams to various outputs, considering factors like device capabilities and user preferences.
+ - Dynamic Audio Routing: Handles dynamic changes in audio routing based on events such as device connections or disconnections and adapts the audio policy accordingly.
+ - Audio Stream Management: Categorizes audio streams into different types and applies specific policies for each type, ensuring a balanced and user-friendly audio experience.
+ - Policy Enforcement: Enforces policies related to volume levels, audio effects, and other audio parameters, ensuring consistency and compliance with user preferences.
+ - Integration with AudioFlinger: Works closely with AudioFlingerService to implement the defined audio policies and communicate them to the underlying audio hardware through the Audio HAL.
+
 See detail information about Android Multimedia Framework below:
 
 <img src="audio.png" alt="Android Multimedia Framework Architecture"/>
