@@ -33,9 +33,9 @@ The key components we are going to introduce include:
 - Resource Management:  
 
 - Jetpack Compose
-- 
+
 - Coroutine
-- 
+
 - ViewModel
 (Note: This document is a work in progress and will be continually updated.)
 
