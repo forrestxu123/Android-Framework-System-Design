@@ -418,7 +418,7 @@ In the constantly changing world of mobile technology, the Android Security Mode
    - Hacker can get physical access to Android devices.
    - Network communication is untrusted 
    - Untrusted code is executed on the device. (Device Image, bootloader, kernel, daemon, system server, app)
-   - Privacy protection for Mutiple party computationer experience.
+   - Privacy leakge for Mutiple party computationer experience.
 
 - Security Model:
   - Multi-party consent: No action should be executed unless all main parties agree — in the standard case, these are user, platform, and developer.
