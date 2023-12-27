@@ -4,11 +4,11 @@ The key components we are going to introduce include:
 
 [- Android Inter-Process Communication (IPC):](#a)
 
-[  - Shared Memory](#a1)
+  - [Shared Memory](#a1)
 
-[  - Unix Domain Socket](#a2)
+  - [Unix Domain Socket](#a2)
 
-[  - Binder IPC](#a3)
+  - [Binder IPC](#a3)
       
 [- Android Security Model Analysis:](#b)
 
