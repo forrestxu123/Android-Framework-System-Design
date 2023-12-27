@@ -408,6 +408,7 @@ public class MainActivity extends AppCompatActivity {
     }
 }
 ```
+
  <a name="b"></a>
 
 ## 2 Android Security Model Analysis
@@ -590,6 +591,7 @@ See detail information about Android Multimedia Framework below:
 <img src="audio.png" alt="Android Multimedia Framework Architecture"/>
 
  <a name="d"></a>
+ 
 ## 4 Android Graphic framework
 The Android Graphics Framework serves as the foundation for crafting rich visual experiences on Android devices. Its essential components play a crucial role in rendering and managing graphical elements, leveraging the Surface class in Image Stream Producers for seamless interaction with SurfaceFlinger to efficiently render images. This involves practices such as buffer queue reuse and collaboration with the GPU/Hardware Composer, contributing to efficient buffer management. The framework also offers key advantages, including synchronization with VSYNC for optimal performance.
 
