@@ -1,5 +1,5 @@
 # Exploring the Depths: A Comprehensive Dive into Android Framework Architecture
-This document serves as a comprehensive guide, delving into the details of the key components of the Android system. By explaining the fundamental principles inherent to the Android Framework System, it aims to empower readers with practical knowledge. Whether you're a seasoned developer or a job seeker preparing for interviews, the document provided here is crafted to be both informative and highly applicable to your daily tasks. The purpose of this document is to explore the inner workings of Android, unravel complexities, and gain a deeper understanding of the Android framework."
+This document serves as a comprehensive guide, delving into the details of the key components of the Android system. By explaining the fundamental principles inherent to the Android Framework System, it is designed to provide practical knowledge. Whether you're a seasoned developer, a job seeker preparing for Android domain knowledge or system design interviews, this document is crafted to be both informative and highly applicable to your daily tasks. The purpose of this document is to explore the inner workings of Android, break down complexities, and gain a deeper understanding of the Android framework.
 The key components we are going to introduce include:
 
 [- Android Inter-Process Communication (IPC):](#a)
@@ -16,9 +16,9 @@ The key components we are going to introduce include:
 
 [- Android Graphic framework: ](#d) 
 
-- Android Sensor Framework:  
+[- Android Camera Framework:](#e)  
 
-- Android Camera Framework:  
+- Android Sensor Framework:  
 
 - Android Booting Process:  
 
@@ -49,16 +49,15 @@ The key components we are going to introduce include:
  
 ## 1 Android Inter-Process Communication (IPC)
 
-IPC mechanisms that involves communication of one process with another process. In Linux, various IPC mechanisms are available, including Pipes, FIFO, Message Queues, Unix Domain Sockets, Shared Memory, Semaphores, 
-and Signals. These mechanisms offer valuable means of communication, they come with certain limitations:
+IPC mechanisms involve the communication of one process with another process. In Linux, various IPC mechanisms are available, including the tranditional IPC mechanisms such as Pipes, FIFO, Message Queues, Unix Domain Sockets, Shared Memory, Semaphores, and Signals. These mechanisms offer valuable means of communication between processes; however, they come with certain limitations:
 
 - **Functionality:**
-    The listed IPC mechanisms are primarily designed for local communication between processes on the same machine. However, they are not specialized for remote method calls and Object-Oriented Communication.
+    The tranditional IPC mechanisms are primarily designed for communication between processes. However, they are not specialized for method calls with Object-Oriented parameters within the same machine.
   
 - **Security:**
-    - *Fine-Grained Security Controls:* The listed IPC mechanisms lack fine-grained security controls, making it challenging to regulate access to shared resources.
-    - *Access Regulation:* They may not provide effective mechanisms to regulate which processes can access shared resources, potentially leading to security vulnerabilities.
-    - *Permissions Management:* The listed IPC mechanisms may not manage permissions effectively, raising concerns about data security and unauthorized access.
+    - *Fine-Grained Security Controls: The tranditional IPC mechanisms lack fine-grained security controls, making it challenging to regulate access to shared resources.
+    - *Access Regulation: The tranditional IPC mechanisms may not provide effective mechanisms to regulate which processes can access shared resources, potentially leading to security vulnerabilities.
+    - *Permissions Management:* The tranditional IPC mechanisms may not manage permissions effectively, raising concerns about data security and unauthorized access.
 
 Security issues may lead to data leakage or deadlock. For preinstalled apps or daemons, a viable solution is to utilize SELinux, ensuring that specific apps can access designated IPC mechanisms, safeguarding app data. However, for regular apps running in an untrusted app domain, SELinux may face limitations in distinguishing between them.
 
@@ -67,24 +66,22 @@ To address these challenges, the Android system provides the Binder IPC mechanis
  <a name="a1"></a>
 
 ### 1.1 SharedMemory
-Shared memory facilitates fast and efficient communication between processes, enabling direct data sharing without the overhead of copying. It provides low-latency, high-performance communication, making it suitable for scenarios involving frequent and large data transfers. The memory-mapped nature of shared memory simplifies data manipulation and enhances memory efficiency, allowing processes to access shared data as if it were regular memory. To ensure proper concurrency and avoid race conditions when accessing shared memory, synchronization mechanisms like semaphores are required. 
+Shared memory facilitates direct data sharing between the local processes without the overhead of copying. It offers low-latency, high-performance communication, making it suitable for scenarios involving frequent and large data transfers. The memory-mapped nature of shared memory simplifies data manipulation and enhances memory efficiency, allowing processes to access shared data as if it were regular memory. To ensure proper concurrency and prevent race conditions when accessing shared memory, synchronization mechanisms like semaphores are required. 
 
 #### 1.1.1 Shared Memory Design Diagram
 The shared memory has the following lifecycle:
 - Processes in user space use the mmap system call to map a portion of virtual memory into their respective address spaces, creating a shared memory region.
-- When a process calls mmap, the /dev/ashmem driver, acting as an intermediary between user space and the kernel, facilitates communication with the kernel's memory management module.
-- The kernel's memory management module interacts with the page table to map the requested virtual memory region to physical memory, ensuring accessibility for the processes. 
+- When a process calls mmap, the /dev/ashmem driver, acting as an intermediary between user space and the kernel, facilitates communication with the kernel's memory management system.
+- The kernel's memory management system interacts with the page table to map the requested virtual memory region to physical memory, ensuring accessibility for the processes. 
 - With the memory successfully mapped, processes can read from or write to the shared memory region. Synchronization mechanisms like semaphores may be employed to coordinate access.
 - When processes are done with the shared memory, they use the munmap system call to unmap the memory.
 - During the memory mapping process, the page table is updated to reflect the mapping of virtual memory to physical memory, ensuring proper address translation for subsequent access.
-
-  See shared memory Design diagram below for more information:
 
 <img src="sharedmemory.png" alt="Shared Memory Architecture"/>
 
 
 #### 1.1.2 Shared Memory example code
-See example code for creating shared memory, accesimg memory and semaphores based synchronization mechanisms below:
+See example code for creating and accessing shared memory with semaphores based synchronization mechanisms support below:
 
 Program A
 
@@ -165,8 +162,8 @@ In this example, Program A writes to shared memory, and Program B reads from sha
  <a name="a2"></a>
  
 ### 1.2 Unix Domain Socket(UDS)
-UDS facilitate efficient and bidirectional communication between processes on the same host, operating locally for minimal latency and enhanced performance. UDS supports zero-copy mechanisms, pointing processes to the same file descriptor in the global file table, reducing data duplication during exchange. Through access modes that define permissions, UDS offer a secure and reliable means for seamless collaboration among local processes.
-Unix Domain Sockets (UDS) play a crucial role in the Android system. For instance, Android utilizes BitTube mechanism whcih is based on UDS to transmit VSYNC information from the Hardware Abstraction Layer (HAL) to SurfaceFlinger, as well as from SurfaceFlinger to the calling applications. This demonstrates the versatility and significance of UDS in facilitating inter-process communication within the Android framework.
+UDS facilitate efficient and bidirectional communication between the local processes. UDS supports zero-copy mechanisms,  reducing data duplication copy during exchange. DS offer a secure data access protection through access modes that define permissions.
+Unix Domain Sockets (UDS) play a crucial role in the Android system. For instance, Android utilizes BitTube mechanism whcih is based on UDS to transmit VSYNC information from the Hardware Abstraction Layer (HAL) to SurfaceFlinger.
 
 #### 1.2.1 UDS Design Diagram
 In the Unix Domain Socket (UDS) design diagram below, the workflow includes the following steps:
@@ -177,7 +174,7 @@ In the Unix Domain Socket (UDS) design diagram below, the workflow includes the 
    - Connection Establishment: Call connect() to establish a connection with the server. Synchronize with the server to make its file descriptor point to the same file description in the open file description table.
    - Data Transfer: Use send() and recv() for communication. The file descriptors in both client and server point to the same file description in the open file description table, facilitating zero-copy operations.
    - Socket Closure: Call close() to remove entries from the process FD table and the system open FD table.
-This workflow ensures a seamless and synchronized interaction between the server and client, leveraging shared file descriptors for efficient data transfer and maintaining proper cleanup procedures during socket closure.
+This workflow ensures a seamless and synchronized interaction between the server and client, leveraging the shared file descriptions for efficient data transfer and maintaining proper cleanup procedures during socket closure.
 
 <img src="unixsocket.png" alt="Unix Domain Socket Architecture"/>
 
@@ -285,7 +282,7 @@ int main() {
  <a name="a3"></a>
 
 ### 1.3 Binder IPC
-Binder IPC is a key mechanism in the Android system, enabling efficient communication among different components. It overcomes limitations found in traditional IPC methods, focusing on efficiency with shared memory supported, security, and support for object-oriented communication. The Binder IPC allows seamless exchange of data and messages between applications, services, and the Android system and HAL layer , ensuring optimal resource utilization. Its fine-grained security controls provide precise access regulation to shared resources, enhancing overall system security. With its integral role in Android's architecture, a solid understanding of Binder IPC is essential for developers to craft robust and high-performance applications. 
+Binder IPC is a key mechanism in the Android system, enabling efficient communication among different components. It overcomes limitations found in traditional IPC methods, focusing on shared memory support, security access control, and method calls with Object-Oriented parameters. In the Android system, The Binder IPC allows seamless exchange of data and messages between applications, system services, and the HAL layer, ensuring optimal resource utilization. With its integral role in Android's architecture, a solid understanding of Binder IPC is essential for developers to craft robust and high-performance applications.
 #### 1.3.1 Binder IPC Design Diagram
 This design diagram below outlines the key steps involved in Binder IPC with a System Service, highlighting the interactions between different components. The workflow includes:
  - Define Binder Interface:
@@ -311,7 +308,7 @@ The /dev/binder driver, a key component of Binder IPC, maps a portion of the Sys
  - Call Method in System Service:
 Upon completing its tasks, the /dev/binder driver triggers the onTransaction() method in the System Service. This method handles deserialization, selects a thread from the thread pool, and calls the corresponding function requested by the client app.
 This comprehensive workflow ensures seamless and efficient communication between the client app and the System Service using Binder IPC, leveraging shared memory and the essential components of the Binder framework.
-\   
+   
 <img src="binderipc.png" alt="Binder IPC tArchitecture"/>
 
 #### 1.3.2 Binder IPC Sample Code:
@@ -413,7 +410,7 @@ public class MainActivity extends AppCompatActivity {
 
 ## 2 Android Security Model Analysis
 
-In the constantly changing world of mobile technology, the Android Security Model serves as a strong defense, protecting user data, system integrity, and overall device security. This comprehensive security framework includes different layers of protection to address various threats. Let's explore specific threat models,security model and how Android enhances its security.
+The Android Security Model serves as a strong defense, protecting user data, system integrity, and overall device security. It includes different layers of protection to address various threats. Let's explore specific threat models,security model and how Android enhances its security in this section.
 
 - Threat Model:
    - Hacker can get physical access to Android devices.
@@ -423,9 +420,9 @@ In the constantly changing world of mobile technology, the Android Security Mode
 
 - Security Model:
   - Multi-party consent: No action should be executed unless all main parties agree — in the standard case, these are user, platform, and developer.
-  - Security is a compatibility requirement. Devices that do not conform to CDD and do not pass CTS are not Android compatiable devices. 
+  - Security is a compatibility requirement. Devices that do not conform to CDD and do not pass CTS,VTS are not Android compatiable devices. 
   - Factory reset restores the device to a safe state. 
-  - Applications are security principals. T
+  - Applications are security principals.
 
 - Security Model design
     Android's architecture is designed with multiple layers of security to provide a robust and comprehensive defense against various threats. The advantages of having multiple layers of security in Android include:
@@ -436,10 +433,10 @@ Each security layer in Android addresses specific aspects of security, such as a
     - Isolation of Components:
 Different layers in Android are designed to operate independently and are isolated from each other.
     - Adaptability to Evolving Threats:
-The use of multiple security layers allows Android to adapt to evolving security threats. As new threats emerge, Android's architecture can be updated to incorporate additional security measures without disrupting the entire system.
+The utilization of diverse security layers empowers Android to evolve in response to emerging security threats. As new challenges arise, Android's architecture can be flexibly updated to integrate supplementary security measures without causing disruption to the entire system.
 
-Android's security architecture includes the following features:
-- Android Compatibility Test: Ensures that Android devices meet compatibility standards, providing a consistent and secure user experience. Devices that pass the compatibility test can reliably run Android applications.
+Android's security architecture includes the following layers of protection:
+- Android Compatibility Test: Ensures that Android devices meet compatibility standards, providing a consistent and secure user experience.
 - Secure Bootloader and Integrity Verification: The bootloader ensures the integrity of the device's boot process. It verifies the authenticity and integrity of each component loaded during the boot sequence, preventing the execution of tampered or unauthorized code.
 - SELinux (Security-Enhanced Linux): Provides fine-grained access control to regulate interactions between processes and the Android system. SELinux enhances security by enforcing mandatory access controls and preventing unauthorized actions.
 - Exploit Mitigation: Incorporates techniques like Address Space Layout Randomization (ASLR) and Data Execution Prevention (DEP) to mitigate common exploit methods. These techniques make it more challenging for attackers to exploit vulnerabilities.
@@ -455,16 +452,16 @@ Android's security architecture includes the following features:
    - Credential Encrypted (CE) storage is available only after the user has unlocked the device. In addition to the protections on DE storage, CE storage keys can only be derived after unlocking the device, with protection against brute force attacks in hardware.
 
 Google Private Computer Core also provide following mechanism:
-- App Sandbox:  Apps operate within sandboxed environments, isolating them from apps outside of sanbox to protect user privacy when the app invloves mutiple party computation sucha as Federal AI or mutiple party computuaion.
+- App Sandbox:  Apps operate within sandboxed environments, isolating them from apps outside of sanbox to protect user privacy when the app invloves mutiple party computation sucha as Federal AI or multiple party computuaion.
 
-See more information below about Android Security Model analysis.
+See more information below about Android Security Model design diagram.
 
 <img src="securitymodel.png" alt="Android Security Model"/>
 
  <a name="c"></a>
  
 ## 3 Android Multimedia framework
-The Android Multimedia Framework provides a comprehensive solution for handling multimedia content on Android devices. It encompasses various components and APIs that facilitate the playback, recording, and manipulation of audio and video content. The framework ensures a seamless multimedia experience for users and serves as a foundation for multimedia applications.
+The Android Multimedia Framework delivers a comprehensive solution for managing multimedia content on Android devices. With support for a multitude of media formats, protocols, and tasks such as multimedia playback, recording, and codec operations, it ensures a flexible and enriched multimedia experience for the Android applications
 
 Key Components:
 - Audio Track / Media Player API
@@ -592,7 +589,7 @@ See detail information about Android Multimedia Framework below:
  <a name="d"></a>
  
 ## 4 Android Graphic framework
-The Android Graphics Framework serves as the foundation for crafting rich visual experiences on Android devices. Its essential components play a crucial role in rendering and managing graphical elements, leveraging the Surface class in Image Stream Producers for seamless interaction with SurfaceFlinger to efficiently render images. This involves practices such as buffer queue reuse and collaboration with the GPU/Hardware Composer, contributing to efficient buffer management. The framework also offers key advantages, including synchronization with VSYNC for optimal performance.
+The Android Graphics Framework is vital for crafting engaging visual experiences on Android devices. Its key components play a crucial role in rendering and managing graphical elements, utilizing the Surface class in Image Stream Producers for seamless interaction with SurfaceFlinger to efficiently render images. This involves features such as buffer queue reuse, collaboration with the Hardware Composer and synchronization with VSYNC for optimal performance and memory efficiency.
 
 Key Components:
 
@@ -613,3 +610,6 @@ Key Components:
 - Gralloc: Gralloc is responsible for allocating and managing graphics memory. It plays a crucial role in the efficient handling of graphic buffers, contributing to the overall performance of the Android Graphics Framework. These buffers are seamlessly interacted with by components such as Surface, SurfaceFlinger, and Hardware Composer, ensuring a cohesive and optimized visual experience on Android devices.
 
 <img src="graphic.png" alt="Android Graphic"/>
+ <a name="e"></a>
+
+## 4 Android Camera framework
