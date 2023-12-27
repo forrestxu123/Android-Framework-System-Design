@@ -590,8 +590,9 @@ The Android Graphics Framework serves as the foundation for crafting rich visual
 
 Key Components:
 
-- Image stream producers: Components that create graphic buffers, such as the image stream in the Camera, WindowManagerService, MediaPlayer, and OpenGL ES, are referred to as image stream producers. They are intricately linked with a surface, facilitating efficient buffer handling.
-
+- Image stream producers: Components that create graphic buffers, such as the image stream in the Camera, WindowManagerService, MediaPlayer, and OpenGL ES, are referred to as image stream producers. They are intricately linked with a surface, facilitating efficient buffer handling through
+- Rendering Tools:The Android Graphics Framework leverages powerful rendering tools such as OpenGL ES, Skia, Vulkan, and Decoders to enhance the rendering capabilities. These tools contribute to the creation and manipulation of graphical content, further enriching the visual experience.
+- Surface: The Surface is the image stream producer component that points to the graphic buffer queue. Created and managed by Gralloc, this buffer queue is a fundamental element in the interaction between image stream producers, SurfaceFlinger, and Hardware Composer. It plays a crucial role in ensuring seamless handling of graphic buffers, contributing to the overall performance of the Android Graphics Framework.
 - SurfaceFlinger: SurfaceFlinger is a crucial system service tasked with consuming currently visible surfaces and composing them onto the display, leveraging information provided by Image Stream Producers. As the exclusive service authorized to modify display content, SurfaceFlinger utilizes OpenGL and the Hardware Composer to compose a collection of surfaces. Key features includes:
 
    - Vsync Integration: SurfaceFlinger seamlessly incorporates Vsync (Vertical Synchronization) features, guaranteeing smooth and synchronized rendering. This integration involves coordination with the caller in the graphics pipeline and receive Vsync event from HW Cpmposer.
