@@ -14,8 +14,11 @@ Delve into Android's Security Model, examining multi-party consent, compatibilit
 
 Delve into the core of multimedia handling in Android, including audio and video playback, recording, and the coordination of media-related functionalities across the framework, influencing both app and system behavior.
 
-- Android Graphic Framework:  
+[- Android Graphic framework: ](#d) 
+
 Discover the graphic rendering and display capabilities of Android, encompassing UI rendering, graphics acceleration, and the overall visual presentation of applications, extending its impact to the system's visual interface.
+
+
 - Android Sensor Framework:  
 Learn about the integration and utilization of various sensors in Android devices, providing input for features like orientation, motion, and environmental sensing, influencing system-level decisions based on sensor data.
 - Android Camera Framework:  
@@ -580,3 +583,26 @@ For details about video display, please refer to the Graphics Framework section.
 See detail information about Android Multimedia Framework below:
 
 <img src="audio.png" alt="Android Multimedia Framework Architecture"/>
+
+ <a name="d"></a>
+## 4 Android Graphic framework
+The Android Graphics Framework serves as the foundation for crafting rich visual experiences on Android devices. Its essential components play a crucial role in rendering and managing graphical elements, leveraging the Surface class in Image Stream Producers for seamless interaction with SurfaceFlinger to efficiently render images. This involves practices such as buffer queue reuse and collaboration with the GPU/Hardware Composer, contributing to efficient buffer management. The framework also offers key advantages, including synchronization with VSYNC for optimal performance.
+
+Key Components:
+
+- Image stream producers: Components that create graphic buffers, such as the image stream in the Camera, WindowManagerService, MediaPlayer, and OpenGL ES, are referred to as image stream producers. They are intricately linked with a surface, facilitating efficient buffer handling.
+
+- SurfaceFlinger: SurfaceFlinger is a crucial system service tasked with consuming currently visible surfaces and composing them onto the display, leveraging information provided by Image Stream Producers. As the exclusive service authorized to modify display content, SurfaceFlinger utilizes OpenGL and the Hardware Composer to compose a collection of surfaces. Key features includes:
+
+   - Vsync Integration: SurfaceFlinger seamlessly incorporates Vsync (Vertical Synchronization) features, guaranteeing smooth and synchronized rendering. This integration involves coordination with the caller in the graphics pipeline and receive Vsync event from HW Cpmposer.
+
+   - Enqueue/Dequeue Mechanism: SurfaceFlinger adeptly manages the queueing and dequeuing of surfaces in collaboration with its caller, ensuring effortless transitions and updates in graphical content.
+
+   - Acquire/Release Operations: Interactions with the Hardware Abstraction Layer (HAL) Layer entail acquiring and releasing resources, facilitating effective communication between SurfaceFlinger and the underlying hardware.
+
+   - Collaboration with Hardware Composer: SurfaceFlinger collaborates synergistically with the Hardware Composer (HW Composer) to efficiently compose and present graphics on the display. This collaboration is integral for optimal performance and responsiveness in rendering graphical elements.
+
+- Hardware Composer: The Hardware Composer (HW Composer) acts as the hardware abstraction for the display subsystem. It collaborates with SurfaceFlinger to offload certain composition work from OpenGL and the GPU, contributing to lower power consumption. The HW Composer supports essential events, including VSYNC, for synchronization.
+- Gralloc: Gralloc is responsible for allocating and managing graphics memory. It plays a crucial role in the efficient handling of graphic buffers, contributing to the overall performance of the Android Graphics Framework. These buffers are seamlessly interacted with by components such as Surface, SurfaceFlinger, and Hardware Composer, ensuring a cohesive and optimized visual experience on Android devices.
+
+<img src="graphic.png" alt="Android Graphic"/>
