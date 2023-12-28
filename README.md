@@ -915,7 +915,7 @@ public class SensorActivity extends AppCompatActivity implements SensorEventList
     @Override
     public void onSensorChanged(SensorEvent event) {
         if (event.sensor.getType() == Sensor.TYPE_ACCELEROMETER) {
-            // Access accelerometer values
+            // Access accelerometer values represented by xAxis, yAxis, and zAxis
             float[] accelerometerValues = event.values;
             float xAxis = accelerometerValues[0];
             float yAxis = accelerometerValues[1];
