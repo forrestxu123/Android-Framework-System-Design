@@ -854,8 +854,97 @@ protected void onPause() {
  <a name="F"></a>
 ##  6 Android Sensor Framework
 
-The Android Sensor Framework provides developers with access to a variety of sensors embedded in Android devices. These sensors enable applications to gather information about the device's physical environment, user movements, and other relevant data. The framework offers a consistent API for interacting with sensors, making it easier for developers to create applications that respond to changes in the device's surroundings.
+The Android Sensor Framework provides developers with unified access to a range of sensors in Android devices, including accelerometers, gyroscopes, magnetometers, barometers, humidity, pressure, light, proximity, and heart rate sensors. It empowers developers to create applications that dynamically respond to changes in the device's environment.
 
 Key Components:
-- 
- 
+- SensorManager: SensorManager covers key functionalities such as sensor discovery, event registration, accessing default sensors, and managing sensor listeners, providing developers with essential tools for building applications that leverage device sensor data. The main feature includes:
+   - List<Sensor> getSensorList(int type), Retrieves a list of Sensor objects of a specified type
+   - void registerListener(SensorEventListener listener, Sensor sensor, int samplingPeriodUs), Registers a SensorEventListener to listen for sensor events from a specific sensor.
+   - void unregisterListener(SensorEventListener listener)
+   - Sensor getDefaultSensor(int type),  Returns the default instance of a sensor for a given type.
+   - getSensorOrientation(float[] R, float[] values),  Computes the device's orientation based on rotation matrix R.
+- SensorEventListener: Represents an interface for receiving notifications about changes in sensor values
+   - onSensorChanged(SensorEvent event), Called when there is a change in sensor values.
+   - onAccuracyChanged(Sensor sensor, int accuracy)  Called when the accuracy of a sensor changes.
+- SensorEvent: Represents an event that encapsulates sensor data, providing information about a change in sensor values. It provides the following Properties:
+   - float[] values, An array of sensor values (e.g., acceleration, rotation) corresponding to the specific sensor type. Use Case: Developers extract and interpret these values based on the sensor type to gain insights into the device's motion or environmental conditions.
+   - int accuracy,  Indicates the accuracy or reliability of the sensor data. Use Case: Developers use this information to assess the quality of the sensor readings and adapt their application's behavior accordingly.
+   - Sensor sensor, Represents the specific sensor that generated the event. Use Case: Developers can identify the sensor type and apply sensor-specific logic based on the information provided.
+- Sensor: Represents a sensor on the device, providing information about its type, capabilities, and properties:
+   - getName(), return the name of the sensor.
+   - int	getType(), return the sensor type (e.g., accelerometer, gyroscope)
+   - String	getVendor()
+   - int	getVersion()
+   - int getId()
+
+The sample code below uses the listed API to get accelerometer's (x, y ,z) Axis.
+
+```c
+import android.content.Context;
+import android.hardware.Sensor;
+import android.hardware.SensorEvent;
+import android.hardware.SensorEventListener;
+import android.hardware.SensorManager;
+import android.os.Bundle;
+import androidx.appcompat.app.AppCompatActivity;
+
+public class SensorActivity extends AppCompatActivity implements SensorEventListener {
+
+    private SensorManager sensorManager;
+    private Sensor accelerometerSensor;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_sensor);
+
+        // Initialize SensorManager
+        sensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
+
+        // Get the default accelerometer sensor
+        accelerometerSensor = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
+
+        // Check if the accelerometer sensor is available
+        if (accelerometerSensor != null) {
+            // Register the SensorEventListener
+            sensorManager.registerListener(this, accelerometerSensor, SensorManager.SENSOR_DELAY_NORMAL);
+        }
+    }
+
+    @Override
+    public void onSensorChanged(SensorEvent event) {
+        if (event.sensor.getType() == Sensor.TYPE_ACCELEROMETER) {
+            // Access accelerometer values
+            float[] accelerometerValues = event.values;
+            float xAxis = accelerometerValues[0];
+            float yAxis = accelerometerValues[1];
+            float zAxis = accelerometerValues[2];
+
+            // TODO: Use accelerometer data in your application logic
+        }
+    }
+
+    @Override
+    public void onAccuracyChanged(Sensor sensor, int accuracy) {
+        // Handle accuracy changes if needed
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        // Unregister the SensorEventListener to conserve resources when the activity is paused
+        sensorManager.unregisterListener(this);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        // Re-register the SensorEventListener when the activity is resumed
+        if (accelerometerSensor != null) {
+            sensorManager.registerListener(this, accelerometerSensor, SensorManager.SENSOR_DELAY_NORMAL);
+        }
+    }
+}
+
+```
+
