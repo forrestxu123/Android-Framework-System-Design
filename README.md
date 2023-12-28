@@ -18,7 +18,7 @@ The key components we are going to introduce include:
 
 [- Android Camera Framework:](#e)  
 
-- Android Sensor Framework:  
+[- Android Sensor Framework:](#f)  
 
 - Android Booting Process:  
 
@@ -614,7 +614,7 @@ Key Components:
  
 ## 5 Android Camera framework
 
-The Android Camera framework supports various cameras and camera features available on the device. It supports features such as camera preview, image capture, image analysis, and video recording. it also facilitates the efficient handling and processing of image data, ensuring seamless interactions between the camera hardware and software layers with optimal performance, memory, and power usage. It empowers developers with advanced camera functionalities.
+The Android Camera framework supports various cameras and camera features. It supports features such as camera preview, image capture, image analysis, and video recording. it also facilitates the efficient handling and processing of image data, ensuring seamless interactions between the camera hardware and software layers with optimal performance, memory, and power usage. It empowers developers with advanced camera functionalities.
 
 Key Components:
 - Camera 2 API:
@@ -850,6 +850,9 @@ protected void onPause() {
 
  See image buffer flow diagram below for information about how image is rendered:
  <img src="camera2.png" alt="Android Graphic"/>
+
+##  6 Android Sensor Framework
+
 
 
  
