@@ -801,6 +801,8 @@ protected void onPause() {
     super.onPause();
 }
 
+```
+
 - AIDL Files:
   - ICameraDeviceUser: Provides Camera Service AIDL interface to CameraDevice with the following main features:
     - Camera Device Management: disconnect(), submitRequest(), cancelRequest()
