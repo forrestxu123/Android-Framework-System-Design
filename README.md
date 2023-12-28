@@ -485,7 +485,25 @@ See the Media Recorder state diagram below to understand how to use the Media Re
 
   - Encoding and Decoding: Allows developers to encode and decode multimedia content, leveraging its capabilities to efficiently process different types of data including compressed data, raw audio, and raw video.
   - Surface Integration: For optimal performance with raw video data, MediaCodec recommends using a Surface. This integration is particularly beneficial for seamless interaction with Android graphic framework, enhancing overall efficiency in multimedia processing.
-
+- MediaPlayerService
+  - Audio/Video Playback: The service handles the playback of audio and video content, supporting a variety of formats and streaming protocols.
+  - Audio/Video Recording: MediaPlayerService supports recording audio and video from device microphones and cameras, providing functionalities for starting, stopping, and managing the recording process.
+  - Playback Control: Offers methods for controlling playback, including play, pause, stop, seek, and volume adjustments.
+  - Media Session Management: Manages media sessions, allowing multiple apps to interact with media playback and recording simultaneously.
+  - Audio Focus Handling: Coordinates with the audio framework to manage audio focus, ensuring a seamless experience when multiple apps request audio resources.
+  - Integration with Audio Framework: MediaPlayerService integrates with the underlying audio framework, allowing efficient and low-level control over audio playback and recording.
+- AudioFlingerService
+  - Audio Mixing: AudioFlingerService combines multiple audio streams from different applications and services, ensuring seamless playback.
+  - Hardware Abstraction: Interacts with the Audio Hardware Abstraction Layer (Audio HAL) to communicate with the underlying audio hardwar.
+  - Audio Routing: Directs audio streams to the appropriate output sources, such as speakers, headphones, or Bluetooth devices.
+  - Integration with Audio Policy: Collaborates with AudioPolicyService to enforce audio policies and ensure consistent audio behavior across the system.
+- AudioPolicyService
+  - Audio Routing Policies: AudioPolicyService defines policies for routing audio streams to various outputs, considering factors like device capabilities and user preferences.
+  - Dynamic Audio Routing: Handles dynamic changes in audio routing based on events such as device connections or disconnections and adapts the audio policy accordingly.
+  - Audio Stream Management: Categorizes audio streams into different types and applies specific policies for each type, ensuring a balanced and user-friendly audio experience.
+  - Policy Enforcement: Enforces policies related to volume levels, audio effects, and other audio parameters, ensuring consistency and compliance with user preferences.
+  - Integration with AudioFlinger: Works closely with AudioFlingerService to implement the defined audio policies and communicate them to the underlying audio hardware through the Audio HAL.
+ 
 See the MediaCodec state diagram and sample code below to understand how to use the Media MediaCodec API.
 
 <img src="mediacodecapi.png" alt="MediaReCodec API"/>
@@ -561,27 +579,6 @@ public class MediaCodecExample {
 
 ```
 
-- MediaPlayerService
-  - Audio/Video Playback: The service handles the playback of audio and video content, supporting a variety of formats and streaming protocols.
-  - Audio/Video Recording: MediaPlayerService supports recording audio and video from device microphones and cameras, providing functionalities for starting, stopping, and managing the recording process.
-  - Playback Control: Offers methods for controlling playback, including play, pause, stop, seek, and volume adjustments.
-  - Media Session Management: Manages media sessions, allowing multiple apps to interact with media playback and recording simultaneously.
-  - Audio Focus Handling: Coordinates with the audio framework to manage audio focus, ensuring a seamless experience when multiple apps request audio resources.
-  - Integration with Audio Framework: MediaPlayerService integrates with the underlying audio framework, allowing efficient and low-level control over audio playback and recording.
-
-- AudioFlingerService
-  - Audio Mixing: AudioFlingerService combines multiple audio streams from different applications and services, ensuring seamless playback.
-  - Hardware Abstraction: Interacts with the Audio Hardware Abstraction Layer (Audio HAL) to communicate with the underlying audio hardwar.
-  - Audio Routing: Directs audio streams to the appropriate output sources, such as speakers, headphones, or Bluetooth devices.
-  - Integration with Audio Policy: Collaborates with AudioPolicyService to enforce audio policies and ensure consistent audio behavior across the system.
-   
-- AudioPolicyService
-  - Audio Routing Policies: AudioPolicyService defines policies for routing audio streams to various outputs, considering factors like device capabilities and user preferences.
-  - Dynamic Audio Routing: Handles dynamic changes in audio routing based on events such as device connections or disconnections and adapts the audio policy accordingly.
-  - Audio Stream Management: Categorizes audio streams into different types and applies specific policies for each type, ensuring a balanced and user-friendly audio experience.
-  - Policy Enforcement: Enforces policies related to volume levels, audio effects, and other audio parameters, ensuring consistency and compliance with user preferences.
-  - Integration with AudioFlinger: Works closely with AudioFlingerService to implement the defined audio policies and communicate them to the underlying audio hardware through the Audio HAL.
-
 For details about video display, please refer to the Graphics Framework section.
 See the design diagram below for more information about Android Multimedia Framework:
 
@@ -651,6 +648,45 @@ Key Components:
         -  onCaptureFailed (CameraCaptureSession session,  CaptureRequest request,  CaptureFailure failure)
      - void capture(CaptureRequest request, CameraCaptureSession.CaptureCallback listener, Handler handler): Submit a request for an image to be captured by the camera device.
      - void close(): Close this capture session asynchronously.
+- AIDL Files:
+  - ICameraDeviceUser: Provides CameraService AIDL interface to CameraDevice with the following main features:
+    - Camera Device Management: disconnect(), submitRequest(), cancelRequest()
+    - Stream Management: createStream(), deleteStream(), createInputStream(), getInputSurface()
+    - Camera Operations Control:waitUntilIdle(), flush(), prepare2(), tearDown()
+  - ICameraService: Provides Camera Service AIDL interface to CameraManager with the following main features:
+    - Camera Device Management: getNumberOfCameras(), getCameraInfo(), connectDevice()
+    - Listener and Event Handling: addListener(), removeListener(), notifySystemEvent(), notifyDisplayConfigurationChange()
+    - Stream Configuration and Session Management: getConcurrentCameraIds(), getCameraCharacteristics()
+  - ICameraServiceListener: The interface is designed to inform CameraManager about dynamic changes in camera availability and camera access priorities.
+    - onStatusChanged(), onPhysicalCameraStatusChanged(), onCameraAccessPrioritiesChanged(), onCameraOpened(), onCameraClosed()
+  - ICameraDeviceCallbacks: The interface is designed to inform CamerDevice about callback notifications related to camera device events.
+    - Device Error Handling: onDeviceError(), Notifies about various camera device errors using error codes and additional capture result information.
+    - Device State Notifications: onDeviceIdle(), Notifies when the camera device transitions to the idle state.
+    - Capture Events: onCaptureStarted(), onResultReceived()
+  - Stream and Request Handling: onPrepared(), onRepeatingRequestError(), onRequestQueueEmpty.
+- HAL Files:
+  - ICameraProvider: Provides HIDL interface for CameraService to access with the following main features:
+    - Callback Registration: disconnect(), submitRequest(), cancelRequest()
+    - Stream Management: createStream(), deleteStream(), createInputStream(), getInputSurface()
+    - Camera Operations Control:waitUntilIdle(), flush(), prepare2(), tearDown()
+  - ICameraDevicer: Provides HIDL interface for CameraService to access with the following main features:
+    - Camera Characteristics: getCameraCharacteristics()
+    - Camera Device Initialization: open().
+    - Debugging State Dump: dumpStat()
+      
+  - ICameraDeviceSession: Provides HIDL interface for CameraService to access with the following main features:
+    - Construct Default Request Settings: constructDefaultRequestSettings()
+    - Configure Streams: open().
+    - processCaptureRequest: processCaptureReques()
+    - Get Capture Request Metadata Queue: getCaptureRequestMetadataQueue()
+    - Flush: flush()
+    - Close: close()
+- CmaeraService
+  - class CameraService: This class is a framework layer implementaiom for ICameraService and ICameraServiceListener.
+  - class CameraDeviceClient: This class is a framework layer implementaiom for ICameraDeviceUser and ICameraDeviceCallbacks.
+  - class CameraProviderManage: This class help CameraService to access the information from HAL layer components through ICameraProvider and ICameraDevicer.
+  - class Camera3DDevice:  Tthis class help CameraService to access the information from HAL layer components through ICameraDeviceSession.
+ 
 The sample code below uses the listed API to create a camera preview session, capture still images, and close the camera device.
 
 ```c
@@ -802,47 +838,6 @@ protected void onPause() {
 }
 
 ```
-
-- AIDL Files:
-  - ICameraDeviceUser: Provides CameraService AIDL interface to CameraDevice with the following main features:
-    - Camera Device Management: disconnect(), submitRequest(), cancelRequest()
-    - Stream Management: createStream(), deleteStream(), createInputStream(), getInputSurface()
-    - Camera Operations Control:waitUntilIdle(), flush(), prepare2(), tearDown()
-  - ICameraService: Provides Camera Service AIDL interface to CameraManager with the following main features:
-    - Camera Device Management: getNumberOfCameras(), getCameraInfo(), connectDevice()
-    - Listener and Event Handling: addListener(), removeListener(), notifySystemEvent(), notifyDisplayConfigurationChange()
-    - Stream Configuration and Session Management: getConcurrentCameraIds(), getCameraCharacteristics()
-  - ICameraServiceListener: The interface is designed to inform CameraManager about dynamic changes in camera availability and camera access priorities.
-    - onStatusChanged(), onPhysicalCameraStatusChanged(), onCameraAccessPrioritiesChanged(), onCameraOpened(), onCameraClosed()
-  - ICameraDeviceCallbacks: The interface is designed to inform CamerDevice about callback notifications related to camera device events.
-    - Device Error Handling: onDeviceError(), Notifies about various camera device errors using error codes and additional capture result information.
-    - Device State Notifications: onDeviceIdle(), Notifies when the camera device transitions to the idle state.
-    - Capture Events: onCaptureStarted(), onResultReceived()
-  - Stream and Request Handling: onPrepared(), onRepeatingRequestError(), onRequestQueueEmpty.
-
-- HAL Files:
-  - ICameraProvider: Provides HIDL interface for CameraService to access with the following main features:
-    - Callback Registration: disconnect(), submitRequest(), cancelRequest()
-    - Stream Management: createStream(), deleteStream(), createInputStream(), getInputSurface()
-    - Camera Operations Control:waitUntilIdle(), flush(), prepare2(), tearDown()
-  - ICameraDevicer: Provides HIDL interface for CameraService to access with the following main features:
-    - Camera Characteristics: getCameraCharacteristics()
-    - Camera Device Initialization: open().
-    - Debugging State Dump: dumpStat()
-      
-  - ICameraDeviceSession: Provides HIDL interface for CameraService to access with the following main features:
-    - Construct Default Request Settings: constructDefaultRequestSettings()
-    - Configure Streams: open().
-    - processCaptureRequest: processCaptureReques()
-    - Get Capture Request Metadata Queue: getCaptureRequestMetadataQueue()
-    - Flush: flush()
-    - Close: close()
-
-- CmaeraService
-  - class CameraService: This class is a framework layer implementaiom for ICameraService and ICameraServiceListener.
-  - class CameraDeviceClient: This class is a framework layer implementaiom for ICameraDeviceUser and ICameraDeviceCallbacks.
-  - class CameraProviderManage: This class help CameraService to access the information from HAL layer components through ICameraProvider and ICameraDevicer.
-  - class Camera3DDevice:  Tthis class help CameraService to access the information from HAL layer components through ICameraDeviceSession.
  
  See the design diagram below for more information about Android Camera Framework:
 
@@ -877,6 +872,9 @@ Key Components:
     - String	getVendor()
     - int	getVersion()
     - int getId()
+- SensorService: The SensorService is responsible for bridging applications with the Hardware Abstraction Layer (HAL). Using the poll() mechanism and the UDB-based BitTube protocol, it employs a Threadloop to receive sensor events from the HAL layer.
+- HAL API and  sensors.h: The API is the interface between the hardware drivers and the Android framework. It consists of one HAL interface sensors.h and one HAL implementation we refer to as sensors.cpp. The interface is defined by Android and AOSP contributors, and the implementation is provided by the manufacturer of the device.
+- Driver: The sensor drivers interact with the physical devices. In some cases, the HAL implementation and the drivers are the same software entity. In other cases, the hardware integrator requests sensor chip manufacturers to provide the drivers, but they are the ones writing the HAL implementation. In all cases, HAL implementation and kernel drivers are the responsibility of the hardware manufacturers, and Android does not provide preferred approaches to write them.
 
 The sample code below uses the listed API to get accelerometer's (x, y ,z) Axis.
 
@@ -948,9 +946,6 @@ public class SensorActivity extends AppCompatActivity implements SensorEventList
 }
 
 ```
-- SensorService: The SensorService is responsible for bridging applications with the Hardware Abstraction Layer (HAL). Using the poll() mechanism and the UDB-based BitTube protocol, it employs a Threadloop to receive sensor events from the HAL layer.
-- HAL API and  sensors.h: The API is the interface between the hardware drivers and the Android framework. It consists of one HAL interface sensors.h and one HAL implementation we refer to as sensors.cpp. The interface is defined by Android and AOSP contributors, and the implementation is provided by the manufacturer of the device.
-- Driver: The sensor drivers interact with the physical devices. In some cases, the HAL implementation and the drivers are the same software entity. In other cases, the hardware integrator requests sensor chip manufacturers to provide the drivers, but they are the ones writing the HAL implementation. In all cases, HAL implementation and kernel drivers are the responsibility of the hardware manufacturers, and Android does not provide preferred approaches to write them.
   
  See the design diagram below for more information about Android Sensor Framework:
 
