@@ -307,7 +307,7 @@ Serialize the data related to the method call in the client app. This serialized
 The /dev/binder driver, a key component of Binder IPC, maps a portion of the System Server's memory to the shared memory in the client app. This mapping facilitates efficient data transfer.
  - Call Method in System Service:
 Upon completing its tasks, the /dev/binder driver triggers the onTransaction() method in the System Service. This method handles deserialization, selects a thread from the thread pool, and calls the corresponding function requested by the client app.
-This comprehensive workflow ensures seamless and efficient communication between the client app and the System Service using Binder IPC, leveraging shared memory and the essential components of the Binder framework.
+This comprehensive workflow ensures seamless and efficient communication between the client app and the System Service using Binder IPC, leveraging shared memory and the essential components of the Binder framework. See design diagram below for more detail:
    
 <img src="binderipc.png" alt="Binder IPC tArchitecture"/>
 
