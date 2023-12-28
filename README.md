@@ -583,7 +583,7 @@ public class MediaCodecExample {
   - Integration with AudioFlinger: Works closely with AudioFlingerService to implement the defined audio policies and communicate them to the underlying audio hardware through the Audio HAL.
 
 For details about video display, please refer to the Graphics Framework section.
-See detail information about Android Multimedia Framework below:
+See the design diagram below for more information about Android Multimedia Framework:
 
 <img src="audio.png" alt="Android Multimedia Framework Architecture"/>
  <a name="d"></a>
@@ -804,7 +804,7 @@ protected void onPause() {
 ```
 
 - AIDL Files:
-  - ICameraDeviceUser: Provides Camera Service AIDL interface to CameraDevice with the following main features:
+  - ICameraDeviceUser: Provides CameraService AIDL interface to CameraDevice with the following main features:
     - Camera Device Management: disconnect(), submitRequest(), cancelRequest()
     - Stream Management: createStream(), deleteStream(), createInputStream(), getInputSurface()
     - Camera Operations Control:waitUntilIdle(), flush(), prepare2(), tearDown()
@@ -821,3 +821,30 @@ protected void onPause() {
   - Stream and Request Handling: onPrepared(), onRepeatingRequestError(), onRequestQueueEmpty.
 
 - HAL Files:
+  - ICameraProvider: Provides HIDL interface for CameraService to access with the following main features:
+    - Callback Registration: disconnect(), submitRequest(), cancelRequest()
+    - Stream Management: createStream(), deleteStream(), createInputStream(), getInputSurface()
+    - Camera Operations Control:waitUntilIdle(), flush(), prepare2(), tearDown()
+  - ICameraDevicer: Provides HIDL interface for CameraService to access with the following main features:
+    - Camera Characteristics: getCameraCharacteristics()
+    - Camera Device Initialization: open().
+    - Debugging State Dump: dumpStat()
+      
+  - ICameraDeviceSession: Provides HIDL interface for CameraService to access with the following main features:
+    - Construct Default Request Settings: constructDefaultRequestSettings()
+    - Configure Streams: open().
+    - processCaptureRequest: processCaptureReques()
+    - Get Capture Request Metadata Queue: getCaptureRequestMetadataQueue()
+    - Flush: flush()
+    - Close: close()
+
+- CmaeraService
+  - class CameraService: This class is a framework layer implementaiom for ICameraService and ICameraServiceListener.
+  - class CameraDeviceClient: This class is a framework layer implementaiom for ICameraDeviceUser and ICameraDeviceCallbacks.
+  - class CameraProviderManage: This class help CameraService to access the information from HAL layer components through ICameraProvider and ICameraDevicer.
+  - class Camera3DDevice:  Tthis class help CameraService to access the information from HAL layer components through ICameraDeviceSession.
+ 
+ See the design diagram below for more information about Android Camera Framework:
+
+ <img src="camera.png" alt="Android Graphic"/>
+ 
