@@ -634,22 +634,15 @@ Key Components:
     - void close(): Close the connection to this camera device as quickly as possible.
     - int getId(): Get the ID of this camera device.
   - CaptureRequest
-     -  Key: A Key is used to do capture request field lookups with CaptureRequest#get or to set fields with CaptureRequest.Builder#set(Key, Object). for example , to set the crop rectangle for the next capture below:  
-```c
-
-Rect cropRectangle = new Rect(0, 0, 640, 480);
-captureRequestBuilder.set(SCALER_CROP_REGION, cropRectangle);
-
-```
-      
-   - Build
-     - void addTarget(Surface outputTarget): Add a surface to the list of targets for this request
-       - void build():Build a request using the current target Surfaces and settings.
-       - void set(CaptureRequest.Key<T> key, T value): 
-    - isReprocess(): Determine if this is a reprocess capture request. 
+    -  Key: A Key is used to do capture request field lookups with CaptureRequest#get or to set fields with CaptureRequest.Builder#set(Key, Object).       
+    - Build:
+      - void addTarget(Surface outputTarget): Add a surface to the list of targets for this request
+      - void build():Build a request using the current target Surfaces and settings.
+      - void set(CaptureRequest.Key<T> key, T value): 
+   - isReprocess(): Determine if this is a reprocess capture request.
  - SessionConfiguration: 
-     - SessionConfiguration(int sessionType, List<OutputConfiguration> outputs, Executor executor, CameraCaptureSession.StateCallback callback):  Create a new SessionConfiguration. The session type. Value is SESSION_REGULAR, or SESSION_HIGH_SPEED,  The executor which should be used to invoke the callback. OutputConfiguration is created by passing Surface object.
- - CameraCaptureSession:
+   - SessionConfiguration(int sessionType, List<OutputConfiguration> outputs, Executor executor, CameraCaptureSession.StateCallback callback):  Create a new SessionConfiguration. The session type. Value is SESSION_REGULAR, or SESSION_HIGH_SPEED,  The executor which should be used to invoke the callback. OutputConfiguration is created by passing Surface object.
+  - CameraCaptureSession:
      - StateCallback 
         - void onConfigureFailed(CameraCaptureSession session): Called if the session cannot be configured as requested.
         - void	onConfigured(CameraCaptureSession session): Called when the camera device has finished configuring itself, and the session can start processing capture requests.
