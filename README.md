@@ -857,25 +857,26 @@ protected void onPause() {
 The Android Sensor Framework provides developers with unified access to a range of sensors in Android devices, including accelerometers, gyroscopes, magnetometers, barometers, humidity, pressure, light, proximity, and heart rate sensors. It empowers developers to create applications that dynamically respond to changes in the device's environment.
 
 Key Components:
-- SensorManager: SensorManager covers key functionalities such as sensor discovery, event registration, accessing default sensors, and managing sensor listeners, providing developers with essential tools for building applications that leverage device sensor data. The main feature includes:
-   - List<Sensor> getSensorList(int type), Retrieves a list of Sensor objects of a specified type
-   - void registerListener(SensorEventListener listener, Sensor sensor, int samplingPeriodUs), Registers a SensorEventListener to listen for sensor events from a specific sensor.
-   - void unregisterListener(SensorEventListener listener)
-   - Sensor getDefaultSensor(int type),  Returns the default instance of a sensor for a given type.
-   - getSensorOrientation(float[] R, float[] values),  Computes the device's orientation based on rotation matrix R.
-- SensorEventListener: Represents an interface for receiving notifications about changes in sensor values
-   - onSensorChanged(SensorEvent event), Called when there is a change in sensor values.
-   - onAccuracyChanged(Sensor sensor, int accuracy)  Called when the accuracy of a sensor changes.
-- SensorEvent: Represents an event that encapsulates sensor data, providing information about a change in sensor values. It provides the following Properties:
-   - float[] values, An array of sensor values (e.g., acceleration, rotation) corresponding to the specific sensor type. Use Case: Developers extract and interpret these values based on the sensor type to gain insights into the device's motion or environmental conditions.
-   - int accuracy,  Indicates the accuracy or reliability of the sensor data. Use Case: Developers use this information to assess the quality of the sensor readings and adapt their application's behavior accordingly.
-   - Sensor sensor, Represents the specific sensor that generated the event. Use Case: Developers can identify the sensor type and apply sensor-specific logic based on the information provided.
-- Sensor: Represents a sensor on the device, providing information about its type, capabilities, and properties:
-   - getName(), return the name of the sensor.
-   - int	getType(), return the sensor type (e.g., accelerometer, gyroscope)
-   - String	getVendor()
-   - int	getVersion()
-   - int getId()
+- Sensor API:
+  - SensorManager: SensorManager covers key functionalities such as sensor discovery, event registration, accessing default sensors, and managing sensor listeners, providing developers with essential tools for building applications that leverage device sensor data. The main feature includes:
+     - List<Sensor> getSensorList(int type), Retrieves a list of Sensor objects of a specified type
+     - void registerListener(SensorEventListener listener, Sensor sensor, int samplingPeriodUs), Registers a SensorEventListener to listen for sensor events from a specific sensor.
+     - void unregisterListener(SensorEventListener listener)
+     - Sensor getDefaultSensor(int type),  Returns the default instance of a sensor for a given type.
+     - getSensorOrientation(float[] R, float[] values),  Computes the device's orientation based on rotation matrix R.
+  - SensorEventListener: Represents an interface for receiving notifications about changes in sensor values
+    - onSensorChanged(SensorEvent event), Called when there is a change in sensor values.
+    - onAccuracyChanged(Sensor sensor, int accuracy)  Called when the accuracy of a sensor changes.
+  - SensorEvent: Represents an event that encapsulates sensor data, providing information about a change in sensor values. It provides the following Properties:
+    - float[] values, An array of sensor values (e.g., acceleration, rotation) corresponding to the specific sensor type. Use Case: Developers extract and interpret these values based on the sensor type to gain insights into the device's motion or environmental conditions.
+    - int accuracy,  Indicates the accuracy or reliability of the sensor data. Use Case: Developers use this information to assess the quality of the sensor readings and adapt their application's behavior accordingly.
+    - Sensor sensor, Represents the specific sensor that generated the event. Use Case: Developers can identify the sensor type and apply sensor-specific logic based on the information provided.
+  - Sensor: Represents a sensor on the device, providing information about its type, capabilities, and properties:
+    - getName(), return the name of the sensor.
+    - int	getType(), return the sensor type (e.g., accelerometer, gyroscope)
+    - String	getVendor()
+    - int	getVersion()
+    - int getId()
 
 The sample code below uses the listed API to get accelerometer's (x, y ,z) Axis.
 
@@ -947,7 +948,10 @@ public class SensorActivity extends AppCompatActivity implements SensorEventList
 }
 
 ```
-
+- SensorService: The SensorService is responsible for bridging applications with the Hardware Abstraction Layer (HAL). Using the poll() mechanism and the UDB-based BitTube protocol, it employs a Threadloop to receive sensor events from the HAL layer.
+- HAL API and  sensors.h: The API is the interface between the hardware drivers and the Android framework. It consists of one HAL interface sensors.h and one HAL implementation we refer to as sensors.cpp. The interface is defined by Android and AOSP contributors, and the implementation is provided by the manufacturer of the device.
+- Driver: The sensor drivers interact with the physical devices. In some cases, the HAL implementation and the drivers are the same software entity. In other cases, the hardware integrator requests sensor chip manufacturers to provide the drivers, but they are the ones writing the HAL implementation. In all cases, HAL implementation and kernel drivers are the responsibility of the hardware manufacturers, and Android does not provide preferred approaches to write them.
+  
  See the design diagram below for more information about Android Sensor Framework:
 
  <img src="sensor.png" alt="Sensor"/>
