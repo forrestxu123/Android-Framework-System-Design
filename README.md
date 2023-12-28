@@ -628,11 +628,11 @@ Key Components:
       - void onDisconnected(CameraDevice camera): The method called when a camera device is no longer available for use.
       - void onError(CameraDevice camera, int error): The method called when a camera device has encountered a serious error.
       - void onOpened(CameraDevice camera): The method called when a camera device has finished opening.
-   - CaptureRequest.Builder:
-   - createCaptureRequest (int templateType): Create a CaptureRequest.Builder for new capture requests, initialized with templateType for a target use case using one of the  TEMPLATE_PREVIEW, TEMPLATE_STILL_CAPTURE, TEMPLATE_RECORD or TEMPLATE_VIDEO_SNAPSHOT as value.
-   - void createCaptureSession(SessionConfiguration config): Create a new CameraCaptureSession using a SessionConfiguration helper object that aggregates all supported parameters.
-   - void close(): Close the connection to this camera device as quickly as possible.
-   - int getId(): Get the ID of this camera device.
+    - CaptureRequest.Builder:
+    - createCaptureRequest (int templateType): Create a CaptureRequest.Builder for new capture requests, initialized with templateType for a target use case using one of the  TEMPLATE_PREVIEW, TEMPLATE_STILL_CAPTURE, TEMPLATE_RECORD or TEMPLATE_VIDEO_SNAPSHOT as value.
+    - void createCaptureSession(SessionConfiguration config): Create a new CameraCaptureSession using a SessionConfiguration helper object that aggregates all supported parameters.
+    - void close(): Close the connection to this camera device as quickly as possible.
+    - int getId(): Get the ID of this camera device.
   - CaptureRequest
      -  Key: A Key is used to do capture request field lookups with CaptureRequest#get or to set fields with CaptureRequest.Builder#set(Key, Object). for example , to set the crop rectangle for the next capture below:  
 ```c
@@ -640,9 +640,10 @@ Key Components:
 Rect cropRectangle = new Rect(0, 0, 640, 480);
 captureRequestBuilder.set(SCALER_CROP_REGION, cropRectangle);
 
-```          
-    - Build
-       - void addTarget(Surface outputTarget): Add a surface to the list of targets for this request
+```
+      
+   - Build
+     - void addTarget(Surface outputTarget): Add a surface to the list of targets for this request
        - void build():Build a request using the current target Surfaces and settings.
        - void set(CaptureRequest.Key<T> key, T value): 
     - isReprocess(): Determine if this is a reprocess capture request. 
