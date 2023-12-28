@@ -612,6 +612,197 @@ Key Components:
 <img src="graphic.png" alt="Android Graphic"/>
  <a name="e"></a>
 ## 5 Android Camera framework
+The Android Camera framework supports various cameras and camera features available on the device. It supports features such as camera preview, image capture, image analysis, and video recording. it also facilitates the efficient handling and processing of image data, ensuring seamless interactions between the camera hardware and software layers with optimal performance, memory, and power usage. It empowers developers with advanced camera functionalities.
 
+Key Components:
+- Camera 2 API:
+ - CameraManager: Represents the system service for managing camera devices. It allows access to camera devices, their properties, and the ability to open and configure them. The main APIs include:
+  - CameraCharacteristics getCameraCharacteristics(int cameraId): Retrieves detailed camera characteristics such as whether the camera is front-facing or back-facing, the location of the camera, and the supported minimum and maximum zoom ratios.
+  - String[] getCameraIdList(): Retrieves the list of available camera IDs.
+  - void openCamera(String cameraId, CameraDevice.StateCallback callback, Handler handler): Opens a connection to a camera with the given ID. The handler specifies the thread on which the callback should be invoked, or null to use the current thread's looper.
+ - CameraDevice: The CameraDevice class is a representation of a single camera connected to an Android device, allowing for fine-grain control of image capture and post-processing at high frame rates.
+   - StateCallback: A callback objects for receiving updates about the state of a camera device. It must be provided to the CameraManager#openCamera method to open a camera device. These state updates include notifications about the device completing startup,  disconnection or closure, and about unexpected device errors.
+     - void onClosed(CameraDevice camera):The method called when a camera device has been closed with CameraDevice#close.
+     - void onDisconnected(CameraDevice camera): The method called when a camera device is no longer available for use.
+     - void onError(CameraDevice camera, int error): The method called when a camera device has encountered a serious error.
+     - void onOpened(CameraDevice camera): The method called when a camera device has finished opening.
+  - CaptureRequest.Builder: createCaptureRequest (int templateType): Create a CaptureRequest.Builder for new capture requests, initialized with templateType for a target use case using one of the  TEMPLATE_PREVIEW, TEMPLATE_STILL_CAPTURE, TEMPLATE_RECORD or TEMPLATE_VIDEO_SNAPSHOT as value.
+  - void createCaptureSession(SessionConfiguration config): Create a new CameraCaptureSession using a SessionConfiguration helper object that aggregates all supported parameters.
+  - void close(): Close the connection to this camera device as quickly as possible.
+  - int getId(): Get the ID of this camera device.
+ - CaptureRequest
+   -  Key: A Key is used to do capture request field lookups with CaptureRequest#get or to set fields with CaptureRequest.Builder#set(Key, Object). for example , to set the crop rectangle for the next capture below:
+   -  
+```c
+
+Rect cropRectangle = new Rect(0, 0, 640, 480);
+captureRequestBuilder.set(SCALER_CROP_REGION, cropRectangle);
+
+```          
+   - Build
+     - void addTarget(Surface outputTarget): Add a surface to the list of targets for this request
+     - void build():Build a request using the current target Surfaces and settings.
+     - void set(CaptureRequest.Key<T> key, T value): 
+   - isReprocess(): Determine if this is a reprocess capture request. 
+ - SessionConfiguration: 
+  - SessionConfiguration(int sessionType, List<OutputConfiguration> outputs, Executor executor, CameraCaptureSession.StateCallback callback):  Create a new SessionConfiguration. The session type. Value is SESSION_REGULAR, or SESSION_HIGH_SPEED,  The executor which should be used to invoke the callback. OutputConfiguration is create bt passing Surface object.
+ - CameraCaptureSession:
+  - StateCallback 
+    - void onConfigureFailed(CameraCaptureSession session): Called if the session cannot be configured as requested.
+    - void	onConfigured(CameraCaptureSession session): Called when the camera device has finished configuring itself, and the session can start processing capture requests.
+  - CaptureCallback
+    -  void onCaptureCompleted (CameraCaptureSession session, CaptureRequest request, TotalCaptureResult result)
+    -  onCaptureFailed (CameraCaptureSession session,  CaptureRequest request,  CaptureFailure failure)
+  - void capture(CaptureRequest request, CameraCaptureSession.CaptureCallback listener, Handler handler): Submit a request for an image to be captured by the camera device.
+  - void close(): Close this capture session asynchronously.
+This code uses the listed API to create a camera preview session, capture still images, and close the camera device.
+
+```c
+
+// Step 1: Request Camera Permissions (Handle this in your activity or fragment)
+
+// Step 2: Open the Camera
+private void openCamera() {
+    try {
+        cameraId = cameraManager.getCameraIdList()[0];
+        CameraCharacteristics characteristics = cameraManager.getCameraCharacteristics(cameraId);
+        // TODO: Configure necessary parameters based on your requirements
+        cameraManager.openCamera(cameraId, new CameraDevice.StateCallback() {
+            @Override
+            public void onOpened(@NonNull CameraDevice camera) {
+                cameraDevice = camera;
+                createCameraPreviewSession();
+            }
+            @Override
+            public void onDisconnected(@NonNull CameraDevice camera) {
+                camera.close();
+                cameraDevice = null;
+            }
+            @Override
+            public void onError(@NonNull CameraDevice camera, int error) {
+                camera.close();
+                cameraDevice = null;
+            }
+        }, backgroundHandler);
+    } catch (CameraAccessException e) {
+        e.printStackTrace();
+    }
+}
+// Step 3: Create Camera Preview Session
+private void createCameraPreviewSession() {
+    try {
+        SurfaceTexture texture = textureView.getSurfaceTexture();
+        assert texture != null;
+        // Configure the size of the texture based on your chosen size
+        texture.setDefaultBufferSize(1920, 1080);
+        Surface surface = new Surface(texture);
+
+        // Create a CaptureRequest.Builder for preview
+        CaptureRequest.Builder previewRequestBuilder = cameraDevice.createCaptureRequest(CameraDevice.TEMPLATE_PREVIEW);
+
+        // Set the target surface for the preview
+        previewRequestBuilder.addTarget(surface);
+
+        // Build the CaptureRequest for preview
+        CaptureRequest previewRequest = previewRequestBuilder.build();
+
+        // Create a CameraCaptureSession.StateCallback
+        CameraCaptureSession.StateCallback stateCallback = new CameraCaptureSession.StateCallback() {
+            @Override
+            public void onConfigured(@NonNull CameraCaptureSession session) {
+                cameraCaptureSession = session;
+
+                // Start the preview by continuously repeating the preview request
+                try {
+                    cameraCaptureSession.setRepeatingRequest(previewRequest, null, backgroundHandler);
+
+                    // Now that the preview session is configured, you can capture still image
+                    captureStillImage();
+                } catch (CameraAccessException e) {
+                    e.printStackTrace();
+                }
+            }
+            @Override
+            public void onConfigureFailed(@NonNull CameraCaptureSession session) {
+                Toast.makeText(getApplicationContext(), "Configuration failed", Toast.LENGTH_SHORT).show();
+            }
+        };
+
+        // Create a SessionConfiguration
+        SessionConfiguration sessionConfiguration = new SessionConfiguration(
+                SessionConfiguration.SESSION_REGULAR,
+                Collections.singletonList(new OutputConfiguration(surface)),
+                new HandlerExecutor(backgroundHandler),
+                stateCallback
+        );
+
+        // Create a CameraCaptureSession using the SessionConfiguration
+        cameraDevice.createCaptureSession(sessionConfiguration);
+
+    } catch (CameraAccessException e) {
+        e.printStackTrace();
+    }
+}
+// Step 4: Capture Still Image
+private void captureStillImage() {
+    try {
+        // Create a CaptureRequest.Builder for still image capture
+        CaptureRequest.Builder captureBuilder = cameraDevice.createCaptureRequest(CameraDevice.TEMPLATE_STILL_CAPTURE);
+
+        // Set the target surface for still image capture
+        captureBuilder.addTarget(imageReader.getSurface()); // Assuming imageReader is properly initialized
+
+        // Build the CaptureRequest for still image capture
+        CaptureRequest captureRequest = captureBuilder.build();
+
+        // Create a CameraCaptureSession.CaptureCallback for handling capture results
+        CameraCaptureSession.CaptureCallback captureCallback = new CameraCaptureSession.CaptureCallback() {
+            @Override
+            public void onCaptureCompleted(@NonNull CameraCaptureSession session, @NonNull CaptureRequest request, @NonNull TotalCaptureResult result) {
+                super.onCaptureCompleted(session, request, result);
+                // Handle capture completion, e.g., save the captured image
+                // You can add your logic here
+            }
+        };
+
+        // Submit the capture request to the CameraCaptureSession
+        cameraCaptureSession.capture(captureRequest, captureCallback, backgroundHandler);
+
+    } catch (CameraAccessException e) {
+        e.printStackTrace();
+    }
+}
+
+// Step 5: Close the Camera
+private void closeCamera() {
+    if (cameraCaptureSession != null) {
+        cameraCaptureSession.close();
+        cameraCaptureSession = null;
+    }
+
+    if (cameraDevice != null) {
+        cameraDevice.close();
+        cameraDevice = null;
+    }
+}
+close);
+
+    } catch (CameraAccessException e) {
+        e.printStackTrace();
+    }
+}
+
+// Additional Step: Handle Camera Lifecycle (e.g., in your Activity or Fragment)
+@Override
+protected void onResume() {
+    super.onResume();
+    openCamera();
+}
+
+@Override
+protected void onPause() {
+    closeCamera();
+    super.onPause();
+}
 
 
