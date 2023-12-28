@@ -847,4 +847,9 @@ protected void onPause() {
  See the design diagram below for more information about Android Camera Framework:
 
  <img src="camera.png" alt="Android Graphic"/>
+
+ See image buffer flow diagram below for information about how image is rendered:
+ <img src="camera2.png" alt="Android Graphic"/>
+
+
  
