@@ -801,4 +801,21 @@ protected void onPause() {
     super.onPause();
 }
 
+- AIDL Files:
+  - ICameraDeviceUser: Provides Camera Service AIDL interface to CameraDevice with the following main features:
+    - Camera Device Management: disconnect(), submitRequest(), cancelRequest()
+    - Stream Management: createStream(), deleteStream(), createInputStream(), getInputSurface()
+    - Camera Operations Control:waitUntilIdle(), flush(), prepare2(), tearDown()
+  - ICameraService: Provides Camera Service AIDL interface to CameraManager with the following main features:
+    - Camera Device Management: getNumberOfCameras(), getCameraInfo(), connectDevice()
+    - Listener and Event Handling: addListener(), removeListener(), notifySystemEvent(), notifyDisplayConfigurationChange()
+    - Stream Configuration and Session Management: getConcurrentCameraIds(), getCameraCharacteristics()
+  - ICameraServiceListener: The interface is designed to inform CameraManager about dynamic changes in camera availability and camera access priorities.
+    - onStatusChanged(), onPhysicalCameraStatusChanged(), onCameraAccessPrioritiesChanged(), onCameraOpened(), onCameraClosed()
+  - ICameraDeviceCallbacks: The interface is designed to inform CamerDevice about callback notifications related to camera device events.
+    - Device Error Handling: onDeviceError(), Notifies about various camera device errors using error codes and additional capture result information.
+    - Device State Notifications: onDeviceIdle(), Notifies when the camera device transitions to the idle state.
+    - Capture Events: onCaptureStarted(), onResultReceived()
+  - Stream and Request Handling: onPrepared(), onRepeatingRequestError(), onRequestQueueEmpty.
 
+- HAL Files:
