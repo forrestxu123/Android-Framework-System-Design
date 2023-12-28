@@ -636,21 +636,21 @@ Key Components:
   - CaptureRequest
     -  Key: A Key is used to do capture request field lookups with CaptureRequest#get or to set fields with CaptureRequest.Builder#set(Key, Object).       
     - Build:
-      - void addTarget(Surface outputTarget): Add a surface to the list of targets for this request
-      - void build():Build a request using the current target Surfaces and settings.
-      - void set(CaptureRequest.Key<T> key, T value): 
-   - isReprocess(): Determine if this is a reprocess capture request.
- - SessionConfiguration: 
-   - SessionConfiguration(int sessionType, List<OutputConfiguration> outputs, Executor executor, CameraCaptureSession.StateCallback callback):  Create a new SessionConfiguration. The session type. Value is SESSION_REGULAR, or SESSION_HIGH_SPEED,  The executor which should be used to invoke the callback. OutputConfiguration is created by passing Surface object.
+       - void addTarget(Surface outputTarget): Add a surface to the list of targets for this request
+       - void build():Build a request using the current target Surfaces and settings.
+       - void set(CaptureRequest.Key<T> key, T value): 
+     - isReprocess(): Determine if this is a reprocess capture request.
+  - SessionConfiguration: 
+     - SessionConfiguration(int sessionType, List<OutputConfiguration> outputs, Executor executor, CameraCaptureSession.StateCallback callback):  Create a new SessionConfiguration. The session type. Value is SESSION_REGULAR, or SESSION_HIGH_SPEED,  The executor which should be used to invoke the callback. OutputConfiguration is created by passing Surface object.
   - CameraCaptureSession:
      - StateCallback 
         - void onConfigureFailed(CameraCaptureSession session): Called if the session cannot be configured as requested.
         - void	onConfigured(CameraCaptureSession session): Called when the camera device has finished configuring itself, and the session can start processing capture requests.
-    - CaptureCallback
+     - CaptureCallback
         -  void onCaptureCompleted (CameraCaptureSession session, CaptureRequest request, TotalCaptureResult result)
         -  onCaptureFailed (CameraCaptureSession session,  CaptureRequest request,  CaptureFailure failure)
-    - void capture(CaptureRequest request, CameraCaptureSession.CaptureCallback listener, Handler handler): Submit a request for an image to be captured by the camera device.
-    - void close(): Close this capture session asynchronously.
+     - void capture(CaptureRequest request, CameraCaptureSession.CaptureCallback listener, Handler handler): Submit a request for an image to be captured by the camera device.
+     - void close(): Close this capture session asynchronously.
 The sample code below uses the listed API to create a camera preview session, capture still images, and close the camera device.
 
 ```c
