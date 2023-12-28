@@ -948,3 +948,7 @@ public class SensorActivity extends AppCompatActivity implements SensorEventList
 
 ```
 
+ See the design diagram below for more information about Android Sensor Framework:
+
+ <img src="sensor.png" alt="Sensor"/>
+
