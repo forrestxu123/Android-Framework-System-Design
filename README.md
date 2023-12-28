@@ -628,7 +628,8 @@ Key Components:
       - void onDisconnected(CameraDevice camera): The method called when a camera device is no longer available for use.
       - void onError(CameraDevice camera, int error): The method called when a camera device has encountered a serious error.
       - void onOpened(CameraDevice camera): The method called when a camera device has finished opening.
-   - CaptureRequest.Builder: createCaptureRequest (int templateType): Create a CaptureRequest.Builder for new capture requests, initialized with templateType for a target use case using one of the  TEMPLATE_PREVIEW, TEMPLATE_STILL_CAPTURE, TEMPLATE_RECORD or TEMPLATE_VIDEO_SNAPSHOT as value.
+   - CaptureRequest.Builder:
+   - createCaptureRequest (int templateType): Create a CaptureRequest.Builder for new capture requests, initialized with templateType for a target use case using one of the  TEMPLATE_PREVIEW, TEMPLATE_STILL_CAPTURE, TEMPLATE_RECORD or TEMPLATE_VIDEO_SNAPSHOT as value.
    - void createCaptureSession(SessionConfiguration config): Create a new CameraCaptureSession using a SessionConfiguration helper object that aggregates all supported parameters.
    - void close(): Close the connection to this camera device as quickly as possible.
    - int getId(): Get the ID of this camera device.
@@ -640,14 +641,14 @@ Rect cropRectangle = new Rect(0, 0, 640, 480);
 captureRequestBuilder.set(SCALER_CROP_REGION, cropRectangle);
 
 ```          
-     - Build
+    - Build
        - void addTarget(Surface outputTarget): Add a surface to the list of targets for this request
        - void build():Build a request using the current target Surfaces and settings.
        - void set(CaptureRequest.Key<T> key, T value): 
-     - isReprocess(): Determine if this is a reprocess capture request. 
-  - SessionConfiguration: 
-     - SessionConfiguration(int sessionType, List<OutputConfiguration> outputs, Executor executor, CameraCaptureSession.StateCallback callback):  Create a new SessionConfiguration. The session type. Value is SESSION_REGULAR, or SESSION_HIGH_SPEED,  The executor which should be used to invoke the callback. OutputConfiguration is create bt passing Surface object.
-  - CameraCaptureSession:
+    - isReprocess(): Determine if this is a reprocess capture request. 
+ - SessionConfiguration: 
+     - SessionConfiguration(int sessionType, List<OutputConfiguration> outputs, Executor executor, CameraCaptureSession.StateCallback callback):  Create a new SessionConfiguration. The session type. Value is SESSION_REGULAR, or SESSION_HIGH_SPEED,  The executor which should be used to invoke the callback. OutputConfiguration is created by passing Surface object.
+ - CameraCaptureSession:
      - StateCallback 
         - void onConfigureFailed(CameraCaptureSession session): Called if the session cannot be configured as requested.
         - void	onConfigured(CameraCaptureSession session): Called when the camera device has finished configuring itself, and the session can start processing capture requests.
