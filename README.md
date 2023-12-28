@@ -851,8 +851,11 @@ protected void onPause() {
  See image buffer flow diagram below for information about how image is rendered:
  <img src="camera2.png" alt="Android Graphic"/>
 
+ <a name="F"></a>
 ##  6 Android Sensor Framework
 
+The Android Sensor Framework provides developers with access to a variety of sensors embedded in Android devices. These sensors enable applications to gather information about the device's physical environment, user movements, and other relevant data. The framework offers a consistent API for interacting with sensors, making it easier for developers to create applications that respond to changes in the device's surroundings.
 
-
+Key Components:
+- 
  
