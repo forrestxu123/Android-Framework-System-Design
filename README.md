@@ -22,30 +22,7 @@ The key components we are going to introduce include:
 
 [- Android Sensor Framework:](#f)  
 
-- Android Booting Process:   //TODO: 
-
-- Android Connectivity Framework:  //TODO: 
-
-- Android Installation/Package Framework:  //TODO: 
-
-- Android Activity Manager:  //TODO: 
-
-- Android Runtime:  //TODO: 
-
-- Android WindowManager: //TODO:  
-
-- Performance Optimization:  //TODO: 
-
-- Battery Usage and Power Management:  //TODO: 
-
-- Resource Management:  //TODO: 
-
-- Jetpack Compose//TODO: 
-
-- Coroutine //TODO: 
-
-- ViewModel //TODO: 
-(Note: This document is a work in progress and will be continually updated.)
+(Note: This document is a work in progress and will be continually updated. In the future, it will include detailed information on Android Booting Process, Android Connectivity Framework, Android Installation/Package Framework, Android Activity Manager, Android Runtime, Android WindowManager, Performance Optimization, Battery Usage and Power Management, Resource Management, Jetpack Compose, Coroutine, ViewModel, and more )
 
  <a name="a"></a>
  
