@@ -36,12 +36,12 @@ Understanding the intricacies of crash events is crucial for developers to effec
     val file = File(Environment.getExternalStorageDirectory(), "example.txt")
     val inputStream = FileInputStream(file)  // FileNotFoundException
 ```
-  SecurityException: 
+   - SecurityException: 
 ```c
         val uri = Uri.parse("content://com.android.contacts/data/1")
         val inputStream = contentResolver.openInputStream(uri) 
 ```
- ArrayIndexOutOfBoundsException:
+   - ArrayIndexOutOfBoundsException:
 ```c
         val androidVersions = arrayOf("Jelly Bean", "KitKat", "Lollipop", "Marshmallow")
         val version = androidVersions[10] 
@@ -52,18 +52,18 @@ Understanding the intricacies of crash events is crucial for developers to effec
   char* ptr = nullptr;
   int value = *ptr; // This line will crash and result in a segmentation fault
 ```
-   - Out-of-Bounds Memory Access
+    - Out-of-Bounds Memory Access
 ```c
   int arr[5];
   int value = arr[10]; // This line goes out of bounds and may cause a crash
 ```
-  - Division by Zero
+    - Division by Zero
 ```c
   int numerator = 88;
   int denominator = 0;
   int result = numerator / denominator; // This line will crash and result in a segmentation fault
 ```
-   - Dangling Pointer Access
+    - Dangling Pointer Access
 ```c
   int* dynamicInt = new int(88);
   
