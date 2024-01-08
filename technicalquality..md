@@ -24,4 +24,5 @@ This document serves as an exhaustive guide for achieving technical quality exce
 ## 1 Stability
 Stability is foundational for a seamless and reliable experience in Android development. It is a cornerstone for the overall functionality and success of Android applications, preventing disruptions such as crashes, ANR, and Low Memory. This section will delve into the principles of issue identification, monitoring strategies, and problem resolution to help readers ensure the robustness of their Android projects
 
-###1.1 Crash
+### 1.1 Crash
+
