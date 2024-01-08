@@ -60,7 +60,7 @@ Understanding the intricacies of crash events is crucial for developers to effec
     ```c
     int arr[5];
     int value = arr[10]; // This line goes out of bounds and may cause a crash
-   ```
+    ```
 
   - Division by Zero
     ```c
