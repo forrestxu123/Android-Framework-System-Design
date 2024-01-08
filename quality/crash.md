@@ -36,12 +36,12 @@ Understanding the intricacies of crash events is crucial for developers to effec
     val file = File(Environment.getExternalStorageDirectory(), "example.txt")
     val inputStream = FileInputStream(file)  // FileNotFoundException
 ```
-   - SecurityException: 
+    - SecurityException: 
 ```c
         val uri = Uri.parse("content://com.android.contacts/data/1")
         val inputStream = contentResolver.openInputStream(uri) 
 ```
-   - ArrayIndexOutOfBoundsException:
+    - ArrayIndexOutOfBoundsException:
 ```c
         val androidVersions = arrayOf("Jelly Bean", "KitKat", "Lollipop", "Marshmallow")
         val version = androidVersions[10] 
