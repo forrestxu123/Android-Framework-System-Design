@@ -32,58 +32,58 @@ Handling and resolving crashes are essential in software development and for mai
 Understanding the intricacies of crash events is crucial for developers to effectively address and prevent them. See below sample code snippets in Kotlin, and C/C++ for common scenarios where crashes occur:
 - Kotlin:
   - FileNotFoundException: 
-```c
+    ```c
     val file = File(Environment.getExternalStorageDirectory(), "example.txt")
     val inputStream = FileInputStream(file)  // FileNotFoundException
-```
+    ```
 
-   - SecurityException: 
-```c
-        val uri = Uri.parse("content://com.android.contacts/data/1")
-        val inputStream = contentResolver.openInputStream(uri) 
-```
+  - SecurityException: 
+    ```c
+    val uri = Uri.parse("content://com.android.contacts/data/1")
+    val inputStream = contentResolver.openInputStream(uri) 
+    ```
 
-   - ArrayIndexOutOfBoundsException:
-```c
-        val androidVersions = arrayOf("Jelly Bean", "KitKat", "Lollipop", "Marshmallow")
-        val version = androidVersions[10] 
-```
+  - ArrayIndexOutOfBoundsException:
+    ```c
+    val androidVersions = arrayOf("Jelly Bean", "KitKat", "Lollipop", "Marshmallow")
+    val version = androidVersions[10] 
+    ```
 
 - C/C++
-   - Null Pointer Dereference
-```c
-  char* ptr = nullptr;
-  int value = *ptr; // This line will crash and result in a segmentation fault
-```
+  - Null Pointer Dereference
+    ```c
+    char* ptr = nullptr;
+    int value = *ptr; // This line will crash and result in a segmentation fault
+    ```
 
-   - Out-of-Bounds Memory Access
-```c
-  int arr[5];
-  int value = arr[10]; // This line goes out of bounds and may cause a crash
-```
+  - Out-of-Bounds Memory Access
+    ```c
+    int arr[5];
+    int value = arr[10]; // This line goes out of bounds and may cause a crash
+   ```
 
-   - Division by Zero
-```c
-  int numerator = 88;
-  int denominator = 0;
-  int result = numerator / denominator; // This line will crash and result in a segmentation fault
-```
+  - Division by Zero
+    ```c
+    int numerator = 88;
+    int denominator = 0;
+    int result = numerator / denominator; // This line will crash and result in a segmentation fault
+    ```
 
-   - Dangling Pointer Access
-```c
-  int* dynamicInt = new int(88);
+  - Dangling Pointer Access
+    ```c
+    int* dynamicInt = new int(88);
   
-   // Assign the pointer to another variable
-  int* anotherPointer = dynamicInt;
-  delete dynamicInt;
+    // Assign the pointer to another variable
+    int* anotherPointer = dynamicInt;
+    delete dynamicInt;
   
-  // Access the memory through the other pointer (dangling pointer),This may cause a crash or undefined behavior
-  std::cout << *anotherPointer << std::endl;
+    // Access the memory through the other pointer (dangling pointer),This may cause a crash or undefined behavior
+    std::cout << *anotherPointer << std::endl;
   
-  // Free the memory again (double deletion),This may cause a crash or undefined behavior
-  delete anotherPointer;
-  return 0;
-```
+    // Free the memory again (double deletion),This may cause a crash or undefined behavior
+    delete anotherPointer;
+    return 0;
+    ```
 4. Android Application Crash
 Description:
 An Android application may crash due to various reasons. One common scenario is an unhandled exception in the application code.
