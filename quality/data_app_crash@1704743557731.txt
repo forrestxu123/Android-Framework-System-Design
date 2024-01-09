@@ -37,7 +37,7 @@ Caused by: java.lang.SecurityException: Permission Denial: opening provider com.
 	at android.content.ContentResolver.openTypedAssetFileDescriptor(ContentResolver.java:2027)
 	at android.content.ContentResolver.openAssetFileDescriptor(ContentResolver.java:1858)
 	at android.content.ContentResolver.openInputStream(ContentResolver.java:1528)
-	at com.codelabs.composetutorial.MainActivity.onCreate(MainActivity.kt:58)
+	at com.codelabs.composetutorial.MainActivity.onCreate(MainActivity.kt:54)
 	at android.app.Activity.performCreate(Activity.java:8595)
 	at android.app.Activity.performCreate(Activity.java:8573)
 	at android.app.Instrumentation.callActivityOnCreate(Instrumentation.java:1456)
