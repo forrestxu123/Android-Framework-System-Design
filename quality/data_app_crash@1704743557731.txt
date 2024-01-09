@@ -1,0 +1,52 @@
+Process: com.codelabs.composetutorial
+PID: 24725
+UID: 10217
+Frozen: false
+Flags: 0x20e8bf46
+Package: com.codelabs.composetutorial v1 (1.0)
+Foreground: Yes
+Process-Runtime: 442
+Build: google/sdk_gphone64_x86_64/emu64xa:14/UPB4.230623.005/10442412:userdebug/dev-keys
+Crash-Handler: com.android.internal.os.RuntimeInit$KillApplicationHandler
+Loading-Progress: 1.0
+Dropped-Count: 0
+
+java.lang.RuntimeException: Unable to start activity ComponentInfo{com.codelabs.composetutorial/com.codelabs.composetutorial.MainActivity}: java.lang.SecurityException: Permission Denial: opening provider com.android.providers.contacts.ContactsProvider2 from ProcessRecord{a3ccbec 24725:com.codelabs.composetutorial/u0a217} (pid=24725, uid=10217) requires android.permission.READ_CONTACTS or android.permission.WRITE_CONTACTS
+	at android.app.ActivityThread.performLaunchActivity(ActivityThread.java:3782)
+	at android.app.ActivityThread.handleLaunchActivity(ActivityThread.java:3922)
+	at android.app.servertransaction.LaunchActivityItem.execute(LaunchActivityItem.java:103)
+	at android.app.servertransaction.TransactionExecutor.executeCallbacks(TransactionExecutor.java:139)
+	at android.app.servertransaction.TransactionExecutor.execute(TransactionExecutor.java:96)
+	at android.app.ActivityThread$H.handleMessage(ActivityThread.java:2443)
+	at android.os.Handler.dispatchMessage(Handler.java:106)
+	at android.os.Looper.loopOnce(Looper.java:205)
+	at android.os.Looper.loop(Looper.java:294)
+	at android.app.ActivityThread.main(ActivityThread.java:8176)
+	at java.lang.reflect.Method.invoke(Native Method)
+	at com.android.internal.os.RuntimeInit$MethodAndArgsCaller.run(RuntimeInit.java:552)
+	at com.android.internal.os.ZygoteInit.main(ZygoteInit.java:971)
+Caused by: java.lang.SecurityException: Permission Denial: opening provider com.android.providers.contacts.ContactsProvider2 from ProcessRecord{a3ccbec 24725:com.codelabs.composetutorial/u0a217} (pid=24725, uid=10217) requires android.permission.READ_CONTACTS or android.permission.WRITE_CONTACTS
+	at android.os.Parcel.createExceptionOrNull(Parcel.java:3057)
+	at android.os.Parcel.createException(Parcel.java:3041)
+	at android.os.Parcel.readException(Parcel.java:3024)
+	at android.os.Parcel.readException(Parcel.java:2966)
+	at android.app.IActivityManager$Stub$Proxy.getContentProvider(IActivityManager.java:5906)
+	at android.app.ActivityThread.acquireProvider(ActivityThread.java:7309)
+	at android.app.ContextImpl$ApplicationContentResolver.acquireUnstableProvider(ContextImpl.java:3668)
+	at android.content.ContentResolver.acquireUnstableProvider(ContentResolver.java:2542)
+	at android.content.ContentResolver.openTypedAssetFileDescriptor(ContentResolver.java:2027)
+	at android.content.ContentResolver.openAssetFileDescriptor(ContentResolver.java:1858)
+	at android.content.ContentResolver.openInputStream(ContentResolver.java:1528)
+	at com.codelabs.composetutorial.MainActivity.onCreate(MainActivity.kt:58)
+	at android.app.Activity.performCreate(Activity.java:8595)
+	at android.app.Activity.performCreate(Activity.java:8573)
+	at android.app.Instrumentation.callActivityOnCreate(Instrumentation.java:1456)
+	at android.app.ActivityThread.performLaunchActivity(ActivityThread.java:3764)
+	... 12 more
+Caused by: android.os.RemoteException: Remote stack trace:
+	at com.android.server.am.ContentProviderHelper.checkAssociationAndPermissionLocked(ContentProviderHelper.java:691)
+	at com.android.server.am.ContentProviderHelper.getContentProviderImpl(ContentProviderHelper.java:287)
+	at com.android.server.am.ContentProviderHelper.getContentProvider(ContentProviderHelper.java:144)
+	at com.android.server.am.ActivityManagerService.getContentProvider(ActivityManagerService.java:6697)
+	at android.app.IActivityManager$Stub.onTransact(IActivityManager.java:2761)
+
