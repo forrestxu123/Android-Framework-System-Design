@@ -29,7 +29,7 @@ Handling and resolving crashes are essential in software development and for mai
 
 ####1.1.1  Decoding the Anatomy of Crashes
 
-Understanding the intricacies of crash events is crucial for developers to effectively address and prevent them. See below sample code snippets in Kotlin, and C/C++ for common scenarios where crashes occur:
+Understanding the details of crash events is crucial for developers to effectively address and prevent them. See below sample code snippets in Kotlin, and C/C++ for common scenarios where crashes occur:
 - Kotlin:
   - FileNotFoundException: 
     ```c
@@ -84,12 +84,44 @@ Understanding the intricacies of crash events is crucial for developers to effec
     delete anotherPointer;
     return 0;
     ```
-4. Android Application Crash
-Description:
-An Android application may crash due to various reasons. One common scenario is an unhandled exception in the application code.
 
+As we can see, one common scenario for Java/Kotlin app crashes is caused due to an uncaught Throwable. For the native side (C/C++), most crashes are related to improperly dealing with memory. Therefore, to support us in identifying, locating, monitoring, and solving the crash question, it is important for us to understand how the Android system handles crashes in both Java and native environments. Here is the main workflow related to this topic
+As we can see, a common scenario for Java/Kotlin app crashes is caused by an uncaught Throwable. For the native side (C/C++), most crashes are related to improper memory handling. Therefore, to aid in identifying, locating, monitoring, and solving crash issues, it is crucial to understand how the Android system handles crashes in both Java and native environments. Here is the main workflow related to this topic:
+- Java/Kotlin based Components ( App and System Server):
+  - 1. App sets default uncaught exception handle:
+     When an app is forked, it calls Thread.setDefaultUncaughtExceptionHandler(new KillApplicationHandler()) to set the default uncaught exception handler for all throwable or exceptions in the process using an instance of KillApplicationHandler. Now, when an uncaught exception occurs in any thread within the process, KillApplicationHandler.uncaughtException() will be called to handle that exception.
+  - 2. App sets default uncaught exception handle:
+    uncaughtException() calls the ActivityManager method handleApplicationCrash() when a throwable is not caught in the current app to request ActivityManagerService(AMS) for crash handling.
+  - 3. AMS Crash Handling:
+    AMS collects all crash information needs and sends it to DropManagerService by calling the method DropManager#addData().
+  - 4. DropManagerService creates crash log information.
+    DropManagerService receives the crash information from AMS and store crash information log file into /data/drop folder.
+  - 5. App Self-Termination Handling:
+    the App takes appropriate actions to terminate itself.
+See the java side of the following diagram for more detail.
 
 <img src="crash.png" alt="Crash"/>
+
+- Native based Components (JNI and Daemon):
+  - 1. App sets default uncaught exception handle:
+     When an app is forked, it calls Thread.setDefaultUncaughtExceptionHandler(new KillApplicationHandler()) to set the default uncaught exception handler for all throwable or exceptions in the process using an instance of KillApplicationHandler. Now, when an uncaught exception occurs in any thread within the process, KillApplicationHandler.uncaughtException() will be called to handle that exception.
+  - 2. App sets default uncaught exception handle:
+    uncaughtException() calls the ActivityManager method handleApplicationCrash() when a throwable is not caught in the current app to request ActivityManagerService(AMS) for crash handling.
+  - 3. AMS Crash Handling:
+    AMS collects all crash information needs and sends it to DropManagerService by calling the method DropManager#addData().
+  - 4. DropManagerService creates crash log information.
+    DropManagerService receives the crash information from AMS and store crash information log file into /data/drop folder.
+  - 5. App Self-Termination Handling:
+    the App takes appropriate actions to terminate itself.
+
+
+1、如何捕获崩溃（比如c++常见的野指针错误或是内存读写越界，当发生这些情况时程序不是异常退出了吗，我们如何捕获它呢）
+
+2、如何获取堆栈信息（告诉我们崩溃是哪个函数，甚至是第几行发生的，这样我们才可能重现并修改问题）
+
+3、将错误日志上传到指定服务器（这个最好办）
+
+ 
 
 ####1.1.2  Crash Analysis and Monitoring
 
