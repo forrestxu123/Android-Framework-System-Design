@@ -86,8 +86,8 @@ Understanding the details of crash events is crucial for developers to effective
     ```
 
 As we can see, one common scenario for Java/Kotlin app crashes is caused due to an uncaught Throwable. For the native side (C/C++), most crashes are related to improperly dealing with memory. Therefore, to support us in identifying, locating, monitoring, and solving the crash question, it is important for us to understand how the Android system handles crashes in both Java and native environments. Here is the main workflow related to this topic
-As we can see, a common scenario for Java/Kotlin app crashes is caused by an uncaught Throwable. For the native side (C/C++), most crashes are related to improper memory handling. Therefore, to aid in identifying, locating, monitoring, and solving crash issues, it is crucial to understand how the Android system handles crashes in both Java and native environments. Here is the main workflow related to this topic:
 - Java/Kotlin based Components ( App and System Server):
+  As we can see, a common scenario for Java/Kotlin app crashes is caused by an uncaught Throwable.  Therefore, to aid in identifying, locating, monitoring, and solving Java crash issues, it is crucial to understand how the Android system handles crashes in both Java environments. Here is the main workflow related to this topic:
   - 1. App sets default uncaught exception handle:
      When an app is forked, it calls Thread.setDefaultUncaughtExceptionHandler(new KillApplicationHandler()) to set the default uncaught exception handler for all throwable or exceptions in the process using an instance of KillApplicationHandler. Now, when an uncaught exception occurs in any thread within the process, KillApplicationHandler.uncaughtException() will be called to handle that exception.
   - 2. App sets default uncaught exception handle:
@@ -101,6 +101,24 @@ As we can see, a common scenario for Java/Kotlin app crashes is caused by an unc
 See the java side of the following diagram for more detail.
 
 <img src="crash.png" alt="Crash"/>
+
+- Native components (JNI and Daemon):
+Any native component crash will cause the kernel to issue a signal from the list below in Android:
+
+SIGABRT (Abort)
+SIGBUS (Bus Error)
+SIGFPE (Floating Point Exception)
+SIGILL (Illegal Instruction)
+SIGSEGV (Segmentation Fault)
+SIGSTKFLT (Stack Fault) to the native components.
+From the example code provided above, we can also see that most crashes on the native side (C/C++) are related to improper memory handling. To support users in analyzing crashes and memory issues, Android loads liblinker, debugged library, and libAsan (Android 8.1+) when the app is started. This loading occurs as part of the Android runtime environment and aims to enhance debugging and analysis capabilities during runtime.
+
+  - liblinker: A part of the Android runtime environment responsible for dynamic linking, loading, and unloading of shared libraries.
+  - Debugged Library: When loaded, it provides additional debugging information, aiding developers in identifying and resolving issues during runtime.
+  - libAsan (Android 8.1+): libAsan (AddressSanitizer) is a memory error detector tool that helps identify memory-related issues such as buffer overflows, use-after-free, and other memory corruptions at runtime, providing enhanced runtime debugging capabilities.
+
+When an ASan issue or crash occurs, the kernel will provide detailed information about the problem, including the location in the code where the issue happened, the type of issue (e.g., buffer overflow), and other relevant details. This information is valuable for developers to identify and fix bugs that could lead to crashes or other unexpected behavior. We will discuss this information in the next section. This section focuses on how the information of ASan issues or crashes is collected.
+We can also utilize Debugged and libAsan for our native Daemon development if necessary. 
 
 - Native based Components (JNI and Daemon):
   - 1. App sets default uncaught exception handle:
