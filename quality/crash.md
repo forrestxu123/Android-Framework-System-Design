@@ -141,7 +141,7 @@ See the native side of the above diagram for more detail. Please note that the a
 
 #### 1.1.2  Crash Analysis and Monitoring
 Crash log files play a crucial role in identifying and resolving issues in Android development. Analyzing these logs provides valuable information about the root cause of crashes, contributing to enhancements in stability and user experience. Let's proceed to analyze several crash log files using both example code and log files.
-##### 1.1.2.1  Java crash logfile
+##### 1.1.2.1  Java crash logfile analysis 
 
   We provide the following source code in MainActivity:
   ```c
@@ -173,8 +173,8 @@ As seen, one crash causes 3 exceptions, making it challenging for the reader to 
 
 - Binder IPC Failure - RemoteException
   - Description: The initial failure occurs in Binder Inter-Process Communication (IPC).
-     Cause: The IPC failure is a result of a permission issue, leading to a SecurityException.
-     Details: The RemoteException is thrown, indicating a problem in the communication channel.
+  - Cause: The IPC failure is a result of a permission issue, leading to a SecurityException.
+  - Details: The RemoteException is thrown, indicating a problem in the communication channel.
 
 - Propagation to SecurityException - Binder Proxy
   - Description: The SecurityException is detected and re-thrown in the Binder Proxy layer.
@@ -189,5 +189,54 @@ As seen, one crash causes 3 exceptions, making it challenging for the reader to 
 In a stack trace, the order of exceptions is typically determined by the order in which they were thrown. The most recently thrown exception (RuntimeException) appears at the top of the log without having a "Caused by:" prefix. The last caught exception (RemoteException) is at the bottom of the log. In this example, the root cause can be easily identified in line 54 based on the information:
   at com.codelabs.composetutorial.MainActivity.onCreate(MainActivity.kt:54)
 Normally, the presence of the current app package name (e.g., com.codelabs.composetutorial) may indicate the specific location in our code where the issue or crash occurred. Analyzing this part of the code may help identify the root cause of the problem.
+
+##### 1.1.2.2  native crash logfile analysis 
+ We provide the following source code:
+```c
+void com::example::Crasher::crash() {
+    int* nullPointer = nullptr;
+    *nullPointer = 42; // Attempting to dereference a null pointer
+}
+
+extern "C" {
+    JNIEXPORT void JNICALL
+    Java_com_example_testapp_MainActivity_runCrashThread(JNIEnv *env, jobject instance) {
+        com::example::Crasher::crash();
+    }
+}
+```
+
+Run the application including above code, we obtain the followng log infromation in /data/tombstone or logcat:
+
+```c
+*** *** *** *** *** *** *** *** *** *** *** *** *** *** *** ***
+Build fingerprint: 'google/foo/bar:10/123.456/78910:user/release-keys'
+ABI: 'arm64'
+Timestamp: 2020-02-16 11:16:31+0100
+pid: 8288, tid: 8288, name: com.example.testapp  >>> com.example.testapp <<<
+uid: 1010332
+signal 11 (SIGSEGV), code 1 (SEGV_MAPERR), fault addr 0x0
+Cause: null pointer dereference
+    x0  0000007da81396c0  x1  0000007fc91522d4  x2  0000000000000001  x3  000000000000206e
+    x4  0000007da8087000  x5  0000007fc9152310  x6  0000007d209c6c68  x7  0000007da8087000
+    x8  0000000000000000  x9  0000007cba01b660  x10 0000000000430000  x11 0000007d80000000
+    x12 0000000000000060  x13 0000000023fafc10  x14 0000000000000006  x15 ffffffffffffffff
+    x16 0000007cba01b618  x17 0000007da44c88c0  x18 0000007da943c000  x19 0000007da8087000
+    x20 0000000000000000  x21 0000007da8087000  x22 0000007fc9152540  x23 0000007d17982d6b
+    x24 0000000000000004  x25 0000007da823c020  x26 0000007da80870b0  x27 0000000000000001
+    x28 0000007fc91522d0  x29 0000007fc91522a0
+    sp  0000007fc9152290  lr  0000007d22d4e354  pc  0000007cba01b640
+
+backtrace:
+  #00  pc 0000000000042f89  /data/app/com.example.testapp/lib/arm64/libexample.so (com::example::Crasher::crash() const)
+  #01  pc 0000000000000640  /data/app/com.example.testapp/lib/arm64/libexample.so (com::example::runCrashThread())
+  #02  pc 0000000000065a3b  /system/lib/libc.so (__pthread_start(void*))
+  #03  pc 000000000001e4fd  /system/lib/libc.so (__start_thread)
+```
+We can get a lot of information such as pid, uid, app package name, crash signal , carsh coause , register information and  backtrace for us to locate crash issue.
+
+##### 1.1.2.3  ASan logfile analysis 
+see [link] (https://developer.android.com/ndk/guides/gwp-asan)  for more detail
+
 
 #### 1.1.3  Strategies to Prevent Crashes
