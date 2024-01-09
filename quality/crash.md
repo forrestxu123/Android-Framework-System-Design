@@ -84,10 +84,11 @@ Understanding the details of crash events is crucial for developers to effective
     delete anotherPointer;
     return 0;
     ```
+As we can see, a common scenario for Java/Kotlin app crashes is caused by an uncaught Throwable and most crashes on the native side (C/C++) are related to improper memory handling. Therefore, to aid in identifying, locating, monitoring, and solving Java crash issues, it is crucial to understand how the Android system handles crashes in Java environments. The following diagram shows the main work flow related to this topi:
 
+<img src="crash.png" alt="Crash"/>
+Let's explian the daigram:
 - Java/Kotlin based Components (App and System Server) Crash Handling:
-  
-  As we can see, a common scenario for Java/Kotlin app crashes is caused by an uncaught Throwable. Therefore, to aid in identifying, locating, monitoring, and solving Java crash issues, it is crucial to understand how the Android system handles crashes in Java environments. Here is the main workflow related to this topic::
   - App sets default uncaught exception handle:
      When an app is forked, it calls Thread.setDefaultUncaughtExceptionHandler(new KillApplicationHandler()) to set the default uncaught exception handler for all throwable or exceptions in the process using an instance of KillApplicationHandler. Now, when an uncaught exception occurs in any thread within the process, KillApplicationHandler.uncaughtException() will be called to handle that exception.
   - App sets default uncaught exception handle:
@@ -98,9 +99,6 @@ Understanding the details of crash events is crucial for developers to effective
     DropManagerService receives the crash information from AMS and store crash information log file into /data/system/drop folder.
   - App Self-Termination Handling:
     the App takes appropriate actions to terminate itself.
-See the java side of the following diagram for more detail.
-
-<img src="crash.png" alt="Crash"/>
 
 - Native components (JNI and Daemon) Memory Issue and Crash Handling:
 
@@ -112,7 +110,7 @@ See the java side of the following diagram for more detail.
   - SIGSEGV (Segmentation Fault)
   - SIGSTKFLT (Stack Fault)
     
-  Most crashes on the native side (C/C++) are related to improper memory handling. See some example code provided above. To support users in analyzing crashes and memory issues, Android loads liblinker, debugged library, and libAsan (Android 8.1+) when the app is started. This loading occurs as part of the Android runtime environment and aims to enhance debugging and analysis capabilities during runtime.
+  To support users in analyzing crashes and memory issues, Android loads liblinker, debugged library, and [libAsan] (https://developer.android.com/ndk/guides/gwp-asan) when the app is started. This loading occurs as part of the Android runtime environment and aims to enhance debugging and analysis capabilities during runtime.
    - liblinker: A part of the Android runtime environment responsible for dynamic linking, loading, and unloading of shared libraries.
    - Debugged Library: When loaded, it provides additional debugging information, aiding developers in identifying and resolving issues during runtime.
    - libAsan (Android 8.1+): libAsan (AddressSanitizer) is a memory error detector tool that helps identify memory-related issues such as buffer overflows, use-after-free, and other memory corruptions at runtime, providing enhanced runtime debugging capabilities.
@@ -129,15 +127,7 @@ See the java side of the following diagram for more detail.
   - DropManagerService creates crash log information.
     Similar to the handling in Java code, the crash log is put into the /data/drop folder.
 
-See the native side of the above diagram for more detail. Please note that the above workflow is available only for Android apps. However, we can also utilize Debugged and libAsan for our native Daemon development if necessary.
-
-
-1、如何捕获崩溃（比如c++常见的野指针错误或是内存读写越界，当发生这些情况时程序不是异常退出了吗，我们如何捕获它呢）
-
-2、如何获取堆栈信息（告诉我们崩溃是哪个函数，甚至是第几行发生的，这样我们才可能重现并修改问题）
-
-3、将错误日志上传到指定服务器（这个最好办）
-
+Please note that the above workflow is available only for Android apps. However, we can also utilize Debugged and libAsan for our native Daemon development if necessary.
 
 #### 1.1.2  Crash Analysis and Monitoring
 Crash log files play a crucial role in identifying and resolving issues in Android development. Analyzing these logs provides valuable information about the root cause of crashes, contributing to enhancements in stability and user experience. Let's proceed to analyze several crash log files using both example code and log files.
