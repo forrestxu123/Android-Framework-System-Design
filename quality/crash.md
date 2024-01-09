@@ -87,7 +87,7 @@ Understanding the details of crash events is crucial for developers to effective
 
 - Java/Kotlin based Components ( App and System Server):
   
-  As we can see, a common scenario for Java/Kotlin app crashes is caused by an uncaught Throwable.  Therefore, to aid in identifying, locating, monitoring, and solving Java crash issues, it is crucial to understand how the Android system handles crashes in both Java environments. Here is the main workflow related to this topic:
+  As we can see, a common scenario for Java/Kotlin app crashes is caused by an uncaught Throwable. Therefore, to aid in identifying, locating, monitoring, and solving Java crash issues, it is crucial to understand how the Android system handles crashes in Java environments. Here is the main workflow related to this topic::
   - App sets default uncaught exception handle:
      When an app is forked, it calls Thread.setDefaultUncaughtExceptionHandler(new KillApplicationHandler()) to set the default uncaught exception handler for all throwable or exceptions in the process using an instance of KillApplicationHandler. Now, when an uncaught exception occurs in any thread within the process, KillApplicationHandler.uncaughtException() will be called to handle that exception.
   - App sets default uncaught exception handle:
