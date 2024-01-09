@@ -150,7 +150,7 @@ Crash log files play a crucial role in identifying and resolving issues in Andro
         54  val inputStream = contentResolver.openInputStream(uri) // SecurityException
  ```
 
-Run the application, we obtain the followng [log infromation](data_app_crash@1704743557731.txt) in /data/system/dropbox or logcat:
+  Run the application, we obtain the followng [log infromation](data_app_crash@1704743557731.txt) in /data/system/dropbox or logcat:
 
 ```c
 java.lang.RuntimeException: Unable to start activity ComponentInfo{com.codelabs.composetutorial/com.codelabs.composetutorial.MainActivity}: java.lang.SecurityException: Permission Denial: ... 
@@ -171,18 +171,21 @@ Caused by: android.os.RemoteException: Remote stack trace:
  ```
 As seen, one crash causes 3 exceptions, making it challenging for the reader to understand. Let's provide further clarification:
 
-  - Binder IPC Failure - RemoteException
-    Description: The initial failure occurs in Binder Inter-Process Communication (IPC).
-    Cause: The IPC failure is a result of a permission issue, leading to a SecurityException.
-    Details: The RemoteException is thrown, indicating a problem in the communication channel.
-  - Propagation to SecurityException - Binder Proxy
-    Description: The SecurityException is detected and re-thrown in the Binder Proxy layer.
-    Cause: The SecurityException is the underlying issue in the IPC failure.
-    Details: The Binder Proxy, upon handling the RemoteException, identifies the embedded SecurityException and re-throws it.
-  - Exception Propagation to RuntimeException - ActivityThread
-    Description: The SecurityException further propagates up the stack, resulting in a java.lang.RuntimeException.
-    Cause: The root cause of the RuntimeException is the original SecurityException from the IPC failure.
-    Details: ActivityThread, during the launch of the activity, re-throws the received RuntimeException.
+   - Binder IPC Failure - RemoteException
+     
+     Description: The initial failure occurs in Binder Inter-Process Communication (IPC).
+     Cause: The IPC failure is a result of a permission issue, leading to a SecurityException.
+     Details: The RemoteException is thrown, indicating a problem in the communication channel.
+   - Propagation to SecurityException - Binder Proxy
+     
+     Description: The SecurityException is detected and re-thrown in the Binder Proxy layer.
+     Cause: The SecurityException is the underlying issue in the IPC failure.
+     Details: The Binder Proxy, upon handling the RemoteException, identifies the embedded SecurityException and re-throws it.
+   - Exception Propagation to RuntimeException - ActivityThread
+     
+     Description: The SecurityException further propagates up the stack, resulting in a java.lang.RuntimeException.
+     Cause: The root cause of the RuntimeException is the original SecurityException from the IPC failure.
+     Details: ActivityThread, during the launch of the activity, re-throws the received RuntimeException.
 
 In a stack trace, the order of exceptions is typically determined by the order in which they were thrown. The most recently thrown exception (RuntimeException) appears at the top of the log without having a "Caused by:" prefix. The last caught exception (RemoteException) is at the bottom of the log. In this example, the root cause can be easily identified in line 54 based on the information:
   at com.codelabs.composetutorial.MainActivity.onCreate(MainActivity.kt:54)
