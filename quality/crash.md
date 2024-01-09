@@ -141,7 +141,7 @@ See the native side of the above diagram for more detail. Please note that the a
 
 #### 1.1.2  Crash Analysis and Monitoring
 Crash log files play a crucial role in identifying and resolving issues in Android development. Analyzing these logs provides valuable information about the root cause of crashes, contributing to enhancements in stability and user experience. Let's proceed to analyze several crash log files using both example code and log files.
-- Java crash logfile
+##### 1.1.2.1  Java crash logfile
 
   We provide the following source code in MainActivity:
   ```c
@@ -171,21 +171,20 @@ Caused by: android.os.RemoteException: Remote stack trace:
  ```
 As seen, one crash causes 3 exceptions, making it challenging for the reader to understand. Let's provide further clarification:
 
-   - Binder IPC Failure - RemoteException
-     
-     Description: The initial failure occurs in Binder Inter-Process Communication (IPC).
+- Binder IPC Failure - RemoteException
+  - Description: The initial failure occurs in Binder Inter-Process Communication (IPC).
      Cause: The IPC failure is a result of a permission issue, leading to a SecurityException.
      Details: The RemoteException is thrown, indicating a problem in the communication channel.
-   - Propagation to SecurityException - Binder Proxy
-     
-     Description: The SecurityException is detected and re-thrown in the Binder Proxy layer.
-     Cause: The SecurityException is the underlying issue in the IPC failure.
-     Details: The Binder Proxy, upon handling the RemoteException, identifies the embedded SecurityException and re-throws it.
-   - Exception Propagation to RuntimeException - ActivityThread
-     
-     Description: The SecurityException further propagates up the stack, resulting in a java.lang.RuntimeException.
-     Cause: The root cause of the RuntimeException is the original SecurityException from the IPC failure.
-     Details: ActivityThread, during the launch of the activity, re-throws the received RuntimeException.
+
+- Propagation to SecurityException - Binder Proxy
+  - Description: The SecurityException is detected and re-thrown in the Binder Proxy layer.
+  - Cause: The SecurityException is the underlying issue in the IPC failure.
+  - Details: The Binder Proxy, upon handling the RemoteException, identifies the embedded SecurityException and re-throws it.
+    
+- Exception Propagation to RuntimeException - ActivityThread
+  - Description: The SecurityException further propagates up the stack, resulting in a java.lang.RuntimeException.
+  - Cause: The root cause of the RuntimeException is the original SecurityException from the IPC failure.
+  - Details: ActivityThread, during the launch of the activity, re-throws the received RuntimeException.
 
 In a stack trace, the order of exceptions is typically determined by the order in which they were thrown. The most recently thrown exception (RuntimeException) appears at the top of the log without having a "Caused by:" prefix. The last caught exception (RemoteException) is at the bottom of the log. In this example, the root cause can be easily identified in line 54 based on the information:
   at com.codelabs.composetutorial.MainActivity.onCreate(MainActivity.kt:54)
