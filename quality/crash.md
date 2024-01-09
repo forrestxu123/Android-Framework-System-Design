@@ -110,8 +110,9 @@ See the java side of the following diagram for more detail.
   - SIGFPE (Floating Point Exception)
   - SIGILL (Illegal Instruction)
   - SIGSEGV (Segmentation Fault)
-  - SIGSTKFLT (Stack Fault) to the native components.
-  From the example code provided above, we can also see that most crashes on the native side (C/C++) are related to improper memory handling. To support users in analyzing crashes and memory issues, Android loads liblinker, debugged library, and libAsan (Android 8.1+) when the app is started. This loading occurs as part of the Android runtime environment and aims to enhance debugging and analysis capabilities during runtime.
+  - SIGSTKFLT (Stack Fault)
+    
+    From the example code provided above, we can also see that most crashes on the native side (C/C++) are related to improper memory handling. To support users in analyzing crashes and memory issues, Android loads liblinker, debugged library, and libAsan (Android 8.1+) when the app is started. This loading occurs as part of the Android runtime environment and aims to enhance debugging and analysis capabilities during runtime.
 
   - liblinker: A part of the Android runtime environment responsible for dynamic linking, loading, and unloading of shared libraries.
   - Debugged Library: When loaded, it provides additional debugging information, aiding developers in identifying and resolving issues during runtime.
