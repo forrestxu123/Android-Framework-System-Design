@@ -27,7 +27,7 @@ As a key element of technical quality excellence, stability is fundamental to th
 ### 1.1 Crash
 Handling and resolving crashes are essential in software development and for maintaining system reliability. When Android products encounter crashes, they disrupt user experiences and pose a risk to data integrity and system stability. Effectively addressing crashes involves navigating through various stages, including unraveling crashes, in-depth Analysis,  monitoring, and approaches to preventing crashes. This section focuses on these aspects to provide readers with valuable insights into managing crashes, ensuring a seamless user experience, and enhancing overall system stability.
 
-####1.1.1  Decoding the Anatomy of Crashes
+#### 1.1.1  Decoding the Anatomy of Crashes
 
 Understanding the details of crash events is crucial for developers to effectively address and prevent them. See below sample code snippets in Kotlin, and C/C++ for common scenarios where crashes occur:
 - Kotlin:
@@ -85,7 +85,7 @@ Understanding the details of crash events is crucial for developers to effective
     return 0;
     ```
 
-- Java/Kotlin based Components ( App and System Server):
+- Java/Kotlin based Components (App and System Server) Crash Handling:
   
   As we can see, a common scenario for Java/Kotlin app crashes is caused by an uncaught Throwable. Therefore, to aid in identifying, locating, monitoring, and solving Java crash issues, it is crucial to understand how the Android system handles crashes in Java environments. Here is the main workflow related to this topic::
   - App sets default uncaught exception handle:
@@ -102,7 +102,7 @@ See the java side of the following diagram for more detail.
 
 <img src="crash.png" alt="Crash"/>
 
-- Native components (JNI and Daemon):
+- Native components (JNI and Daemon) Memory Issue and Crash Handling:
 
   Any native component crash will cause the kernel to issue a signal from the list below in Android:
   - SIGABRT (Abort)
