@@ -95,7 +95,7 @@ Understanding the details of crash events is crucial for developers to effective
   - AMS Crash Handling:
     AMS collects all crash information needs through handleApplicationCrashInner() and sends it to DropManagerService by calling the method DropManager#addData().
   - DropManagerService creates crash log information.
-    DropManagerService receives the crash information from AMS and store crash information log file into /data/drop folder.
+    DropManagerService receives the crash information from AMS and store crash information log file into /data/system/drop folder.
   - App Self-Termination Handling:
     the App takes appropriate actions to terminate itself.
 See the java side of the following diagram for more detail.
@@ -123,7 +123,7 @@ See the java side of the following diagram for more detail.
   - Create debuggerd dispatch pseudo thread to transfer crash issue information to the crashdump process:
     The debuggerd_signal_handler() method creates the debuggerd_dispatch_pseudo_thread. The debuggerd_dispatch_pseudo_thread creates the crashdump process and passes crash issue information to crashdump using a Pipe.
   - Log handling:
-    The crashdump uses UDS to send crash issue information to tombstoned daemon for logging and also send it to AMS for logging.
+    The crashdump uses UDS to send crash issue information to tombstoned daemon for logging and store the informatuin at /data/tombstone.  The crashdump also uses UDS to send crash issue information to AMS for logging.
   - AMS Crash Handling:
     AMS has a NativeCrashListener thread started at the System Server launch stage. It creates a UDS socket to observe the crash from the crashdump process. If it receives crash issue information from the crashdump process, it creates a NativeCrashReport thread and calls handleApplicationCrashInner() for further handling.
   - DropManagerService creates crash log information.
@@ -141,17 +141,52 @@ See the native side of the above diagram for more detail. Please note that the a
  
 
 #### 1.1.2  Crash Analysis and Monitoring
-Crash log files are crucial for identifying and resolving issues in Android applications. Analyzing these logs provides valuable insights into the root cause of application crashes, helping developers improve the stability and user experience. Here are the key steps to understand and manage crash log files:
-- Identify the Crash Cause: Locate the stack trace to find the exception type and crash location.
-- Read the Exception: Understand the specific exception type to guide your troubleshooting.
-- Locate in the Code: Identify your code in the stack trace to pinpoint the crash location.
-- Analyze Variables and Values: Examine variable values in the stack trace to understand the application's state.
-- Check External Libraries: Investigate third-party libraries for potential issues.
-- Use Crash Reporting Tools: Integrate tools like Firebase Crashlytics for automated crash reporting.
-- Reproduce the Issue: Try to replicate the crash scenario on a test device or emulator.
-- Note Version and Device Info: Record device model and Android version details for context.
-- Continuous Improvement: Utilize crash reports for ongoing app improvements and monitor for patterns.
-Understanding crash log files is a fundamental skill for Android developers, enabling them to deliver more robust and reliable applications. Regularly reviewing crash reports and addressing identified issues contributes to a positive user experience and overall app success.
+Crash log files play a crucial role in identifying and resolving issues in Android development. Analyzing these logs provides valuable insights into the root cause of crashes, facilitating improvements in stability and user experience. Following the introduction on reading a crash log file through example code, we will proceed to analyze several crash log files.
+- Java crash logfile
+  We provide the following source code in MainActivity:
+  ```c
+        52  val contentResolver = contentResolver
+        53  val uri = Uri.parse("content://com.android.contacts/data/1")
+        54  val inputStream = contentResolver.openInputStream(uri) // SecurityException
+ ```
+Run the application, we obtain the followng [log infromation](data_app_crash@1704743557731.txt) in /data/system/dropbox or logcat:
+```c
+java.lang.RuntimeException: Unable to start activity ComponentInfo{com.codelabs.composetutorial/com.codelabs.composetutorial.MainActivity}: java.lang.SecurityException: Permission Denial: ... 
+	at android.app.ActivityThread.performLaunchActivity(ActivityThread.java:3782)
+	at android.app.ActivityThread.handleLaunchActivity(ActivityThread.java:3922)
+...
+	at com.android.internal.os.ZygoteInit.main(ZygoteInit.java:971)
+Caused by: java.lang.SecurityException: Permission Denial: opening provider ...
+	at android.os.Parcel.createExceptionOrNull(Parcel.java:3057)
+	at android.os.Parcel.createException(Parcel.java:3041)
+...
+	at android.content.ContentResolver.openInputStream(ContentResolver.java:1528)
+	at com.codelabs.composetutorial.MainActivity.onCreate(MainActivity.kt:54)
+...
+Caused by: android.os.RemoteException: Remote stack trace:
+	at com.android.server.am.ContentProviderHelper.checkAssociationAndPermissionLocked(ContentProviderHelper.java:691)
+	at com.android.server.am.ContentProviderHelper.getContentProviderImpl(ContentProviderHelper.java:287)
+	at com.android.server.am.ContentProviderHelper.getContentProvider(ContentProviderHelper.java:144)
+	at com.android.server.am.ActivityManagerService.getContentProvider(ActivityManagerService.java:6697)
+	at android.app.IActivityManager$Stub.onTransact(IActivityManager.java:2761)
+ ```
+As seen, one crash causes 3 exceptions, making it challenging for the reader to understand. Let's provide further clarification:
 
+- Binder IPC Failure - RemoteException
+  Description: The initial failure occurs in Binder Inter-Process Communication (IPC).
+  Cause: The IPC failure is a result of a permission issue, leading to a SecurityException.
+  Details: The RemoteException is thrown, indicating a problem in the communication channel.
+- Propagation to SecurityException - Binder Proxy
+  Description: The SecurityException is detected and re-thrown in the Binder Proxy layer.
+  Cause: The SecurityException is the underlying issue in the IPC failure.
+  Details: The Binder Proxy, upon handling the RemoteException, identifies the embedded SecurityException and re-throws it.
+- Exception Propagation to RuntimeException - ActivityThread
+  Description: The SecurityException further propagates up the stack, resulting in a java.lang.RuntimeException.
+  Cause: The root cause of the RuntimeException is the original SecurityException from the IPC failure.
+  Details: ActivityThread, during the launch of the activity, re-throws the received RuntimeException.
+
+In a stack trace, the order of exceptions is typically determined by the order in which they were thrown. The most recently thrown exception (RuntimeException) appears at the top of the log without having a "Caused by:" prefix. The last caught exception (RemoteException) is at the bottom of the log. In this example, the root cause can be easily identified in line 54 based on the information:
+  at com.codelabs.composetutorial.MainActivity.onCreate(MainActivity.kt:54)
+Normally, the presence of the current app package name (e.g., com.codelabs.composetutorial) may indicate the specific location in our code where the issue or crash occurred. Analyzing this part of the code may help identify the root cause of the problem.
 
 #### 1.1.3  Strategies to Prevent Crashes
