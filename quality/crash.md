@@ -112,26 +112,16 @@ See the java side of the following diagram for more detail.
   - SIGSEGV (Segmentation Fault)
   - SIGSTKFLT (Stack Fault)
     
-From the example code provided above, we can also see that most crashes on the native side (C/C++) are related to improper memory handling. To support users in analyzing crashes and memory issues, Android loads liblinker, debugged library, and libAsan (Android 8.1+) when the app is started. This loading occurs as part of the Android runtime environment and aims to enhance debugging and analysis capabilities during runtime.
+  From the example code provided above, we can also see that most crashes on the native side (C/C++) are related to improper memory handling. To support users in analyzing crashes and memory issues, Android loads liblinker, debugged library, and libAsan (Android 8.1+) when the app is started. This loading occurs as part of the Android runtime environment and aims to enhance debugging and analysis capabilities during runtime.
 
-  - liblinker: A part of the Android runtime environment responsible for dynamic linking, loading, and unloading of shared libraries.
-  - Debugged Library: When loaded, it provides additional debugging information, aiding developers in identifying and resolving issues during runtime.
-  - libAsan (Android 8.1+): libAsan (AddressSanitizer) is a memory error detector tool that helps identify memory-related issues such as buffer overflows, use-after-free, and other memory corruptions at runtime, providing enhanced runtime debugging capabilities.
+   - liblinker: A part of the Android runtime environment responsible for dynamic linking, loading, and unloading of shared libraries.
+   - Debugged Library: When loaded, it provides additional debugging information, aiding developers in identifying and resolving issues during runtime.
+   - libAsan (Android 8.1+): libAsan (AddressSanitizer) is a memory error detector tool that helps identify memory-related issues such as buffer overflows, use-after-free, and other memory corruptions at runtime, providing enhanced runtime debugging capabilities.
 
-When an ASan issue or crash occurs, the kernel will provide detailed information about the problem, including the location in the code where the issue happened, the type of issue (e.g., buffer overflow), and other relevant details. This information is valuable for developers to identify and fix bugs that could lead to crashes or other unexpected behavior. We will discuss this information in the next section. This section focuses on how the information of ASan issues or crashes is collected.
+  When an ASan issue or crash occurs, the kernel will provide detailed information about the problem, including the location in the code where the issue happened, the type of issue (e.g., buffer overflow), and other relevant details. This information is valuable for developers to identify and fix bugs that could lead to crashes or other unexpected behavior. We will discuss this information in the next section. This section focuses on how the information of ASan issues or crashes is collected.  Here is the main workflow related to this topic:
+
+
 We can also utilize Debugged and libAsan for our native Daemon development if necessary. 
-
-- Native based Components (JNI and Daemon):
-  - 1. App sets default uncaught exception handle:
-     When an app is forked, it calls Thread.setDefaultUncaughtExceptionHandler(new KillApplicationHandler()) to set the default uncaught exception handler for all throwable or exceptions in the process using an instance of KillApplicationHandler. Now, when an uncaught exception occurs in any thread within the process, KillApplicationHandler.uncaughtException() will be called to handle that exception.
-  - 2. App sets default uncaught exception handle:
-    uncaughtException() calls the ActivityManager method handleApplicationCrash() when a throwable is not caught in the current app to request ActivityManagerService(AMS) for crash handling.
-  - 3. AMS Crash Handling:
-    AMS collects all crash information needs and sends it to DropManagerService by calling the method DropManager#addData().
-  - 4. DropManagerService creates crash log information.
-    DropManagerService receives the crash information from AMS and store crash information log file into /data/drop folder.
-  - 5. App Self-Termination Handling:
-    the App takes appropriate actions to terminate itself.
 
 
 1、如何捕获崩溃（比如c++常见的野指针错误或是内存读写越界，当发生这些情况时程序不是异常退出了吗，我们如何捕获它呢）
