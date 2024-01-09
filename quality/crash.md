@@ -84,9 +84,10 @@ Understanding the details of crash events is crucial for developers to effective
     delete anotherPointer;
     return 0;
     ```
-As we can see, a common scenario for Java/Kotlin app crashes is caused by an uncaught Throwable and most crashes on the native side (C/C++) are related to improper memory handling. Therefore, to aid in identifying, locating, monitoring, and solving Java crash issues, it is crucial to understand how the Android system handles crashes in Java environments. The following diagram shows the main work flow related to this topi:
+As we can see, a common scenario for Java/Kotlin app crashes is caused by an uncaught throwable/exception and most crashes on the native side (C/C++) are related to improper memory handling. Therefore, to aid in identifying, locating, monitoring, and solving Java crash issues, it is crucial to understand how the Android system handles crashes in Java environments. The following diagram shows the main work flow related to this topic:
 
 <img src="crash.png" alt="Crash"/>
+
 Let's explian the daigram:
 - Java/Kotlin based Components (App and System Server) Crash Handling:
   - App sets default uncaught exception handle:
