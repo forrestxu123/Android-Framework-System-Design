@@ -262,7 +262,8 @@ int main() {
     delete dynamicMemory; // Attempting to free the same memory twice
     return 0;
 }
-```c
+```
+
 This example demonstrates the issue of freeing the same memory block more than once.
 
 - Out-of-Bounds Array Access:
@@ -284,7 +285,7 @@ int main() {
     // Missing 'delete' or 'free' statement, leading to a memory leak
     return 0;
 }
-```c
+```
 Failing to free dynamically allocated memory, resulting in a memory leak.
 
 These examples illustrate common memory-related issues that libAsan can help identify during runtime by providing detailed diagnostics and crash reports. See [link] (https://developer.android.com/ndk/guides/gwp-asan)  for more detail aboutthe log file.
