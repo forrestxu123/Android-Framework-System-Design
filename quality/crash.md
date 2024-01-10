@@ -227,7 +227,66 @@ backtrace:
 We can get a lot of information such as pid, uid, app package name, crash signal , carsh coause , register information and  backtrace for us to locate crash issue.
 
 ##### 1.1.2.3  ASan logfile analysis 
-see [link] (https://developer.android.com/ndk/guides/gwp-asan)  for more detail
+libAsan (AddressSanitizer) is a memory error detector tool that helps identify memory-related issues such as buffer overflows, use-after-free, and other memory corruptions at runtime, providing enhanced runtime debugging capabilities. See memory isses like:
+Here are examples of memory-related issues that libAsan can help detect at runtime:
 
+- Buffer Overflow:
+
+```c
+int main() {
+    char buffer[5];
+    strcpy(buffer, "Overflowing the buffer");
+    return 0;
+}
+```
+This example writes more data to the buffer than it can hold, causing a buffer overflow.
+
+- Use-After-Free:
+
+```c
+int main() {
+    int* dynamicMemory = new int;
+    delete dynamicMemory;
+    *dynamicMemory = 42; // Accessing memory after it has been freed
+    return 0;
+}
+```
+In this case, the program tries to use memory after it has been deallocated using delete.
+
+- Double Free:
+
+```c
+int main() {
+    int* dynamicMemory = new int;
+    delete dynamicMemory;
+    delete dynamicMemory; // Attempting to free the same memory twice
+    return 0;
+}
+```c
+This example demonstrates the issue of freeing the same memory block more than once.
+
+- Out-of-Bounds Array Access:
+
+```c
+int main() {
+    int array[3] = {1, 2, 3};
+    int value = array[4]; // Accessing an element beyond the array bounds
+    return 0;
+}
+```c
+Attempting to access an element outside the bounds of the array.
+
+- Memory Leak:
+
+```c
+int main() {
+    int* dynamicMemory = new int;
+    // Missing 'delete' or 'free' statement, leading to a memory leak
+    return 0;
+}
+```c
+Failing to free dynamically allocated memory, resulting in a memory leak.
+
+These examples illustrate common memory-related issues that libAsan can help identify during runtime by providing detailed diagnostics and crash reports. See [link] (https://developer.android.com/ndk/guides/gwp-asan)  for more detail aboutthe log file.
 
 #### 1.1.3  Strategies to Prevent Crashes
