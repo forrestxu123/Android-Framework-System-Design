@@ -30,40 +30,33 @@ As a key element of technical quality excellence, stability is fundamental to th
 ### 1.1 Memory Challenges
 Effective memory management is crucial for achieving optimal performance, preventing crashes, and delivering a seamless user experience in Android products. This section delves into memory management principles in both Java and C/C++, and introduces essential memory monitoring tools along with effective resolution approaches.
 
-#### 1.1.1 Memory Principles in Java
-In the Java environment, memory management relies on a garbage collector. It is crucial for developers to understand object lifecycle management and avoid unnecessary object retention. By allowing the garbage collector to reclaim memory efficiently, developers can prevent memory leaks and maintain optimal application performance. 
-
+#### 1.1.1 Memory Management Principles in Java
+In the Java environment, memory management relies on a garbage collector. It is crucial for developers to understand object lifecycle management and avoid unnecessary object retention. By allowing the garbage collector to reclaim memory efficiently, developers can prevent memory leaks and maintain optimal application performance.
 Android employs a memory management strategy leveraging Young Generation garbage collection. In its runtime environments, both the predecessor Dalvik Virtual Machine and the current Android Runtime (ART) adopt principles aligned with Young Generation garbage collection to enhance memory efficiency. Here's a high-level overview of the Young Generation garbage collection process:
 
-Young Generation:
+- Young Generation Space:
+  The Young Generation Space is divided into three spaces: Eden space and two survivor spaces (S0 and S1). Eden is where new objects are initially allocated and referenced by local variables in the stack or static variables in the method area. After each garbage collection cycle, surviving objects are moved to one of the survivor spaces.
+- Minor Garbage Collection:
+  When Eden space becomes full, a minor garbage collection is triggered. The garbage collector identifies and collects unreferenced or short-lived objects in the Young Generation Space. The surviving objects are moved to one of the survivor spaces. Objects that survive several garbage collection cycles are eventually promoted to the Old Generation.
+- Old Generation:
+  The Old Generation is a memory space intended for longer-lived objects.
+- Major Garbage Collection:
+  Major garbage collection involves cleaning up the entire heap. Major GC is triggered when the Old Generation is close to full capacity or when explicit calls are made.
 
-The Young Generation is where new objects are initially allocated.
-It is further divided into three spaces: Eden space and two survivor spaces (S0 and S1).
-Objects are created in the Eden space.
-After each garbage collection cycle, surviving objects are moved to one of the survivor spaces.
-Minor (Young Generation) Garbage Collection:
+The following diagram shows the main work flow for Android  Jave garbage collection:
 
-The primary goal of Young Generation garbage collection is to identify and collect short-lived objects (young objects).
-When Eden space becomes full, a minor garbage collection (also known as a minor GC) is triggered.
-During a minor GC, the garbage collector identifies and collects unreferenced or short-lived objects in the Young Generation.
-The surviving objects are moved to one of the survivor spaces.
-Objects that survive several garbage collection cycles are eventually promoted to the Old Generation.
-Survivor Spaces and Aging:
+<img src="jvm.png" alt="JVM"/>
 
-Objects that survive a minor GC are promoted to one of the survivor spaces (S0 or S1).
-The survivor spaces are used to temporarily store surviving objects.
-Objects that survive multiple garbage collection cycles in the survivor spaces are eventually promoted to the Old Generation.
-Promotion to Old Generation:
-
-Objects that continue to survive in the Young Generation are promoted to the Old Generation.
-This promotes the generational hypothesis that states that most objects die young, and those that survive have a higher chance of living longer.
-Tuning and Configuration:
-
-The Young Generation garbage collection process can be tuned using various JVM (Java Virtual Machine) options.
-Parameters such as the size of the Young Generation, the size of the survivor spaces, and the frequency of garbage collection cycles can be adjusted to optimize performance based on application characteristics.
-By efficiently managing short-lived objects in the Young Generation, Java's garbage collector can significantly improve overall garbage collection performance. The generational garbage collection strategy leverages the observation that many objects become unreachable shortly after being created, making it more efficient to collect them in a separate, smaller space.
-
-
+Based on our analysis, common memory issues in Java include:
+- Insufficient Stack or Heap Space:
+  This can occur when there is insufficient space or a lack of continuous space in the stack or heap to allocate a Java object. Examples include a stack overflow due to excessive function calls and heap space limitations leading to failed object allocation.
+- Memory Leaks:
+  A short-lived object referencing a long-lived object can cause memory leaks. This occurs when objects are not appropriately released, leading to unnecessary memory consumption. For example activty (short lived object) has a staic member (long lived object) may cause memory leak, 
+- Excessive Memory Allocation:
+  Allocating too much memory in the stack or heap, can strain system resources and result in performance degradation.
+- Performance Impact:
+  Frequent GC cycles due to an abundance of memory allocation can impact performance negatively.
+  
  <a name="a2"></a>
  
 ### 1.2 Crash
