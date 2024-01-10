@@ -93,14 +93,19 @@ As we can see, a common scenario for Java/Kotlin app crashes is caused by an unc
 Let's explian the daigram:
 - Java/Kotlin based Components (App and System Server) Crash Handling:
   - App sets default uncaught exception handle:
+    
      When an app is forked, it calls Thread.setDefaultUncaughtExceptionHandler(new KillApplicationHandler()) to set the default uncaught exception handler for all throwable or exceptions in the process using an instance of KillApplicationHandler. Now, when an uncaught exception occurs in any thread within the process, KillApplicationHandler.uncaughtException() will be called to handle that exception.
   - App sets default uncaught exception handle:
+    
     uncaughtException() calls the ActivityManager method handleApplicationCrash() when a throwable is not caught in the current app to request ActivityManagerService(AMS) for crash handling.
   - AMS Crash Handling:
+    
     AMS collects all crash information needs through handleApplicationCrashInner() and sends it to DropManagerService by calling the method DropManager#addData().
-  - DropManagerService creates crash log information.
+  - DropManagerService creates crash log information:
+    
     DropManagerService receives the crash information from AMS and store crash information log file into /data/system/drop folder.
   - App Self-Termination Handling:
+    
     the App takes appropriate actions to terminate itself.
 
 - Native components (JNI and Daemon) Memory Issue and Crash Handling:
@@ -120,14 +125,19 @@ Let's explian the daigram:
 
   When an ASan issue or crash occurs, the kernel and ASan tool provides detailed information about the problem, including the location in the code where the issue happened, the type of issue (e.g., buffer overflow), and other relevant details. This information is valuable for developers to identify and fix bugs that could lead to crashes or other unexpected behavior. We will discuss this information in the next section. This section focuses on how the information of ASan issues or crashes is collected (To simplify, we call it a crash issue here). Here is the main workflow related to this topic:
   - Triggle crash issue handling:
+    
     The kernel triggers a crash signal or ASan triggers a memory issue. It causes the current app to use the debuggerd_signal_handler() method in the debugged library to handle crash issue information.
   - Create debuggerd dispatch pseudo thread to transfer crash issue information to the crashdump process:
+    
     The debuggerd_signal_handler() method creates the debuggerd_dispatch_pseudo_thread. The debuggerd_dispatch_pseudo_thread creates the crashdump process and passes crash issue information to crashdump using a Pipe.
   - Log handling:
+    
     The crashdump uses UDS to send crash issue information to tombstoned daemon for logging and store the informatuin at /data/tombstone.  The crashdump also uses UDS to send crash issue information to AMS for logging.
   - AMS Crash Handling:
+    
     AMS has a NativeCrashListener thread started at the System Server launch stage. It creates a UDS socket to observe the crash from the crashdump process. If it receives crash issue information from the crashdump process, it creates a NativeCrashReport thread and calls handleApplicationCrashInner() for further handling.
   - DropManagerService creates crash log information.
+    
     Similar to the handling in Java code, the crash log is put into the /data/drop folder.
 
 Please note that the above workflow is available only for Android apps. However, we can also utilize Debugged and libAsan for our native Daemon development if necessary.
