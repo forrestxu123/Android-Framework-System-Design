@@ -198,7 +198,7 @@ Normally, the presence of the current app package name (e.g., com.codelabs.compo
 ```c
 void com::example::Crasher::crash() {
     int* nullPointer = nullptr;
-    *nullPointer = 42; // Attempting to dereference a null pointer
+    *nullPointer = 88; // Attempting to dereference a null pointer
 }
 
 extern "C" {
