@@ -259,7 +259,7 @@ This example writes more data to the buffer than it can hold, causing a buffer o
 int main() {
     int* dynamicMemory = new int;
     delete dynamicMemory;
-    *dynamicMemory = 42; // Accessing memory after it has been freed
+    *dynamicMemory = 88; // Accessing memory after it has been freed
     return 0;
 }
 ```
