@@ -304,31 +304,27 @@ These examples illustrate common memory-related issues that libAsan can help ide
 
 #### 1.1.3  Crash Monitoring
 
-Android Vitals and Firebase Crashlytics are two distinct services offered by Google that only manages Java crash information. They all provides a comprehensive set of crash data and analytics to help developers diagnose and understand issues within their Android applications. for example, Metrics related to the crash, such as 
+Android Vitals and Firebase Crashlytics are two distinct services offered by Google that exclusively manage issues arising from Java code. They both provide a comprehensive set of crash data and analytics to help developers diagnose and understand issues within their Android applications. For example, metrics related to the crash include:
 
 - the number of affected users, the frequency of occurrences, and any other relevant statistical data.
 - The version of the application in which the crash occurred.
 - A detailed stack trace highlighting the sequence of method calls and the location where the crash occurred.
 - Details about the device on which the crash occurred, such as the device model, manufacturer, and operating system version.
 
-By analyzing the information provided in the services, developers can prioritize and address the most critical issues impacting their application's stability. The stack trace and associated details empower developers to understand the context of each crash, enabling efficient debugging and problem resolution.
+By analyzing the information provided in the services, developers can prioritize and address the most critical issues impacting their application's stability.
+Application developers can also develop their own custom crash monitoring system. Here is the code to collect the java crash information in application:
 
-Application developers can also develop their own custom crash monitoring system. Here is the code to collect the java crash information in application.
 class MyApplication : Application(), Thread.UncaughtExceptionHandler {
-
     private var systemUncaughtExceptionHandler: Thread.UncaughtExceptionHandler? = null
-
     override fun onCreate() {
         super.onCreate()
         systemUncaughtExceptionHandler = Thread.getDefaultUncaughtExceptionHandler()
         Thread.setDefaultUncaughtExceptionHandler(this)
         // Additional initialization code if needed
     }
-
     override fun uncaughtException(thread: Thread, ex: Throwable) {
         // Save the crash details to a file, database, or send it to a server
         saveCrashDetailsToFile(ex)
-
         val background = mainLooper.thread != thread
         if (systemUncaughtExceptionHandler != null) {
             val handler = Handler(mainLooper)
