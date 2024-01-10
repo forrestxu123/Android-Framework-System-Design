@@ -286,7 +286,7 @@ int main() {
     int value = array[4]; // Accessing an element beyond the array bounds
     return 0;
 }
-```c
+```
 Attempting to access an element outside the bounds of the array.
 
 - Memory Leak:
