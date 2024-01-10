@@ -3,11 +3,12 @@ This document serves as an exhaustive guide for achieving technical quality exce
 
 [- Stability:](#a)
 
-  - [Crash](#a1)
+  - [Memory Challenges](#a1)
+  
+  - [Crash](#a2)
 
-  - [Application not Response (ANR)](#a2)
+  - [Application not Response (ANR)](#a3)
 
-  - [Memory Challenges](#a3)
       
 [- Performance:](#b)
 
@@ -25,11 +26,50 @@ This document serves as an exhaustive guide for achieving technical quality exce
  
 ## 1 Stability
 As a key element of technical quality excellence, stability is fundamental to the overall functionality and success of Android development. Stable products play a critical role in preventing disruptions such as crashes, ANR, and memory challenges, contributing to customer satisfaction. This section will explore the principles of issue identification, effective monitoring strategies, and problem resolution, empowering readers to enhance the robustness of their Android projects.
+ <a name="a1"></a>
+### 1.1 Memory Challenges
+Effective memory management is crucial for achieving optimal performance, preventing crashes, and delivering a seamless user experience in Android products. This section delves into memory management principles in both Java and C/C++, and introduces essential memory monitoring tools along with effective resolution approaches.
 
-### 1.1 Crash
+#### 1.1.1 Memory Principles in Java
+In the Java environment, memory management relies on a garbage collector. It is crucial for developers to understand object lifecycle management and avoid unnecessary object retention. By allowing the garbage collector to reclaim memory efficiently, developers can prevent memory leaks and maintain optimal application performance. 
+
+Android employs a memory management strategy leveraging Young Generation garbage collection. In its runtime environments, both the predecessor Dalvik Virtual Machine and the current Android Runtime (ART) adopt principles aligned with Young Generation garbage collection to enhance memory efficiency. Here's a high-level overview of the Young Generation garbage collection process:
+
+Young Generation:
+
+The Young Generation is where new objects are initially allocated.
+It is further divided into three spaces: Eden space and two survivor spaces (S0 and S1).
+Objects are created in the Eden space.
+After each garbage collection cycle, surviving objects are moved to one of the survivor spaces.
+Minor (Young Generation) Garbage Collection:
+
+The primary goal of Young Generation garbage collection is to identify and collect short-lived objects (young objects).
+When Eden space becomes full, a minor garbage collection (also known as a minor GC) is triggered.
+During a minor GC, the garbage collector identifies and collects unreferenced or short-lived objects in the Young Generation.
+The surviving objects are moved to one of the survivor spaces.
+Objects that survive several garbage collection cycles are eventually promoted to the Old Generation.
+Survivor Spaces and Aging:
+
+Objects that survive a minor GC are promoted to one of the survivor spaces (S0 or S1).
+The survivor spaces are used to temporarily store surviving objects.
+Objects that survive multiple garbage collection cycles in the survivor spaces are eventually promoted to the Old Generation.
+Promotion to Old Generation:
+
+Objects that continue to survive in the Young Generation are promoted to the Old Generation.
+This promotes the generational hypothesis that states that most objects die young, and those that survive have a higher chance of living longer.
+Tuning and Configuration:
+
+The Young Generation garbage collection process can be tuned using various JVM (Java Virtual Machine) options.
+Parameters such as the size of the Young Generation, the size of the survivor spaces, and the frequency of garbage collection cycles can be adjusted to optimize performance based on application characteristics.
+By efficiently managing short-lived objects in the Young Generation, Java's garbage collector can significantly improve overall garbage collection performance. The generational garbage collection strategy leverages the observation that many objects become unreachable shortly after being created, making it more efficient to collect them in a separate, smaller space.
+
+
+ <a name="a2"></a>
+ 
+### 1.2 Crash
 Handling and resolving crashes are essential in software development and for maintaining system reliability. When Android products encounter crashes, they disrupt user experiences and pose a risk to data integrity and system stability. Effectively addressing crashes involves navigating through various stages, including unraveling crashes, crashes analysis,  crashes monitoring, and approaches to preventing crashes. This section focuses on these aspects to provide readers with valuable insights into managing crashes, ensuring a seamless user experience, and enhancing overall system stability.
 
-#### 1.1.1  Decoding the Anatomy of Crashes
+#### 1.2.1  Decoding the Anatomy of Crashes
 
 Understanding the details of crash events is crucial for developers to effectively address and prevent them. See below sample code snippets in Kotlin, and C/C++ for common scenarios where crashes occur:
 - Kotlin:
@@ -142,9 +182,9 @@ Let's explian the daigram:
 
 Please note that the above workflow is available only for Android apps. However, we can also utilize Debugged and libAsan for our native Daemon development if necessary.
 
-#### 1.1.2  Crash Analysis
+#### 1.2.2  Crash Analysis
 Crash log files play a crucial role in identifying and resolving issues in Android development. Analyzing these logs provides valuable information about the root cause of crashes, contributing to enhancements in stability and user experience. Let's proceed to analyze several crash log files using both example code and log files.
-##### 1.1.2.1  Java crash logfile analysis 
+##### 1.2.2.1  Java crash logfile analysis 
 
   We provide the following source code in MainActivity:
   ```c
@@ -193,7 +233,7 @@ In a stack trace, the order of exceptions is typically determined by the order i
   at com.codelabs.composetutorial.MainActivity.onCreate(MainActivity.kt:54)
 Normally, the presence of the current app package name (e.g., com.codelabs.composetutorial) may indicate the specific location in our code where the issue or crash occurred. Analyzing this part of the code may help identify the root cause of the problem.
 
-##### 1.1.2.2  Native Crash Log file Analysis 
+##### 1.2.2.2  Native Crash Log file Analysis 
  We provide the following source code:
 ```c
 void com::example::Crasher::crash() {
@@ -302,7 +342,7 @@ Failing to free dynamically allocated memory, resulting in a memory leak.
 
 These examples illustrate common memory-related issues that libAsan can help identify during runtime by providing detailed diagnostics and crash reports. For more detailed information about analyzing the log files generated by libAsan, you can refer to the [link] (https://developer.android.com/ndk/guides/gwp-asan) .
 
-#### 1.1.3  Crash Monitoring
+#### 1.2.3  Crash Monitoring
 
 Android Vitals and Firebase Crashlytics are two distinct services offered by Google that exclusively manage issues arising from Java code. They both provide a comprehensive set of crash data and analytics to help developers diagnose and understand issues within their Android applications. For example, metrics related to the crash include:
 
@@ -314,6 +354,7 @@ Android Vitals and Firebase Crashlytics are two distinct services offered by Goo
 By analyzing the information provided in the services, developers can prioritize and address the most critical issues impacting their application's stability.
 Application developers can also develop their own custom crash monitoring system. Here is the code to collect the java crash information in application:
 
+```c
 class MyApplication : Application(), Thread.UncaughtExceptionHandler {
     private var systemUncaughtExceptionHandler: Thread.UncaughtExceptionHandler? = null
     override fun onCreate() {
@@ -335,10 +376,10 @@ class MyApplication : Application(), Thread.UncaughtExceptionHandler {
         }
     }
 }
-
+```
 For native crash information, developers can employ the signal approach by registering signal handlers for specific signals like SIGABRT, SIGBUS, SIGFPE, SIGILL, SIGSEGV, SIGSTKFLT, SIGSYS, and SIGTRAP. When a crash occurs, the associated signal handler function is invoked, enabling developers to capture essential crash details. This method offers a granular level of control over crash reporting, allowing customization of reporting mechanisms based on the requirements. By leveraging signal handlers, developers can inject their crash reporting logic, whether it involves logging, saving crash details to a file, or transmitting information to a monitoring service. This approach is valuable for addressing native crashes and adapting crash reporting to suit specific development needs.
 
-#### 1.1.4  Strategies to Prevent Crashes
+#### 1.2.4  Strategies to Prevent Crashes
 
 In this section, we'll explore strategies to prevent crashes in Android apps and focus on coding best practices and workaround solutions to enhance stability. Solving crashes is very challenging; therefore, we recommend the following coding best practices.
 - Input Validation: Ensure thorough validation of user inputs to prevent unexpected data from causing issues.
@@ -360,3 +401,4 @@ In this section, we'll explore strategies to prevent crashes in Android apps and
 - Permission Checks: Verify and request permissions appropriately to avoid security-related crashes.
 - Network Connectivity: Safeguard against network-related crashes by checking for network availability before initiating network operations.
 
+Effective memory management is crucial for achieving optimal performance, preventing crashes, and delivering a seamless user experience in Android products. This section delves into memory management principles in both Java and C/C++, and introduces essential memory monitoring tools along with effective resolution approaches.
