@@ -56,6 +56,119 @@ Based on our analysis, common memory issues in Java include:
   Allocating too much memory in the stack or heap, can strain system resources and result in performance degradation.
 - Performance Impact:
   Frequent GC cycles due to an abundance of memory allocation can impact performance negatively.
+
+
+#### 1.1.2 Memory Management Principles in C++
+
+In C/C++, memory management relies on manual allocation and deallocation. Developers must explicitly allocate and free memory to prevent memory leaks and maintain optimal performance. Alternatively, smart pointers, such as `std::unique_ptr` and `std::shared_ptr`, can automate memory management and enhance code safety.
+
+**Stack and Heap:**
+The stack is used for local variables and function call management. In contrast, the heap is a dynamic memory region where developers manually allocate and free memory.
+
+**Common Memory Issues:**
+- *Insufficient Stack or Heap Space:* Insufficient stack space can lead to a stack overflow, often caused by excessive function calls or large local variables. Insufficient heap space can occur when there's not enough continuous memory for dynamic allocation.
+  
+- *Excessive Memory Allocation:* Allocating too much memory in the stack or heap can strain system resources, leading to performance degradation or memory fragmentation.
+  
+- *Performance Impact:* Frequent manual memory allocation and deallocation, especially if done inefficiently, can negatively impact performance.
+
+**Specific Memory Issues with Examples:**
+- *Memory Leaks:*
+  ```c
+  int main() {
+      int* dynamicMemory = new int;
+      // Missing 'delete' or 'free' statement, leading to a memory leak
+      return 0;
+  }
+
+- Memory Leaks:
+  Cause gradually increase in memory usage.
+```c
+int main() {
+    int* dynamicMemory = new int;
+    // Missing 'delete' or 'free' statement, leading to a memory leak
+    return 0;
+}
+```
+
+- Buffer Overflow:
+  
+  Potentially overwriting adjacent memory and causing undefined behavior.
+```c
+int main() {
+    char buffer[5];
+    strcpy(buffer, "Overflowing the buffer");
+    return 0;
+}
+```
+
+- Use-After-Free:
+  
+  Results in undefined behavior, potentially a crash.
+```c
+int main() {
+    int* dynamicMemory = new int;
+    delete dynamicMemory;
+    *dynamicMemory = 88; // Accessing memory after it has been freed
+    return 0;
+}
+```
+
+- Double Free:
+  Results in undefined behavior, potentially a crash
+```c
+int main() {
+    int* dynamicMemory = new int;
+    delete dynamicMemory;
+    delete dynamicMemory; 
+    return 0;
+}
+```
+
+
+- Out-of-Bounds Array Access:
+  Results in undefined behavior, potentially a cras
+```c
+int main() {
+    int array[3] = {1, 2, 3};
+    int value = array[4]; // Accessing an element beyond the array bounds
+    return 0;
+}
+```
+
+ - Null Pointer Dereference
+   
+   Causes a segmentation fault as dereferencing a null pointer is an illega
+    ```c
+    char* ptr = nullptr;
+    int value = *ptr; // This line will crash and result in a segmentation fault
+    ```
+
+  - Out-of-Bounds Memory Access
+
+    Results in undefined behavior, potentially a crash
+    ```c
+    int arr[5];
+    int value = arr[10]; // This line goes out of bounds and may cause a crash
+    ```
+
+  - Dangling Pointer Access
+    Results in undefined behavior, potentially a crash. 
+    ```c
+    int* dynamicInt = new int(88);
+  
+    // Assign the pointer to another variable
+    int* anotherPointer = dynamicInt;
+    delete dynamicInt;
+  
+    // Access the memory through the other pointer (dangling pointer),This may cause a crash or undefined behavior
+    std::cout << *anotherPointer << std::endl;
+  
+    // Free the memory again (double deletion),This may cause a crash or undefined behavior
+    delete anotherPointer;
+    return 0;
+    ```
+
   
  <a name="a2"></a>
  
