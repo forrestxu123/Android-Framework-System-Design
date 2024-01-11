@@ -77,15 +77,8 @@ The stack is used for local variables and function call management. In contrast,
 - *Performance Impact:* Frequent manual memory allocation and deallocation, especially if done inefficiently, can negatively impact performance.
 
 **Specific Memory Issues with Examples:**
-- *Memory Leaks:*
-  ```c
-  int main() {
-      int* dynamicMemory = new int;
-      // Missing 'delete' or 'free' statement, leading to a memory leak
-      return 0;
-  }
-
 - Memory Leaks:
+  
   Cause gradually increase in memory usage.
 ```c
 int main() {
@@ -119,6 +112,7 @@ int main() {
 ```
 
 - Double Free:
+  
   Results in undefined behavior, potentially a crash
 ```c
 int main() {
@@ -131,6 +125,7 @@ int main() {
 
 
 - Out-of-Bounds Array Access:
+  
   Results in undefined behavior, potentially a cras
 ```c
 int main() {
@@ -157,6 +152,7 @@ int main() {
     ```
 
   - Dangling Pointer Access
+    
     Results in undefined behavior, potentially a crash. 
     ```c
     int* dynamicInt = new int(88);
