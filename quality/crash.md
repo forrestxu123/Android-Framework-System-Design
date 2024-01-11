@@ -390,7 +390,7 @@ As we can see, a common scenario for Java/Kotlin app crashes is caused by an unc
 
 <img src="crash.png" alt="Crash"/>
 
-Let's explian the daigram:
+Let's explain the daigram:
 - Java/Kotlin based Components (App and System Server) Crash Handling:
   - App sets default uncaught exception handle:
     
