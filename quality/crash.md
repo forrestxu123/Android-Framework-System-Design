@@ -48,6 +48,10 @@ The following diagram shows the main work flow for Android  Jave garbage collect
 
 <img src="jvm.png" alt="JVM"/>
 
+We can use VisualVM tool to monitoe above work flow, the daigram below:
+
+<img src="VisualVM.png" alt="VisualVM"/>
+
 In Minor/Major Garbage Collection, strong references and weak references play the role below in GC process.
 
 Strong References: Objects referenced by strong references are considered reachable and are not eligible for garbage collection. As long as there is at least one strong reference pointing to an object, it will persist in memory.
@@ -247,8 +251,13 @@ LeakCanary logs information about the retained object, including its type and an
 
 In summary, LeakCanary uses weak references and a systematic process of garbage collection and observation to identify objects that should have been released but are still being retained in memory, signaling a potential memory leak. This automated detection simplifies the debugging process for developers.
 
-Code example"
+We take the following code as an example to locate memory leak using LeakCanary.
+
 ```c
+// Add below in gradle file
+debugImplementation ("com.squareup.leakcanary:leakcanary-android:3.0-alpha-1")
+
+
 class MainActivity : ComponentActivity() {
 
     companion object {
@@ -275,8 +284,11 @@ class MainActivity2 : AppCompatActivity() {
         MainActivity.context = this
     ...
 ```
-We can see from the code that a long lived companion object context has a short lived object MainActivity2 object. When we click back button to finsih MainActivity2, it causes memory leak.  See the memory leak information got from the test phone below:
+From the code, it's evident that a long-lived companion object context has a short-lived object MainActivity2. When we click the back button to finish MainActivity2, it causes a memory leak. The memory leak information obtained from the test phone is shown below:
+
 <img src="leak.png" alt="Leak"/>
+
+We can easily identify the cause of the memory leak from the UI on the device.
 
 ### 1.2 Crash
 Handling and resolving crashes are essential in software development and for maintaining system reliability. When Android products encounter crashes, they disrupt user experiences and pose a risk to data integrity and system stability. Effectively addressing crashes involves navigating through various stages, including unraveling crashes, crashes analysis,  crashes monitoring, and approaches to preventing crashes. This section focuses on these aspects to provide readers with valuable insights into managing crashes, ensuring a seamless user experience, and enhancing overall system stability.
