@@ -200,7 +200,7 @@ Android Memory Profiler is an essential tool for Android developers. It helps th
   
   Includes a feature for filtering data indicating potential memory leaks in Activity and Fragment instances.
 
-you can use the picture below to know:
+For example, you can use the picture below to know:
 - Java: Memory from objects allocated from Java or Kotlin code.
 - Native: Memory from objects allocated from C or C++ code.
 - Graphics: Memory used for graphics buffer queues 
@@ -213,7 +213,7 @@ you can use the picture below to know:
 
 Please see [the link](https://developer.android.google.cn/studio/profile/memory-profiler) for more information about Android Memory Profiler.
 
-  
+###### LeakCanary
 
 ### 1.2 Crash
 Handling and resolving crashes are essential in software development and for maintaining system reliability. When Android products encounter crashes, they disrupt user experiences and pose a risk to data integrity and system stability. Effectively addressing crashes involves navigating through various stages, including unraveling crashes, crashes analysis,  crashes monitoring, and approaches to preventing crashes. This section focuses on these aspects to provide readers with valuable insights into managing crashes, ensuring a seamless user experience, and enhancing overall system stability.
