@@ -48,6 +48,14 @@ The following diagram shows the main work flow for Android  Jave garbage collect
 
 <img src="jvm.png" alt="JVM"/>
 
+In Minor/Major Garbage Collection, strong references and weak references play the role below in GC process.
+
+Strong References: Objects referenced by strong references are considered reachable and are not eligible for garbage collection. As long as there is at least one strong reference pointing to an object, it will persist in memory.
+
+Weak References: Objects referenced by weak references are considered weakly reachable. This means that they are eligible for garbage collection even if weak references point to them. When the GC runs, it will collect objects that only have weak references, freeing up memory.
+
+The purpose of weak references is often to avoid memory leaks. For example, in scenarios where an object is only needed as long as there are strong references to it, using weak references allows the object to be collected when no strong references exist, preventing unnecessary memory consumption. The principal has been used by LeakCanary for detecting memory leak.
+
 Based on our analysis, common memory issues in Java include:
 - Insufficient Stack or Heap Space:
   This can occur when there is insufficient space or a lack of continuous space in the stack or heap to allocate a Java object. Examples include a stack overflow due to excessive function calls and heap space limitations leading to failed object allocation.
