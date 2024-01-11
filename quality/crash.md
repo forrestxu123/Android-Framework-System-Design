@@ -31,7 +31,7 @@ As a key element of technical quality excellence, stability is fundamental to th
 Effective memory management is crucial for achieving optimal performance, preventing crashes, and delivering a seamless user experience in Android products. This section delves into memory management principles in both Java and C/C++, and introduces essential memory monitoring tools along with effective resolution approaches.
 
 #### 1.1.1 Memory Management Principles
-##### Java
+##### Java Memory Management Principles
 In the Java environment, memory management relies on a garbage collector. It is crucial for developers to understand object lifecycle management and avoid unnecessary object retention. By allowing the garbage collector to reclaim memory efficiently, developers can prevent memory leaks and maintain optimal application performance.
 Android employs a memory management strategy leveraging Young Generation garbage collection. In its runtime environments, both the predecessor Dalvik Virtual Machine and the current Android Runtime (ART) adopt principles aligned with Young Generation garbage collection to enhance memory efficiency. Here's a high-level overview of the Young Generation garbage collection process:
 
@@ -62,7 +62,7 @@ In conclusion, a comprehensive grasp of these memory management principles empow
 
  <a name="a112"></a>
 
-##### C/C++
+##### C/C++ Memory Management Principles
 
 In C/C++, memory management relies on manual allocation and deallocation. Developers must explicitly allocate and free memory to prevent memory leaks and maintain optimal performance. Alternatively, smart pointers, such as `std::unique_ptr` and `std::shared_ptr`, can automate memory management and enhance code safety.
 
