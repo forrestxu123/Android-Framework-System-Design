@@ -172,8 +172,49 @@ In conclusion, a solid understanding of memory management principles in C++ is e
   
  <a name="a2"></a>
 
- 
- 
+ #### 1.1.2 Memory Developmemnt Tool
+
+##### Java Memory Developmemnt Tool
+
+###### Android Memory Profiler
+
+Android Memory Profiler is an essential tool for Android developers. It helps them ensure optimal memory management, overcome performance challenges, and deliver a seamless user experience on the Android platform. Here is Key Highlights below:
+
+- Memory Profiling: 
+
+   track memory usage, heap dumps,  memory events and  native code allocations and deallocations
+
+- Interface Overview:
+  
+  Provides a comprehensive timeline, controls for garbage collection and heap dump capture, and memory usage information.
+
+- Memory Counts:
+
+  provide memory counts of  Java, Native, Graphics, Stack, Code, and more. Distinguishes between allocated and deallocated objects.
+
+- Visualizing Allocations:
+
+  Presents a visual representation of memory allocations, includes object types, sizes, and allocation stack traces.
+
+- Memory Leak Detection:
+  
+  Includes a feature for filtering data indicating potential memory leaks in Activity and Fragment instances.
+
+you can use the picture below to know:
+- Java: Memory from objects allocated from Java or Kotlin code.
+- Native: Memory from objects allocated from C or C++ code.
+- Graphics: Memory used for graphics buffer queues 
+- Stack: Memory used by both native and Java stacks in your app.
+- Code: Memory that your app uses for code and resources, such as dex bytecode, optimized or compiled dex code, .so libraries, and fonts.
+- Others: Memory used by your app that the system isn't sure how to categorize.
+- Allocated: The number of Java/Kotlin objects allocated by your app.
+
+  <img src="profiler1.png" alt="Profiler"/>
+
+Please see [the link](https://developer.android.google.cn/studio/profile/memory-profiler) for more information about Android Memory Profiler.
+
+  
+
 ### 1.2 Crash
 Handling and resolving crashes are essential in software development and for maintaining system reliability. When Android products encounter crashes, they disrupt user experiences and pose a risk to data integrity and system stability. Effectively addressing crashes involves navigating through various stages, including unraveling crashes, crashes analysis,  crashes monitoring, and approaches to preventing crashes. This section focuses on these aspects to provide readers with valuable insights into managing crashes, ensuring a seamless user experience, and enhancing overall system stability.
 
