@@ -48,7 +48,7 @@ The following diagram shows the main work flow for Android  Jave garbage collect
 
 <img src="jvm.png" alt="JVM"/>
 
-We can use VisualVM tool to monitoe above work flow, the daigram below:
+We can use VisualVM tool to monitoe above work flow, please see the daigram below:
 
 <img src="VisualVM.png" alt="VisualVM"/>
 
@@ -184,9 +184,11 @@ In conclusion, a solid understanding of memory management principles in C++ is e
   
  <a name="a2"></a>
 
- #### 1.1.2 Memory Development Tool
+ #### 1.1.2 Unlocking Memory Optimization
 
-#### 1.1.2.1 Java Memory Development Tool
+ This section introduces widely used tools to help readers optimize memory in Java and C/C++.
+
+#### 1.1.2.1 Mastering Java Memory Optimization
 
 ##### Android Memory Profiler
 
@@ -289,6 +291,9 @@ From the code, it's evident that a long-lived companion object context has a sho
 <img src="leak.png" alt="Leak"/>
 
 We can easily identify the cause of the memory leak from the UI on the device.
+
+#### 1.1.2.2 Mastering C/C++ Memory Optimization
+
 
 ### 1.2 Crash
 Handling and resolving crashes are essential in software development and for maintaining system reliability. When Android products encounter crashes, they disrupt user experiences and pose a risk to data integrity and system stability. Effectively addressing crashes involves navigating through various stages, including unraveling crashes, crashes analysis,  crashes monitoring, and approaches to preventing crashes. This section focuses on these aspects to provide readers with valuable insights into managing crashes, ensuring a seamless user experience, and enhancing overall system stability.
