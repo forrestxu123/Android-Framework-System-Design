@@ -215,6 +215,33 @@ Please see [the link](https://developer.android.google.cn/studio/profile/memory-
 
 ###### LeakCanary
 
+LeakCanary is a powerful memory leak detection library for Android, offering two main features:
+- API Check: Developers can manually check any objects that are no longer needed using the provided API. The AppWatcher.objectwatch.watch() function creates a weak reference for the specified object. If this weak reference isn't cleared after a 5-second wait and garbage collection, the watched object is considered potentially leaking, and LeakCanary logs this information.
+
+- Automatic Check: LeakCanary goes beyond manual checks by automatically detecting memory leaks in specific scenarios without requiring additional code. It achieves this by leveraging Android's lifecycle hooks. The library injects calls AppWatcher.objectwatch.watch() automatically into Activity#onDestroy(), Fragment#onDestroy(), Fragment#onDestroyView(), and ViewModel#onCleared(). This automation is based on the understanding that the referenced objects are no longer needed after these lifecycle events, simplifying the process of identifying memory leaks during the development and debugging phases.
+
+Here is the princiapl of LeakCanary:
+
+- ObjectWatcher and Weak References:
+  
+When an attchedObject is watched using  AppWatcher.objectwatch.watch(attchedObject, description), LeakCanary creates a weak reference to that attchedObject.
+- Garbage Collection and Weak References:
+
+After a waiting period of 5 seconds, LeakCanary triggers garbage collection. Weak references allow the associated objects to be collected during garbage collection if there are no strong references pointing to them.
+
+- Detection of Retained Objects:
+
+If the weak reference held by the ObjectWatcher isn't cleared after garbage collection, it implies that the watched object has not been properly released from memory. This situation indicates a potential memory leak, as the object should have been collected if it was no longer needed.
+
+- Logging and Identification:
+
+LeakCanary logs information about the retained object, including its type and any provided description. Developers can inspect these logs to identify and address the source of the memory leak.
+
+In summary, LeakCanary uses weak references and a systematic process of garbage collection and observation to identify objects that should have been released but are still being retained in memory, signaling a potential memory leak. This automated detection simplifies the debugging process for developers.
+
+
+
+
 ### 1.2 Crash
 Handling and resolving crashes are essential in software development and for maintaining system reliability. When Android products encounter crashes, they disrupt user experiences and pose a risk to data integrity and system stability. Effectively addressing crashes involves navigating through various stages, including unraveling crashes, crashes analysis,  crashes monitoring, and approaches to preventing crashes. This section focuses on these aspects to provide readers with valuable insights into managing crashes, ensuring a seamless user experience, and enhancing overall system stability.
 
