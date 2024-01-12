@@ -360,7 +360,7 @@ In this section, we'll explore essential strategies to prevent memory issues in 
 
 - **Null Checks:** Perform explicit null checks, especially before accessing object references. This helps avoid NullPointerExceptions and ensures the stability of your app.
 
-- **Memory Management:** Efficiently manage object creation and destruction. Leverage tools like the Android Profiler to identify memory leaks and optimize resource usage, enhancing overall app performance.
+- **Memory Management:** Efficiently manage object creation and destruction. Leverage tools like the Android Memory Profiler and LeakCanary to identify memory leaks and optimize resource usage, enhancing overall app performance.
 
 - **Thread Safety:** Implement robust thread safety measures, particularly when dealing with shared resources. Use synchronization or concurrency mechanisms to prevent race conditions and crashes caused by improper threading.
 
@@ -602,32 +602,32 @@ class MyApplication : Application(), Thread.UncaughtExceptionHandler {
 
 #### 1.2.4  Strategies to Prevent Crashes
 
+#### 1.2.4.1 Best Practise to Prevent Crashes
 In this section, we'll explore strategies to prevent crashes in Android apps and focus on coding best practices and workaround solutions to enhance stability. Solving crashes is very challenging; therefore, we recommend the following coding best practices.
+- Best Practise to Prevent Memory Issue: See section 1.1.3.
 - Input Validation: Ensure thorough validation of user inputs to prevent unexpected data from causing issues.
-- Null Checks:Perform explicit null checks, especially before accessing object references.
-- Memory Management: Efficiently manage object creation and destruction, and consider using tools like the Android Profiler to identify memory leaks.
-- Thread Safety: Implement thread safety measures, especially when dealing with shared resources. Use synchronization or concurrency mechanisms to prevent race conditions and crashes due to improper threading.
 - Handle Configuration Changes: Account for configuration changes (e.g., screen rotations) by properly handling the lifecycle events.
 - Use Libraries Carefully: When integrating third-party libraries, ensure they are well-maintained, up-to-date, and compatible with your app's requirements.
 - Testing and QA: Conduct thorough testing, including unit tests, integration tests, and real-device testing.
 - Crash Reporting: Integrate a crash reporting tool like Firebase Crashlytics or other similar services. 
 - Regular Updates: Keep your app and its dependencies up-to-date. 
 - Error Handling: Provide meaningful error messages to users, log errors for developers, and gracefully handle unexpected scenarios to prevent crashes.
-- Static Code Analysis Tool Scaning:  the tool is essential for identifying potential issues, vulnerabilities, and maintaining code quality in software development. 
-- Thorough Code Review: Conduct regular code reviews to catch potential issues early.
 - Input Validation: Ensure thorough validation of user inputs to prevent unexpected data and potential crashes.
 - Proactive Logging: Implement comprehensive logging to record relevant information, aiding in identifying and resolving issues before they lead to crashes.
 - Asynchronous Operations: Handle asynchronous operations carefully, considering callback execution on the main thread and preventing ANR (Application Not Responding) errors.
-- Resource Management: Manage resources efficiently, releasing unused resources promptly to prevent memory leaks and ensure optimal app performance.
 - Permission Checks: Verify and request permissions appropriately to avoid security-related crashes.
 - Network Connectivity: Safeguard against network-related crashes by checking for network availability before initiating network operations.
 
-Effective memory management is crucial for achieving optimal performance, preventing crashes, and delivering a seamless user experience in Android products. This section delves into memory management principles in both Java and C/C++, and introduces essential memory monitoring tools along with effective resolution approaches.
+#### 1.2.4.2 Best Practise to Prevent Crashes
 
+Here is the sample code snippets below for preven crashes. 
+
+```c
 class BeerApp: Application(){
     val leakedViews = mutableListOf<View>()
     override fun onCreate() {
         super.onCreate()
+	initLoop()
     }
 
     private fun initLoop() {
@@ -672,3 +672,5 @@ class BeerApp: Application(){
             }
         }
     }
+```
+When mainHandler.post is called, the original loop within Looper.loop() source code in [Looper.java] (https://cs.android.com/android/platform/superproject/main/+/main:frameworks/base/core/java/android/os/Looper.java;drc=2c73f5abdf31943e12c68e75f8148c10d2abbf6a;l=160?q=Looper.JAVA&ss=android) becomes the outer loop. All code outside this loop is never executed since it contains an infinite inner loop. The code within this inner loop becomes accessible for use. Therefore, we can conditionally handle it based on specific conditions. Using this way, We can resolve many uncaught exception crash. 
