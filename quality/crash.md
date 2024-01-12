@@ -80,7 +80,7 @@ Failure to release resources like file handles or network connections can lead t
 
 Each item listed above can potentially lead to different issues, including OutOfMemoryError (OOM), degraded system performance, and unpredictable application behavior in some cases.
 
-In conclusion, a comprehensive grasp of these memory management principles empowers developers to create Java applications that not only prevent memory-related pitfalls but also maintain optimal performance. By following best practices and utilizing modern tools, developers can effectively address memory management challenges and deliver top-quality software. We will focus on these topics in later sections.
+In conclusion, a comprehensive grasp of these memory management principles empowers developers to create Java applications that not only prevent memory-related challenges but also maintain optimal performance. By following best practices and utilizing modern tools, developers can effectively address memory management challenges and deliver top-quality software. We will focus on these topics in later sections.
 
  <a name="a112"></a>
 
