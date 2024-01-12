@@ -550,8 +550,9 @@ Android Vitals and Firebase Crashlytics are two distinct services offered by Goo
 - Details about the device on which the crash occurred, such as the device model, manufacturer, and operating system version.
 
 By analyzing the information provided in the services, developers can prioritize and address the most critical issues impacting their application's stability.
-Application developers can also develop their own custom crash monitoring system. Here is the code to collect the java crash information in application:
+Application developers can also develop their own custom crash monitoring system, for example:
 
+#### Uses UncaughtExceptionHandler approch, See below sample code snippets
 ```c
 class MyApplication : Application(), Thread.UncaughtExceptionHandler {
     private var systemUncaughtExceptionHandler: Thread.UncaughtExceptionHandler? = null
@@ -575,6 +576,58 @@ class MyApplication : Application(), Thread.UncaughtExceptionHandler {
     }
 }
 ```
+#### Uses DropManager approch, See below sample code snippets
+
+```c
+public class MyBroadcastReceiver extends BroadcastReceiver {
+
+    @Override
+    public void onReceive(Context context, Intent intent) {
+        // Check if there's already an existing work with the given tag
+        boolean isWorkScheduled = isWorkScheduled(context, "my_unique_tag");
+        // If no work is scheduled, enqueue a new task
+        if (!isWorkScheduled) {
+            startWorkManager(context);
+        }
+    }
+    private void startWorkManager(Context context) {
+        // Create a Constraints object if needed
+        Constraints constraints = new Constraints.Builder()
+                // Add constraints if necessary (e.g., network connectivity)
+                .setRequiredNetworkType(NetworkType.CONNECTED)
+                .build();
+        // Create a OneTimeWorkRequest with a unique tag
+        OneTimeWorkRequest workRequest =
+                new OneTimeWorkRequest.Builder(MyWorkerClass.class)
+                        // Set constraints if needed
+                        .setConstraints(constraints)
+                        .addTag("my_unique_tag")
+                        .build();
+        // Enqueue the work request with WorkManager
+        WorkManager.getInstance(context).enqueue(workRequest);
+    }
+
+    private boolean isWorkScheduled(Context context, String tag) {
+        // Check if there's any existing work with the given tag
+        WorkContinuation workContinuation = WorkManager.getInstance(context)
+                .getWorkInfosByTag(tag);
+        ListenableFuture<List<WorkInfo>> workInfos = workContinuation.getWorkInfos();
+        try {
+            List<WorkInfo> workInfoList = workInfos.get();
+            for (WorkInfo workInfo : workInfoList) {
+                if (workInfo.getState() == WorkInfo.State.ENQUEUED ||
+                    workInfo.getState() == WorkInfo.State.RUNNING) {
+                    return true;
+                }
+            }
+        } catch (ExecutionException | InterruptedException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+}
+
+
 For native crash information, developers can employ the signal approach by registering signal handlers for specific signals like SIGABRT, SIGBUS, SIGFPE, SIGILL, SIGSEGV, SIGSTKFLT, SIGSYS, and SIGTRAP. When a crash occurs, the associated signal handler function is invoked, enabling developers to capture essential crash details. This method offers a granular level of control over crash reporting, allowing customization of reporting mechanisms based on the requirements. By leveraging signal handlers, developers can inject their crash reporting logic, whether it involves logging, saving crash details to a file, or transmitting information to a monitoring service. This approach is valuable for addressing native crashes and adapting crash reporting to suit specific development needs.
 
 #### 1.2.4  Strategies to Prevent Crashes
