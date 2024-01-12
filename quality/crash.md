@@ -16,7 +16,7 @@ This document serves as an exhaustive guide for achieving technical quality exce
     
   - [Start and loading time ](#b2)
 
-[- Battery and network usage: ](#c) 
+[- Battery and network usage Optimization: ](#c) 
 
 [- App Size Optimization:](#d)
 
