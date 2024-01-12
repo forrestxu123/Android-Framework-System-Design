@@ -1,5 +1,5 @@
 #  A Comprehensive Dive into Android Technical Quality Excellence
-This document serves as an exhaustive guide for achieving technical quality excellence in Android development. It covers critical aspects, including stability, performance, app size, and release quality, aiming to equip developers with practical knowledge to guarantee excellent outcomes. Introducing fundamental principles related to quality issues, the guide offers insights into issue identification, monitoring strategies, and problem resolution. With a focus on improving the overall development process, this resource is valuable for ensuring high-quality results in both Android applications and the Android platform. The key features we are going to introduce include:
+This document serves as a guide for achieving technical quality excellence in Android development. It offers insights into issue identification, monitoring strategies, and problem resolution,providing developers with practical knowledge to ensure excellent outcomes. The key features we will introduce include:
 
 [- Stability:](#a)
 
@@ -33,7 +33,7 @@ Effective memory management is crucial for achieving optimal performance, preven
 #### 1.1.1 Memory Management Principles
 ##### Java Memory Management Principles
 In the Java environment, memory management relies on a garbage collector. It is crucial for developers to understand object lifecycle management and avoid unnecessary object retention. By allowing the garbage collector to reclaim memory efficiently, developers can prevent memory leaks and maintain optimal application performance.
-Android employs a memory management strategy leveraging Young Generation garbage collection. In its runtime environments, both the predecessor Dalvik Virtual Machine and the current Android Runtime (ART) adopt principles aligned with Young Generation garbage collection to enhance memory efficiency. Here's a high-level overview of the Young Generation garbage collection process:
+Android employs a memory management strategy leveraging Young Generation garbage collection. In its runtime environments, Android Runtime (ART) adopt principles aligned with Young Generation garbage collection to enhance memory efficiency. Here's a high-level overview of the Young Generation garbage collection process:
 
 - Young Generation Space:
   The Young Generation Space is divided into three spaces: Eden space and two survivor spaces (S0 and S1). Eden is where new objects are initially allocated and referenced by local variables in the stack or static variables in the method area. After each garbage collection cycle, surviving objects are moved to one of the survivor spaces.
@@ -56,19 +56,29 @@ In Minor/Major Garbage Collection, strong references and weak references play th
 
 Strong References: Objects referenced by strong references are considered reachable and are not eligible for garbage collection. As long as there is at least one strong reference pointing to an object, it will persist in memory.
 
-Weak References: Objects referenced by weak references are considered weakly reachable. This means that they are eligible for garbage collection even if weak references point to them. When the GC runs, it will collect objects that only have weak references, freeing up memory.
+Weak References: Objects referenced by weak references are considered weakly reachable. This means that they are eligible for garbage collection even if weak references point to them. When the GC runs, it will collect objects that only have weak references or have no other references, freeing up memory.
 
-The purpose of weak references is often to avoid memory leaks. For example, in scenarios where an object is only needed as long as there are strong references to it, using weak references allows the object to be collected when no strong references exist, preventing unnecessary memory consumption. The principal has been used by LeakCanary for detecting memory leak.
-
+The purpose of weak references is often to avoid memory leaks. For example, in scenarios where an object is only needed as long as there are strong references to it, using weak references allows the object to be collected when no strong references exist, preventing unnecessary memory consumption. This principle has been used by LeakCanary for detecting memory leaks.
 Based on our analysis, common memory issues in Java include:
 - Insufficient Stack or Heap Space:
-  This can occur when there is insufficient space or a lack of continuous space in the stack or heap to allocate a Java object. Examples include a stack overflow due to excessive function calls and heap space limitations leading to failed object allocation.
+This can occur when there is insufficient space or a lack of continuous space in the stack or heap to allocate a Java object. Examples include a stack overflow due to excessive function calls and heap space limitations, leading to failed object allocation.
+
 - Memory Leaks:
-  A long-lived object referencing a short-lived object can cause memory leaks, because the short-lived object can not appropriately released.
+A long-lived object referencing a short-lived object can cause memory leaks because the short-lived object may not be appropriately released.
+
 - Excessive Memory Allocation:
-  Allocating too much memory in the stack or heap, can strain system resources and result in performance degradation.
-- Performance Impact:
-  Frequent GC cycles due to an abundance of memory allocation can impact performance negatively.
+Allocating too much memory in the stack or heap can strain system resources and result in performance degradation.
+
+- Garbage Collection Overhead:
+Frequent GC cycles due to an abundance of memory allocation can impact performance negatively.
+
+- Memory Corruption:
+Unintentional memory overwrites or corruption can occur, such as buffer overflow, attempting to access memory through a null reference, leading to unpredictable behavior and potential crashes.
+
+- Resource Leaks:
+Failure to release resources like file handles or network connections can lead to resource leaks, affecting overall system performance.
+
+Each item listed above can potentially lead to different issues, including OutOfMemoryError (OOM), degraded system performance, and unpredictable application behavior in some cases.
 
 In conclusion, a comprehensive grasp of these memory management principles empowers developers to create Java applications that not only prevent memory-related pitfalls but also maintain optimal performance. By following best practices and utilizing modern tools, developers can effectively address memory management challenges and deliver top-quality software. We will focus on these topics in later sections.
 
