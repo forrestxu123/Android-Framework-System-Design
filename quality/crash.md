@@ -315,6 +315,7 @@ Java_android11_test_gwpasan_MainActivity_nativeGetString(
   }
   return reinterpret_cast<jstring>(env->NewGlobalRef(return_string));
 }
+ ```
 
 This example native code has a heap use-after-free bug. It will cause the follwong log from logcate or /data/tombstone:
 ```c
