@@ -296,9 +296,10 @@ We can easily identify the cause of the memory leak from the UI on the device.
 
 In this section, we are going to focus on AddressSanitizer (ASan)/ HWAddressSanitizer (HWASan) tools. Google has intergated ASan into Android system and suggests 'Whenever possible, prefer HWASan.' However, for simplicity in this document, we will use ASan. ASan is a memory error detection tool that helps identify memory-related issues such as buffer overflows, use-after-free, and other memory corruptions at runtime, providing enhanced runtime debugging capabilities. When properly set up in the [building system](https://developer.android.com/ndk/guides/asan), the app can be run without the need to make any code changes
 We take the following code as an example to locate memory leak using ASan:
-    ```c
-jstring native_get_string(JNIEnv* env) {
-   std::string s = "Hellooooooooooooooo ";
+
+  ```c
+ jstring native_get_string(JNIEnv* env) {
+  std::string s = "Hellooooooooooooooo ";
    std::string_view sv = s + "World\n";
    // BUG:   the expression s + "World\n" creates a temporary string that has a limited lifetime.
    //  `sv` holds reference to the temporary string. After returm, `sv` holds a dangling reference to 
