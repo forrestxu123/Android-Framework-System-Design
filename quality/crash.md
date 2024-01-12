@@ -253,9 +253,9 @@ LeakCanary logs information about the retained object, including its type and an
 
 In summary, LeakCanary uses weak references and a systematic process of garbage collection and observation to identify objects that should have been released but are still being retained in memory, signaling a potential memory leak. This automated detection simplifies the debugging process for developers.
 
-We take the following code as an example to locate memory leak using LeakCanary.
+We take the following code as an example to locate memory leak using LeakCanary:
 
-    ```c
+```c
 	// Add below in gradle file
 	debugImplementation ("com.squareup.leakcanary:leakcanary-android:3.0-alpha-1")
 	
@@ -285,7 +285,7 @@ We take the following code as an example to locate memory leak using LeakCanary.
 	    override fun onCreate(savedInstanceState: Bundle?) {
 	        MainActivity.context = this
 	    ...
-    ```
+```
 From the code, it's evident that a long-lived companion object context has a short-lived object MainActivity2. When we click the back button to finish MainActivity2, it causes a memory leak. The memory leak information obtained from the test phone is shown below:
 
 <img src="leak.png" alt="Leak"/>
