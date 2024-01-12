@@ -601,9 +601,9 @@ class MyApplication : Application(), Thread.UncaughtExceptionHandler {
 #### Uses registering crash signal handlers approach, By leveraging signal handlers, developers can inject their crash reporting logic to transmit the log to a monitoring service. This approach is valuable for addressing native crashes and adapting crash reporting to suit specific development needs.
 
 #### 1.2.4  Strategies to Prevent Crashes
+In this section, we'll In this section, we'll focus on coding best practices and a solutions to enhance stability.
 
 #### 1.2.4.1 Best Practise to Prevent Crashes
-In this section, we'll explore strategies to prevent crashes in Android apps and focus on coding best practices and workaround solutions to enhance stability. Solving crashes is very challenging; therefore, we recommend the following coding best practices.
 - Best Practise to Prevent Memory Issue: See section 1.1.3.
 - Input Validation: Ensure thorough validation of user inputs to prevent unexpected data from causing issues.
 - Handle Configuration Changes: Account for configuration changes (e.g., screen rotations) by properly handling the lifecycle events.
@@ -618,9 +618,9 @@ In this section, we'll explore strategies to prevent crashes in Android apps and
 - Permission Checks: Verify and request permissions appropriately to avoid security-related crashes.
 - Network Connectivity: Safeguard against network-related crashes by checking for network availability before initiating network operations.
 
-#### 1.2.4.2 Best Practise to Prevent Crashes
+#### 1.2.4.2 A slution tp Prevent Crashes
 
-Here is the sample code snippets below for preven crashes. 
+Here is the sample code snippet for handling uncaught exceptions below:
 
 ```c
 class BeerApp: Application(){
@@ -674,3 +674,5 @@ class BeerApp: Application(){
     }
 ```
 When mainHandler.post is called, the original loop within Looper.loop() source code in [Looper.java](https://cs.android.com/android/platform/superproject/main/+/main:frameworks/base/core/java/android/os/Looper.java;drc=2c73f5abdf31943e12c68e75f8148c10d2abbf6a;l=160?q=Looper.JAVA&ss=android) becomes the outer loop. All code outside this loop is never executed since it contains an infinite inner loop. The code within this inner loop becomes accessible for use. Therefore, we can conditionally handle it based on specific conditions. Using this way, We can resolve many uncaught exception crash. 
+
+the provided solution may prevent immediate crashes and allow for custom exception handling, it comes with potential risks and should be tested and used carefully, considering the specific requirements and context of the application.
