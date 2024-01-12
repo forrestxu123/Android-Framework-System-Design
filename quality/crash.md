@@ -5,7 +5,7 @@ This document serves as an exhaustive guide for achieving technical quality exce
 
   - [Memory Challenges](#a1)
   
-  - [Crash](#a2)
+  - [Crash Challenges](#a2)
 
   - [Application not Response (ANR)](#a3)
 
