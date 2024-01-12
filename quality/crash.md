@@ -256,36 +256,36 @@ In summary, LeakCanary uses weak references and a systematic process of garbage 
 We take the following code as an example to locate memory leak using LeakCanary.
 
     ```c
-// Add below in gradle file
-debugImplementation ("com.squareup.leakcanary:leakcanary-android:3.0-alpha-1")
-
-
-class MainActivity : ComponentActivity() {
-
-    companion object {
-        lateinit var context : Context
-    }
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState){
-	...
-   }
-}
-
-// in MainActivity, we have a botton defined as below:
-
- Button({
-        val intent = Intent(context, MainActivity2::class.java)
-        context.startActivity(intent)
-}) {
-        ...
-}
-
-class MainActivity2 : AppCompatActivity() {
-    ...
-    override fun onCreate(savedInstanceState: Bundle?) {
-        MainActivity.context = this
-    ...
- ```
+	// Add below in gradle file
+	debugImplementation ("com.squareup.leakcanary:leakcanary-android:3.0-alpha-1")
+	
+	
+	class MainActivity : ComponentActivity() {
+	
+	    companion object {
+	        lateinit var context : Context
+	    }
+	    override fun onCreate(savedInstanceState: Bundle?) {
+	        super.onCreate(savedInstanceState){
+		...
+	   }
+	}
+	
+	// in MainActivity, we have a botton defined as below:
+	
+	 Button({
+	        val intent = Intent(context, MainActivity2::class.java)
+	        context.startActivity(intent)
+	}) {
+	        ...
+	}
+	
+	class MainActivity2 : AppCompatActivity() {
+	    ...
+	    override fun onCreate(savedInstanceState: Bundle?) {
+	        MainActivity.context = this
+	    ...
+    ```
 From the code, it's evident that a long-lived companion object context has a short-lived object MainActivity2. When we click the back button to finish MainActivity2, it causes a memory leak. The memory leak information obtained from the test phone is shown below:
 
 <img src="leak.png" alt="Leak"/>
