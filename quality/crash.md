@@ -717,7 +717,7 @@ Key Components:
 <img src="../graphic.png" alt="Android Graphic"/>
  <a name="e"></a>
 
-#### 2.1.1  Analysis of Graphic Rendering Performance and Issues:
+#### 2.1.2  Analysis of Graphic Rendering Performance and Issues:
 
 An example of the frame rendering process work flow is illustrated in the diagram below:
 
@@ -755,3 +755,5 @@ Therefore, we conclude that:
 - Longer gray color block implies that the rendering thread is blocked by a lock.
 - Longer blue color block may indicate insufficient system resources, causing the rendering thread to wait for an extended period before execution.
 - Longer orange color block suggests that the rendering thread has been blocked due to excessive Input/Output (IO) operations.
+
+- #### 2.1.3 Graphic Performance Monitoring:
