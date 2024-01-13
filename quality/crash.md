@@ -714,6 +714,6 @@ Key Components:
   - Release a displayed buffer for the composer to inject the stream.
 - Gralloc: Gralloc is responsible for allocating and managing graphics memory. These buffers are seamlessly interacted with by components such as Surface, SurfaceFlinger, and Hardware Composer, ensuring a cohesive and optimized visual experience on Android devices.
 
-<img src="./graphic.png" alt="Android Graphic"/>
+<img src="../graphic.png" alt="Android Graphic"/>
  <a name="e"></a>
  
