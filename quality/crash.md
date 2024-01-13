@@ -716,4 +716,8 @@ Key Components:
 
 <img src="../graphic.png" alt="Android Graphic"/>
  <a name="e"></a>
- 
+
+Key Iuu
+- If the frame rate is fast than display rate, it may causes stuttering,  freezing and Tearing 
+- If the frame rate is slow than display rate, it may cause frame drop.
+
