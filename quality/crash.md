@@ -731,7 +731,7 @@ In the diagram, arrows represent refresh time, and the blocks represent frame ti
 
 Different colors in the diagram represent the time spent by a rendering thread in each state in the diagram. The numbers (1 and 2) in the diagram correspond to the actual frame numbers during processing. There could be multiple blocks shared with the same number. The sum of the time spent for the same number means the actual time spent processing a frame.
 
-In the diagram, some frames have dropped because of different factors. This may cause screen tearing and stuttering, impacting the smoothness of animations or visual output:
+In the diagram, some frames have dropped because of different factors. This may cause screen tearing or stuttering, impacting the smoothness of animations or visual output:
 
 - **Screen Tearing:**
   Screen tearing occurs when two different frames are displayed on the screen simultaneously, leading to a visible horizontal line or "tear" between them.
