@@ -729,7 +729,13 @@ In the diagram, arrows represent refresh time, and the blocks represent frame ti
  - **Frame Rates:**
   Frame rate indicates how many frames are processed per second in the rendering process.
 
-Different colors in the diagram represent the time spent by a rendering thread in each state in the diagram. The numbers (1 and 2) in the diagram correspond to the actual frame numbers during processing. There could be multiple blocks shared with the same number. The sum of the time spent for the same number means the actual time spent processing a frame.
+Different colors in the diagram represent the time spent by a rendering thread in each state in the diagram.  
+- Green: Running state. The rendering thread is in the process to draw the frame.
+- Blue: Runnable state. The thread is available to run but isn't currently scheduled.
+- Gray: Lock block state. The thread is blocked on a mutex lock.
+- Orange: I/O block state. The thread is blocked on I/O.
+- Purple: STW block state. The thread is blocked by STW due to GC.
+The numbers (1 and 2) in the diagram correspond to the actual frame numbers during processing. There could be multiple blocks shared with the same number. The sum of the time spent for the same number means the actual time spent processing a frame.
 
 In the diagram, some frames have dropped because of different factors. This may cause screen tearing or stuttering, impacting the smoothness of animations or visual output:
 
@@ -758,3 +764,9 @@ Therefore, we conclude that:
 - Longer orange color block suggests that the rendering thread has been blocked due to excessive Input/Output (IO) operations.
 
 #### 2.1.3 Graphic Performance Monitoring:
+
+We can use [systrace](https://developer.android.com/topic/performance/tracing/) and [perfetto](https://perfetto.dev/) to monitor frame rendering performance information. See the diagram below from systrace:
+
+<img src="renderthread" alt="Frame Rendering"/>
+
+Where a red small circle with the text 'f' inside means the frame is dropped, and a green small circle with the text 'f' inside means the frame is drawn correctly. The line between 'deliverInputEvent' and 'UI Thread' has been marked with the colors we introduced in section 2.1.2, representing different states for render thread.
