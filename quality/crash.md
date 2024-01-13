@@ -756,4 +756,4 @@ Therefore, we conclude that:
 - Longer blue color block may indicate insufficient system resources, causing the rendering thread to wait for an extended period before execution.
 - Longer orange color block suggests that the rendering thread has been blocked due to excessive Input/Output (IO) operations.
 
-- #### 2.1.3 Graphic Performance Monitoring:
+#### 2.1.3 Graphic Performance Monitoring:
