@@ -719,7 +719,7 @@ Key Components:
 
 #### 2.1.1  The performance analysis for graphic renedering:
 
-The frame rendering process is illustrated in the diagram below:
+An example of the frame rendering process work flow is illustrated in the diagram below:
 
 <img src="graphicdropframe.png" alt="Rendering"/>
 
