@@ -767,6 +767,6 @@ Therefore, we conclude that:
 
 We can use [systrace](https://developer.android.com/topic/performance/tracing/) and [perfetto](https://perfetto.dev/) to monitor frame rendering performance information. See the diagram below from systrace:
 
-<img src="renderthread" alt="Frame Rendering"/>
+<img src="renderthread.png" alt="Frame Rendering"/>
 
 Where a red small circle with the text 'f' inside means the frame is dropped, and a green small circle with the text 'f' inside means the frame is drawn correctly. The line between 'deliverInputEvent' and 'UI Thread' has been marked with the colors we introduced in section 2.1.2, representing different states for render thread.
