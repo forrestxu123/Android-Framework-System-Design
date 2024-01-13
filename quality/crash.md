@@ -717,7 +717,35 @@ Key Components:
 <img src="../graphic.png" alt="Android Graphic"/>
  <a name="e"></a>
 
-Key Iuu
-- If the frame rate is fast than display rate, it may causes stuttering,  freezing and Tearing 
-- If the frame rate is slow than display rate, it may cause frame drop.
+#### 2.1.1  The performance analysis for graphic renedering:
+
+The frame rendering process is illustrated in the diagram below:
+
+<img src="graphicdropframe.png" alt="Rendering"/>
+
+In the diagram, arrows represent refresh time, and the blocks represent frame time. The below is their rates definition:
+ - **Refresh Rates:**
+  Refresh rates refer to how often a display refreshes per second.
+ - **Frame Rates:**
+  Frame rate indicates how many frames are processed per second in the rendering process.
+Different colors in the diagram represent the time spent by a rendering thread in each state in the diagram. The numbers (1 and 2) in the diagram correspond to the actual frame numbers during processing. There could be multiple blocks shared with the same number. The sum of the time spent for the same number means the actual time spent processing a frame.
+
+In the diagram, some frames have dropped because of different factors. This may cause screen tearing and stuttering, impacting the smoothness of animations or visual output:
+
+- **Screen Tearing:**
+  Screen tearing occurs when two different frames are displayed on the screen simultaneously, leading to a visible horizontal line or "tear" between them.
+
+- **Stuttering:**
+  Stuttering refers to motion being stuck during animations or video playback.
+
+Fundamentally, stuttering and screen tearing occur due to the difference between frame rates and the refresh rate . The main causes are often related to the following factors:
+
+- **Overdraw:**
+  e.g., Excessive layering.
+
+- **Memory Management:**
+  e.g., Stop the world (STW) caused by GC and excessive memory allocation.
+
+- **Thread Management:**
+  e.g., Thread scheduling, I/O block, and lock block.
 
