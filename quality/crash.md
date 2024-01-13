@@ -686,3 +686,34 @@ class BeerApp: Application(){
 When mainHandler.post is called, the original loop within Looper.loop() source code in [Looper.java](https://cs.android.com/android/platform/superproject/main/+/main:frameworks/base/core/java/android/os/Looper.java;drc=2c73f5abdf31943e12c68e75f8148c10d2abbf6a;l=160?q=Looper.JAVA&ss=android) becomes the outer loop. All code outside this loop is never executed since it contains an infinite inner loop. The code within this inner loop becomes accessible for use. Therefore, we can conditionally handle it based on specific conditions. Using this way, We can resolve many uncaught exception crash. 
 
 the provided solution may prevent immediate crashes and allow for custom exception handling, it comes with potential risks and should be tested and used carefully, considering the specific requirements and context of the application.
+
+## 2 Performance
+Effective performance optimization plays a crucial role in enhancing user experiences and ensuring overall project success. By optimizing performance, developers can provide a superior user experience characterized by smooth rendering, quick user interaction responses, efficient UI navigation, and swift app start times. This section will specifically focus on the optimization of graphic rendering, start-up, and loading times. By providing insights and strategies in these areas, readers can gain the knowledge needed to elevate the performance of their Android applications, ultimately delivering a seamless and responsive user experience.
+
+### 2.1 Graphic Rendering Optimzation
+In this section, we will introduce the principles of the Android Graphic Framework, guide readers on monitoring and locating graphic issues, and provide solutions to resolve these issues. The goal is to empower readers to identify, locate, and effectively resolve rendering problems, ensuring a smoother and visually pleasing user experience.
+
+#### 2.1.1  The pricipal of Android Graphic Framework
+The Android Graphics Framework is vital for crafting engaging visual experiences on Android devices. Its key components play a crucial role in rendering and managing graphical elements, utilizing the Surface class in Image Stream Producers for seamless interaction with SurfaceFlinger to efficiently render images. This involves features such as buffer queue reuse, collaboration with the Hardware Composer and synchronization with VSYNC for optimal performance and memory efficiency.
+
+Key Components:
+
+- Image stream producers: Components that create graphic buffers, such as the image stream in the Camera, WindowManagerService, MediaPlayer, and OpenGL ES, are referred to as image stream producers. They are closely connected with a surface, enabling efficient buffer handling.
+- Rendering Tools:The Android Graphics Framework leverages rendering tools such as OpenGL ES, Skia, Vulkan, and Decoders to enhance the rendering capabilities. These tools contribute to the creation and manipulation of graphical content, further enriching the visual experience.
+- Surface: The Surface is the image stream producer component that points to the graphic buffer queue. Created and managed by SurfaceFlinger, this buffer queue is a fundamental element in the interaction between image stream producers and SurfaceFlinger. It plays a crucial role in ensuring seamless handling of graphic buffers on the client side, contributing to the overall performance of the Android Graphics Framework.
+- SurfaceFlinger: SurfaceFlinger is a crucial system service tasked with consuming currently visible surfaces and composing them onto the display. SurfaceFlinger utilizes OpenGL and the Hardware Composer to compose a collection of surfaces. Key features include::
+
+   - Vsync Integration: SurfaceFlinger seamlessly incorporates Vsync (Vertical Synchronization) features, guaranteeing smooth and synchronized rendering. This integration involves coordination with the caller in the graphics pipeline and receive Vsync event from HW Cpmposer.
+
+   - Enqueue/Dequeue Mechanism: SurfaceFlinger adeptly manages the queueing and dequeuing of surfaces in collaboration with its caller, ensuring effortless transitions and updates in graphical content.
+
+   - Collaboration with Hardware Composer(HW Composer): As an HW Composer stream producer, SurfaceFlinger shares composed buffers for HW Composer to consume.
+
+- HW Composer: The HW Composer acts as the hardware abstraction for the display subsystem. It collaborates with SurfaceFlinger to offload certain composition work from OpenGL and the GPU, contributing to lower power consumption. Therefore, the stream composer could be either SurfaceFlinger or HW Composer. The HW Composer consumes the composed stream using a 2-buffer approach as outlined below:
+  - Acquire a composed buffer from the stream composer for display.
+  - Release a displayed buffer for the composer to inject the stream.
+- Gralloc: Gralloc is responsible for allocating and managing graphics memory. These buffers are seamlessly interacted with by components such as Surface, SurfaceFlinger, and Hardware Composer, ensuring a cohesive and optimized visual experience on Android devices.
+
+<img src="graphic.png" alt="Android Graphic"/>
+ <a name="e"></a>
+ 
