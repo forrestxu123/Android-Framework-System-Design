@@ -712,7 +712,7 @@ Key Components:
 
    - Vsync Integration: SurfaceFlinger seamlessly incorporates Vsync (Vertical Synchronization) features, guaranteeing smooth and synchronized rendering. This integration involves coordination with the caller in the graphics pipeline and receive Vsync event from HW Cpmposer.
 
-   - Enqueue/Dequeue Mechanism: SurfaceFlinger adeptly manages the queueing and dequeuing of surfaces in collaboration with its caller, ensuring effortless transitions and updates in graphical content.
+   - Enqueue/Dequeue Mechanism: SurfaceFlinger manages the queueing and dequeuing of surfaces in collaboration with its caller, ensuring smooth transitions and updates in graphical content
 
    - Collaboration with Hardware Composer(HW Composer): As an HW Composer stream producer, SurfaceFlinger shares composed buffers for HW Composer to consume.
 
