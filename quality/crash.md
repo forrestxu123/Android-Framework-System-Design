@@ -742,6 +742,7 @@ Different colors in the diagram represent the time spent by a rendering thread i
 - Gray: Lock block state. The thread is blocked on a mutex lock.
 - Orange: I/O block state. The thread is blocked on I/O.
 - Purple: STW block state. The thread is blocked by STW due to GC.
+  
 The numbers (1 and 2) in the diagram correspond to the actual frame numbers during processing. There could be multiple blocks shared with the same number. The sum of the time spent for the same number means the actual time spent processing a frame.
 
 In the diagram, some frames have dropped because of different factors. This may cause screen tearing or stuttering, impacting the smoothness of animations or visual output:
