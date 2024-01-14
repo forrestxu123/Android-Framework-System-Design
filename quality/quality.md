@@ -14,7 +14,7 @@ This document serves as a guide for achieving technical quality excellence in An
 
   - [Rendering](#b1)
     
-  - Start and loading time
+  - Starting and loading time
 
 (Note: This document is a work in progress and will be continually updated. In the future, it will include ANR, Start and loading time, Battery and network usage Optimization, App Size Optimization, Security Optimization and more topic.)
 
