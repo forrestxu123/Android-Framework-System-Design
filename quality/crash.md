@@ -695,7 +695,7 @@ the provided solution may prevent immediate crashes and allow for custom excepti
 
  <a name="b"></a>
 ## 2 Performance
-Effective performance optimization plays a crucial role in enhancing user experiences and ensuring overall project success. By optimizing performance, developers can provide a superior user experience characterized by smooth rendering, quick user interaction responses, efficient UI navigation, and swift app start times. This section will specifically focus on the optimization of graphic rendering, start-up, and loading times. By providing insights and strategies in these areas, readers can gain the knowledge needed to elevate the performance of their Android applications, ultimately delivering a seamless and responsive user experience.
+Effective performance optimization plays a crucial role in enhancing user experiences and ensuring overall project success. This section will specifically focus on the optimization of graphic rendering, start-up, and loading times. By providing insights and strategies in these areas, readers can gain the knowledge needed to elevate the performance of their Android applications, ultimately delivering a seamless and responsive user experience.
  <a name="b1"></a>
 ### 2.1 Rendering
 In this section, we will introduce the principles of the Android Graphic Framework, guide readers on monitoring and locating graphic issues, and provide solutions to resolve these issues. The goal is to empower readers to identify, locate, and effectively resolve rendering problems, ensuring a smoother and visually pleasing user experience.
