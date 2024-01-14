@@ -763,9 +763,97 @@ Therefore, we conclude that:
 - Longer blue color block may indicate insufficient system resources, causing the rendering thread to wait for an extended period before execution.
 - Longer orange color block suggests that the rendering thread has been blocked due to excessive Input/Output (IO) operations.
 
-#### 2.1.3 Graphic Performance Monitoring:
+#### 2.1.3 Graphic Rendering Performance Monitoring:
 
-We can use [systrace](https://developer.android.com/topic/performance/tracing/) and [perfetto](https://perfetto.dev/) to monitor frame rendering performance information. See the diagram below from systrace:
+**Monitoring Tools**
+
+To analyze frame rendering performance, we can leverage  [systrace](https://developer.android.com/topic/performance/tracing/) and [perfetto](https://perfetto.dev/). The diagram below, extracted from systrace, illustrates frame rendering:
 
 <img src="renderthread.png" alt="Frame Rendering"/>
-Where a red small circle with the text 'f' inside means the frame is dropped, and a green small circle with the text 'f' inside means the frame is drawn correctly. The line between 'deliverInputEvent' and 'UI Thread' has been marked with the colors we introduced in section 2.1.2, representing different states for render thread.
+
+- A red circle with 'f' inside indicates a dropped frame.
+- A green circle with 'f' inside signifies a correctly drawn frame.
+- The line between 'deliverInputEvent' and 'UI Thread' is color-coded based on the states introduced in section 2.1.2, representing different states of the render thread .
+
+
+**Looper with custom logging**
+Inspect the AOSP code snippet for Looper:
+```c
+public final class Looper {
+    private Printer mLogging;
+    // Used for customized Printer for logging
+    public void setMessageLogging(@Nullable Printer printer) {
+        mLogging = printer;
+    }
+
+    public static Looper getMainLooper() {
+        ...
+    }
+
+    public static void loop() {
+        final Looper me = myLooper();
+   	...
+
+        for (;;) {
+            if (!loopOnce(me, ident, thresholdOverride)) {
+                return;
+            }
+        }
+    }
+
+   private static boolean loopOnce(final Looper me,
+            final long ident, final int thresholdOverride) {
+        Message msg = me.mQueue.next(); // Specifically, each frame rendering involves receiving a message here
+        ...
+        final Printer logging = me.mLogging;
+        if (logging != null) {
+            logging.println(">>>>> Dispatching to " + msg.target + " "
+                    + msg.callback + ": " + msg.what);
+        }
+        ...
+        token = observer.messageDispatchStarting();
+        ...
+
+        if (logging != null) {
+            logging.println("<<<<< Finished to " + msg.target + " " + msg.callback);
+        }
+        ...
+    }
+}
+```
+In this custom logging mechanism, each frame rendering results in a message being received.
+
+As we can see, each frame rendering will cause me.mQueue.next() to receive a message. The information will be logged before and after the message is processed. This approach is utilized by monitoring tools like BlockCanary. Developing a custom logging mechanism allows us to incorporate various features, such as detecting frame drops during graphic rendering, capturing stack information when a frame is dropped, and measuring navigation time when a button is clicked. However, this solution has some limitations. It is primarily focused on UI rendering and also does not take print time cost into consideration.
+
+**Use Choreographer#postFrameCallback**
+Analyzing the Choreographer class reveals the following:
+
+- postFrameCallback (Choreographer.FrameCallback callback): Posts a frame callback to run on the next frame. The callback runs once and is automatically removed.
+- Choreographer.FrameCallback#doFrame(long frameTimeNanos): Called when a new display frame is being rendered, providing the time (in nanoseconds) when the frame started rendering.
+- The difference between two consecutive frameTimeNanos values represents the time taken to render the previous frame.
+We can utilize the following code snippet to monitor frame rendering:
+
+```c
+Choreographer.getInstance().postFrameCallback(new Choreographer.FrameCallback() {
+    private long lastFrameTimeNanos = 0;
+    @Override
+    public void doFrame(long frameTimeNanos) {
+        if (lastFrameTimeNanos == 0) {
+            lastFrameTimeNanos = frameTimeNanos;
+            Choreographer.getInstance().postFrameCallback(this);
+            return;
+        }
+        double diff = (frameTimeNanos - lastFrameTimeNanos) / 1000000.0;
+        if (diff > 16.67) {
+            int dropCount = (int) (diff / 16.7);
+            if (dropCount >= 2) {
+                Log.w(TAG, dropCount + " frames have been dropped. Time difference: " + diff + " ms");
+
+            }
+        }
+        lastFrameTimeNanos = frameTimeNanos;
+        Choreographer.getInstance().postFrameCallback(this);
+    }
+});
+```
+This solution is also focused on UI rendering and also does not take print time cost into consideration.
