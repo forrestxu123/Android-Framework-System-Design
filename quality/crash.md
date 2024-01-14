@@ -38,7 +38,7 @@ Android employs a memory management strategy leveraging Young Generation garbage
 - Young Generation Space:
   The Young Generation Space is divided into three spaces: Eden space and two survivor spaces (S0 and S1). Eden is where new objects are initially allocated and referenced by local variables in the stack or static variables in the method area. After each garbage collection cycle, surviving objects are moved to one of the survivor spaces.
 - Minor Garbage Collection:
-  When Eden space becomes full, a minor garbage collection is triggered. The garbage collector identifies and collects unreferenced or short-lived objects in the Young Generation Space. The surviving objects are moved to one of the survivor spaces. Objects that survive several garbage collection cycles are eventually promoted to the Old Generation.
+  When Eden space becomes full, a minor garbage collection is triggered. The garbage collector collects unreferenced objects in the Young Generation Space. The surviving objects are moved to one of the survivor spaces. Objects that survive several garbage collection cycles are eventually promoted to the Old Generation.
 - Old Generation:
   The Old Generation is a memory space intended for longer-lived objects.
 - Major Garbage Collection:
