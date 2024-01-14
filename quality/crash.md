@@ -67,7 +67,7 @@ This can occur when there is insufficient space or a lack of continuous space in
 A long-lived object referencing a short-lived object can cause memory leaks because the short-lived object may not be appropriately released.
 
 - Excessive Memory Allocation:
-Allocating too much memory in the stack or heap can strain system resources and result in performance degradation.
+Allocating too much memory in the stack or heap can burden system resources and result in performance degradation.
 
 - Garbage Collection Overhead:
 Frequent GC cycles due to an abundance of memory allocation can impact performance negatively.
