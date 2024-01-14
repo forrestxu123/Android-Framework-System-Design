@@ -777,6 +777,7 @@ To analyze frame rendering performance, we can leverage  [systrace](https://deve
 
 
 **Looper with custom logging**
+
 Inspect the AOSP code snippet for Looper:
 ```c
 public final class Looper {
@@ -826,6 +827,7 @@ In this custom logging mechanism, each frame rendering results in a message bein
 As we can see, each frame rendering will cause me.mQueue.next() to receive a message. The information will be logged before and after the message is processed. This approach is utilized by monitoring tools like BlockCanary. Developing a custom logging mechanism allows us to incorporate various features, such as detecting frame drops during graphic rendering, capturing stack information when a frame is dropped, and measuring navigation time when a button is clicked. However, this solution has some limitations. It is primarily focused on UI rendering and also does not take print time cost into consideration.
 
 **Use Choreographer#postFrameCallback**
+
 Analyzing the Choreographer class reveals the following:
 
 - postFrameCallback (Choreographer.FrameCallback callback): Posts a frame callback to run on the next frame. The callback runs once and is automatically removed.
