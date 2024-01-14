@@ -610,7 +610,7 @@ class MyApplication : Application(), Thread.UncaughtExceptionHandler {
 ```
 #### Uses DropBoxManager approch
 
-See the lined sample code snippets [MyBroadcastReceiver.kt](MyBroadcastReceiver.kt) and [MyWorkerClass](MyWorkerClass.kt) for more information. It includes the log related with crash, ANR,  native issue and System Events ( e.g. low memory, low power). 
+See the lined sample code snippets [MyBroadcastReceiver.kt](MyBroadcastReceiver.kt) and [MyWorkerClass](MyWorkerClass.kt) for more information.  dropBoxManager.getNextEntry() returns the log related with crash, ANR,  native issue and System Events ( e.g. low memory, low power). 
 
 #### Uses registering crash signal handlers approach
 
