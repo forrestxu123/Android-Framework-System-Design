@@ -12,9 +12,9 @@ This document serves as a guide for achieving technical quality excellence in An
       
   [- Performance:](#b)
 
-    - [Rendering](#b1)
+    [- Rendering](#b1)
     
-    - Start and loading time
+    [- Start and loading time
 
 - Battery and network usage Optimization: 
 
