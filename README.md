@@ -646,7 +646,7 @@ In this secton,  we provide three approach to monitor Graphic Rendering Performa
 
 To analyze frame rendering performance, we can leverage  [systrace](https://developer.android.com/topic/performance/tracing/) and [perfetto](https://perfetto.dev/). The diagram below, extracted from systrace, illustrates frame rendering:
 
-<img src=""quality\renderthread.png" alt="Frame Rendering"/>
+<img src="quality\renderthread.png" alt="Frame Rendering"/>
 
 - A red circle with 'f' inside indicates a dropped frame.
 - A green circle with 'f' inside signifies a correctly drawn frame.
