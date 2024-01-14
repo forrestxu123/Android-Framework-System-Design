@@ -16,11 +16,11 @@ This document serves as a guide for achieving technical quality excellence in An
     
   - Start and loading time
 
-[- Battery and network usage Optimization:]()
+[- Battery and network usage Optimization:](#c)
 
-[- App Size Optimization:]()
+[- App Size Optimization:](#d)
 
-[- Security Optimization:]()
+[- Security Optimization:](#f)
 
  <a name="a"></a>
  
