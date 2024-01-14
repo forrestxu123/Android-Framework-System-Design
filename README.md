@@ -563,30 +563,180 @@ See the design diagram below for more information about Android Multimedia Frame
 
 <img src="audio.png" alt="Android Multimedia Framework Architecture"/>
  <a name="d"></a>
- 
+
 ## 4 Android Graphic framework
+In this section, we will introduce the principles of the Android Graphic Framework, guide readers on monitoring and locating graphic issues, and provide solutions to resolve these issues. The goal is to empower readers to identify, locate, and effectively resolve rendering problems, ensuring a smoother and visually pleasing user experience.
+
+###4.1  The principal of Android Graphic Framework
 The Android Graphics Framework is vital for crafting engaging visual experiences on Android devices. Its key components play a crucial role in rendering and managing graphical elements, utilizing the Surface class in Image Stream Producers for seamless interaction with SurfaceFlinger to efficiently render images. This involves features such as buffer queue reuse, collaboration with the Hardware Composer and synchronization with VSYNC for optimal performance and memory efficiency.
 
 Key Components:
 
-- Image stream producers: Components that create graphic buffers, such as the image stream in the Camera, WindowManagerService, MediaPlayer, and OpenGL ES, are referred to as image stream producers. They are intricately linked with a surface, facilitating efficient buffer handling through
-- Rendering Tools:The Android Graphics Framework leverages powerful rendering tools such as OpenGL ES, Skia, Vulkan, and Decoders to enhance the rendering capabilities. These tools contribute to the creation and manipulation of graphical content, further enriching the visual experience.
-- Surface: The Surface is the image stream producer component that points to the graphic buffer queue. Created and managed by Gralloc, this buffer queue is a fundamental element in the interaction between image stream producers, SurfaceFlinger, and Hardware Composer. It plays a crucial role in ensuring seamless handling of graphic buffers, contributing to the overall performance of the Android Graphics Framework.
-- SurfaceFlinger: SurfaceFlinger is a crucial system service tasked with consuming currently visible surfaces and composing them onto the display, leveraging information provided by Image Stream Producers. As the exclusive service authorized to modify display content, SurfaceFlinger utilizes OpenGL and the Hardware Composer to compose a collection of surfaces. Key features includes:
+- Image stream producers: Components that create graphic buffers, such as the image stream in the Camera, WindowManagerService, MediaPlayer, and OpenGL ES, are referred to as image stream producers. They are closely connected with a surface, enabling efficient buffer handling.
+- Rendering Tools:The Android Graphics Framework leverages rendering tools such as OpenGL ES, Skia, Vulkan, and Decoders to enhance the rendering capabilities. These tools contribute to the creation and manipulation of graphical content, further enriching the visual experience.
+- Surface: The Surface is the image stream producer component that points to the graphic buffer queue. Created and managed by SurfaceFlinger, this buffer queue is a fundamental element in the interaction between image stream producers and SurfaceFlinger. It plays a crucial role in ensuring seamless handling of graphic buffers on the client side, contributing to the overall performance of the Android Graphics Framework.
+- SurfaceFlinger: SurfaceFlinger is a crucial system service tasked with consuming currently visible surfaces and composing them onto the display. SurfaceFlinger utilizes OpenGL and the Hardware Composer to compose a collection of surfaces. Key features include::
 
    - Vsync Integration: SurfaceFlinger seamlessly incorporates Vsync (Vertical Synchronization) features, guaranteeing smooth and synchronized rendering. This integration involves coordination with the caller in the graphics pipeline and receive Vsync event from HW Cpmposer.
 
-   - Enqueue/Dequeue Mechanism: SurfaceFlinger adeptly manages the queueing and dequeuing of surfaces in collaboration with its caller, ensuring effortless transitions and updates in graphical content.
+   - Enqueue/Dequeue Mechanism: SurfaceFlinger manages the queueing and dequeuing of surfaces in collaboration with its caller, ensuring smooth transitions and updates in graphical content
 
-   - Acquire/Release Operations: Interactions with the Hardware Abstraction Layer (HAL) Layer entail acquiring and releasing resources, facilitating effective communication between SurfaceFlinger and the underlying hardware.
+   - Collaboration with Hardware Composer(HW Composer): As an HW Composer stream producer, SurfaceFlinger shares composed buffers for HW Composer to consume.
 
-   - Collaboration with Hardware Composer: SurfaceFlinger collaborates synergistically with the Hardware Composer (HW Composer) to efficiently compose and present graphics on the display. This collaboration is integral for optimal performance and responsiveness in rendering graphical elements.
-
-- Hardware Composer: The Hardware Composer (HW Composer) acts as the hardware abstraction for the display subsystem. It collaborates with SurfaceFlinger to offload certain composition work from OpenGL and the GPU, contributing to lower power consumption. The HW Composer supports essential events, including VSYNC, for synchronization.
-- Gralloc: Gralloc is responsible for allocating and managing graphics memory. It plays a crucial role in the efficient handling of graphic buffers, contributing to the overall performance of the Android Graphics Framework. These buffers are seamlessly interacted with by components such as Surface, SurfaceFlinger, and Hardware Composer, ensuring a cohesive and optimized visual experience on Android devices.
+- HW Composer: The HW Composer acts as the hardware abstraction for the display subsystem. It collaborates with SurfaceFlinger to offload certain composition work from OpenGL and the GPU, contributing to lower power consumption. Therefore, the stream composer could be either SurfaceFlinger or HW Composer. The HW Composer consumes the composed stream using a 2-buffer approach as outlined below:
+  - Acquire a composed buffer from the stream composer for display.
+  - Release a displayed buffer for the composer to inject the stream.
+- Gralloc: Gralloc is responsible for allocating and managing graphics memory. These buffers are seamlessly interacted with by components such as Surface, SurfaceFlinger, and Hardware Composer, ensuring a cohesive and optimized visual experience on Android devices.
 
 <img src="graphic.png" alt="Android Graphic"/>
- <a name="e"></a>
+
+
+### 4.2  Analysis of Graphic Rendering Performance and Issues:
+
+An example of the frame rendering process work flow is illustrated in the diagram below:
+
+<img src="qulity\graphicdropframe.png" alt="Rendering"/>
+
+In the diagram, arrows represent refresh time, and the blocks represent frame time. The below is their rates definition:
+ - **Refresh Rates:**
+  Refresh rates refer to how often a display refreshes per second.
+ - **Frame Rates:**
+  Frame rate indicates how many frames are processed per second in the rendering process.
+
+Different colors in the diagram represent the time spent by a rendering thread in each state in the diagram.  
+- Green: Running state. The rendering thread is in the process to draw the frame.
+- Blue: Runnable state. The thread is available to run but isn't currently scheduled.
+- Gray: Lock block state. The thread is blocked on a mutex lock.
+- Orange: I/O block state. The thread is blocked on I/O.
+- Purple: STW block state. The thread is blocked by STW due to GC.
+  
+The numbers (1 and 2) in the diagram correspond to the actual frame numbers during processing. There could be multiple blocks shared with the same number. The sum of the time spent for the same number means the actual time spent processing a frame.
+
+In the diagram, some frames have dropped because of different factors. This may cause screen tearing or stuttering, impacting the smoothness of animations or visual output:
+
+- **Screen Tearing:**
+  Screen tearing occurs when two different frames are displayed on the screen simultaneously, leading to a visible horizontal line or "tear" between them.
+
+- **Stuttering:**
+  Stuttering refers to motion being stuck during animations or video playback.
+
+Fundamentally, stuttering and screen tearing occur due to the difference between frame rates and the refresh rate . The main causes are often related to the following factors:
+
+- **Overdraw:**
+  e.g., Excessive layering.
+
+- **Memory Management:**
+  e.g., Stop the world (STW) caused by GC and excessive memory allocation.
+
+- **Thread Management:**
+  e.g., Thread scheduling, I/O block, and lock block.
+
+Therefore, we conclude that:
+- Longer green color block indicates overdraw, possibly caused by many UI layers or time-consuming code in drawing.
+- Longer purple color block suggests that your code is causing excessive memory allocation, potentially leading to Garbage Collection (GC).
+- Longer gray color block implies that the rendering thread is blocked by a lock.
+- Longer blue color block may indicate insufficient system resources, causing the rendering thread to wait for an extended period before execution.
+- Longer orange color block suggests that the rendering thread has been blocked due to excessive Input/Output (IO) operations.
+
+#### 4.3 Graphic Rendering Performance Monitoring:
+In this secton,  we provide three approach to monitor Graphic Rendering Performance.
+
+**Monitoring Tools**
+
+To analyze frame rendering performance, we can leverage  [systrace](https://developer.android.com/topic/performance/tracing/) and [perfetto](https://perfetto.dev/). The diagram below, extracted from systrace, illustrates frame rendering:
+
+<img src="renderthread.png" alt="Frame Rendering"/>
+
+- A red circle with 'f' inside indicates a dropped frame.
+- A green circle with 'f' inside signifies a correctly drawn frame.
+- The line between 'deliverInputEvent' and 'UI Thread' is color-coded based on the states introduced in section 2.1.2, representing different states of the render thread .
+
+
+**Looper with custom logging**
+
+Inspect the AOSP code snippet for Looper:
+```c
+public final class Looper {
+    private Printer mLogging;
+    // Used for customized Printer for logging
+    public void setMessageLogging(@Nullable Printer printer) {
+        mLogging = printer;
+    }
+
+    public static Looper getMainLooper() {
+        ...
+    }
+
+    public static void loop() {
+        final Looper me = myLooper();
+   	...
+
+        for (;;) {
+            if (!loopOnce(me, ident, thresholdOverride)) {
+                return;
+            }
+        }
+    }
+
+   private static boolean loopOnce(final Looper me,
+            final long ident, final int thresholdOverride) {
+        Message msg = me.mQueue.next(); // Specifically, each frame rendering involves receiving a message here
+        ...
+        final Printer logging = me.mLogging;
+        if (logging != null) {
+            logging.println(">>>>> Dispatching to " + msg.target + " "
+                    + msg.callback + ": " + msg.what);
+        }
+        ...
+        token = observer.messageDispatchStarting();
+        ...
+
+        if (logging != null) {
+            logging.println("<<<<< Finished to " + msg.target + " " + msg.callback);
+        }
+        ...
+    }
+}
+```
+In this custom logging mechanism, each frame rendering results in a message being received.
+
+As we can see, each frame rendering will cause me.mQueue.next() to receive a message. The information will be logged before and after the message is processed. This approach is utilized by monitoring tools like BlockCanary. Developing a custom logging mechanism allows us to incorporate various features, such as detecting frame drops during graphic rendering, capturing stack information when a frame is dropped, and measuring navigation time when a button is clicked. However, this solution has some limitations. It is primarily focused on UI rendering and also does not take print time cost into consideration.
+
+**Choreographer#postFrameCallback**
+
+Analyzing the Choreographer class reveals the following:
+
+- postFrameCallback (Choreographer.FrameCallback callback): Posts a frame callback to run on the next frame. The callback runs once and is automatically removed.
+- Choreographer.FrameCallback#doFrame(long frameTimeNanos): Called when a new display frame is being rendered, providing the time (in nanoseconds) when the frame started rendering.
+- The difference between two consecutive frameTimeNanos values represents the time taken to render the previous frame.
+We can utilize the following code snippet to monitor frame rendering:
+
+```c
+Choreographer.getInstance().postFrameCallback(new Choreographer.FrameCallback() {
+    private long lastFrameTimeNanos = 0;
+    @Override
+    public void doFrame(long frameTimeNanos) {
+        if (lastFrameTimeNanos == 0) {
+            lastFrameTimeNanos = frameTimeNanos;
+            Choreographer.getInstance().postFrameCallback(this);
+            return;
+        }
+        double diff = (frameTimeNanos - lastFrameTimeNanos) / 1000000.0;
+        if (diff > 16.67) {
+            int dropCount = (int) (diff / 16.7);
+            if (dropCount >= 2) {
+                Log.w(TAG, dropCount + " frames have been dropped. Time difference: " + diff + " ms");
+
+            }
+        }
+        lastFrameTimeNanos = frameTimeNanos;
+        Choreographer.getInstance().postFrameCallback(this);
+    }
+});
+```
+This solution is also focused on UI rendering and does not take print time cost into consideration.
+
+ <a name="e"></a> 
  
 ## 5 Android Camera framework
 
