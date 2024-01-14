@@ -634,7 +634,7 @@ In this section, we'll In this section, we'll focus on coding best practices and
 - Permission Checks: Verify and request permissions appropriately to avoid security-related crashes.
 - Network Connectivity: Safeguard against network-related crashes by checking for network availability before initiating network operations.
 
-#### 1.2.4.2 A slution tp Prevent Crashes
+#### 1.2.4.2 A solution to Prevent Crashes
 
 Here is the sample code snippet for handling uncaught exceptions below:
 
