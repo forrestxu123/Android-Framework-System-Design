@@ -772,7 +772,7 @@ Therefore, we conclude that:
 - Longer orange color block suggests that the rendering thread has been blocked due to excessive Input/Output (IO) operations.
 
 #### 2.1.3 Graphic Rendering Performance Monitoring:
-
+In this secton,  we provide three approach to monitor Graphic Rendering Performance.
 **Monitoring Tools**
 
 To analyze frame rendering performance, we can leverage  [systrace](https://developer.android.com/topic/performance/tracing/) and [perfetto](https://perfetto.dev/). The diagram below, extracted from systrace, illustrates frame rendering:
@@ -834,7 +834,7 @@ In this custom logging mechanism, each frame rendering results in a message bein
 
 As we can see, each frame rendering will cause me.mQueue.next() to receive a message. The information will be logged before and after the message is processed. This approach is utilized by monitoring tools like BlockCanary. Developing a custom logging mechanism allows us to incorporate various features, such as detecting frame drops during graphic rendering, capturing stack information when a frame is dropped, and measuring navigation time when a button is clicked. However, this solution has some limitations. It is primarily focused on UI rendering and also does not take print time cost into consideration.
 
-**Use Choreographer#postFrameCallback**
+**Choreographer#postFrameCallback**
 
 Analyzing the Choreographer class reveals the following:
 
