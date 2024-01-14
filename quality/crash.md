@@ -20,7 +20,7 @@ This document serves as a guide for achieving technical quality excellence in An
 
 - App Size Optimization:
 
-- Security Optimization:]
+- Security Optimization:
 
  <a name="a"></a>
  
