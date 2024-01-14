@@ -9,7 +9,7 @@ This document serves as a guide for achieving technical quality excellence in An
 
    - Application not Response (ANR)
 
-      
+
   [- Performance:](#b)
 
     - [Rendering](#b1)
