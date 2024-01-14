@@ -582,7 +582,9 @@ Android Vitals and Firebase Crashlytics are two distinct services offered by Goo
 By analyzing the information provided in the services, developers can prioritize and address the most critical issues impacting their application's stability.
 Application developers can also develop their own custom crash monitoring system, for example:
 
-#### Uses UncaughtExceptionHandler approch, See below sample code snippets for java crash log
+#### Uses UncaughtExceptionHandler approch
+
+See below sample code snippets for java crash log
 ```c
 class MyApplication : Application(), Thread.UncaughtExceptionHandler {
     private var systemUncaughtExceptionHandler: Thread.UncaughtExceptionHandler? = null
@@ -606,9 +608,13 @@ class MyApplication : Application(), Thread.UncaughtExceptionHandler {
     }
 }
 ```
-#### Uses DropBoxManager approch, See below sample code snippets [MyBroadcastReceiver.kt](MyBroadcastReceiver.kt) and [MyWorkerClass](MyWorkerClass.kt) for more information. It includes the log related with crash, ANR,  native issue and System Events ( e.g. low memory, low power). 
+#### Uses DropBoxManager approch
 
-#### Uses registering crash signal handlers approach, By leveraging signal handlers, developers can inject their crash reporting logic to transmit the log to a monitoring service. This approach is valuable for addressing native crashes and adapting crash reporting to suit specific development needs.
+See the lined sample code snippets [MyBroadcastReceiver.kt](MyBroadcastReceiver.kt) and [MyWorkerClass](MyWorkerClass.kt) for more information. It includes the log related with crash, ANR,  native issue and System Events ( e.g. low memory, low power). 
+
+#### Uses registering crash signal handlers approach
+
+By leveraging signal handlers, developers can inject their crash reporting logic to transmit the log to a monitoring service. This approach is valuable for addressing native crashes and adapting crash reporting to suit specific development needs.
 
 #### 1.2.4  Strategies to Prevent Crashes
 In this section, we'll In this section, we'll focus on coding best practices and a solutions to enhance stability.
