@@ -3,24 +3,24 @@ This document serves as a guide for achieving technical quality excellence in An
 
 ## [- Stability:](#a)
 
-###   - [Memory Challenges](#a1)
+  - [Memory Challenges](#a1)
   
-###   - [Crash Challenges](#a2)
+  - [Crash Challenges](#a2)
 
-###   - Application not Response (ANR)
+  - Application not Response (ANR)
 
 
-##  [- Performance:](#b)
+[- Performance:](#b)
 
-###   - [Rendering](#b1)
+  - [Rendering](#b1)
     
-###   - Start and loading time
+  - Start and loading time
 
-## - Battery and network usage Optimization: 
+[- Battery and network usage Optimization:] 
 
-## - App Size Optimization:
+[- App Size Optimization:]
 
-## - Security Optimization:
+[- Security Optimization:]
 
  <a name="a"></a>
  
