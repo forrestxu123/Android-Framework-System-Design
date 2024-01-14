@@ -695,12 +695,12 @@ the provided solution may prevent immediate crashes and allow for custom excepti
 
  <a name="b"></a>
 ## 2 Performance
-Effective performance optimization plays a crucial role in enhancing user experiences and ensuring overall project success. This section will specifically focus on the optimization of graphic rendering, start-up, and loading times. By providing insights and strategies in these areas, readers can gain the knowledge needed to elevate the performance of their Android applications, ultimately delivering a seamless and responsive user experience.
+Effective performance optimization plays a crucial role in enhancing user experiences and ensuring overall project success. This section will specifically focus on the optimization of graphic rendering, start-up, and loading times. By providing insights and strategies in these areas, readers can gain the knowledge needed to enhance the performance of their Android applications, ultimately delivering a seamless and responsive user experience.
  <a name="b1"></a>
 ### 2.1 Rendering
 In this section, we will introduce the principles of the Android Graphic Framework, guide readers on monitoring and locating graphic issues, and provide solutions to resolve these issues. The goal is to empower readers to identify, locate, and effectively resolve rendering problems, ensuring a smoother and visually pleasing user experience.
 
-#### 2.1.1  The pricipal of Android Graphic Framework
+#### 2.1.1  The principal of Android Graphic Framework
 The Android Graphics Framework is vital for crafting engaging visual experiences on Android devices. Its key components play a crucial role in rendering and managing graphical elements, utilizing the Surface class in Image Stream Producers for seamless interaction with SurfaceFlinger to efficiently render images. This involves features such as buffer queue reuse, collaboration with the Hardware Composer and synchronization with VSYNC for optimal performance and memory efficiency.
 
 Key Components:
@@ -773,6 +773,7 @@ Therefore, we conclude that:
 
 #### 2.1.3 Graphic Rendering Performance Monitoring:
 In this secton,  we provide three approach to monitor Graphic Rendering Performance.
+
 **Monitoring Tools**
 
 To analyze frame rendering performance, we can leverage  [systrace](https://developer.android.com/topic/performance/tracing/) and [perfetto](https://perfetto.dev/). The diagram below, extracted from systrace, illustrates frame rendering:
