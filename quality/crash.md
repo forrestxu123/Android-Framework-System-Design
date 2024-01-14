@@ -201,7 +201,7 @@ In conclusion, a solid understanding of memory management principles in C++ is e
 
 #### 1.1.2.1 Mastering Java Memory Optimization
 
-##### Android Memory Profiler
+**Android Memory Profiler**
 
 Android Memory Profiler is an essential tool for Android developers. It helps them ensure optimal memory management, overcome performance challenges, and deliver a seamless user experience on the Android platform. Here is Key Highlights below:
 
@@ -238,7 +238,7 @@ For example, you can use the picture below to know:
 
 Please see [the link](https://developer.android.google.cn/studio/profile/memory-profiler) for more information about Android Memory Profiler.
 
-##### LeakCanary
+**LeakCanary**
 
 LeakCanary is a powerful memory leak detection library for Android, offering two main features:
 - API Check: Developers can manually check any objects that are no longer needed using the provided API. The AppWatcher.objectwatch.watch() function creates a weak reference for the specified object. If this weak reference isn't cleared after a 5-second wait and garbage collection, the watched object is considered potentially leaking, and LeakCanary logs this information.
