@@ -7,20 +7,20 @@ This document serves as a guide for achieving technical quality excellence in An
   
   - [Crash Challenges](#a2)
 
-  - [Application not Response (ANR)](#a3)
+  - Application not Response (ANR)
 
       
 [- Performance:](#b)
 
   - [Rendering](#b1)
     
-  - [Start and loading time ](#b2)
+  - Start and loading time
 
-[- Battery and network usage Optimization: ](#c) 
+- Battery and network usage Optimization: 
 
-[- App Size Optimization:](#d)
+- App Size Optimization:
 
-[- Security Optimization:](#e)
+- Security Optimization:]
 
  <a name="a"></a>
  
@@ -859,3 +859,4 @@ Choreographer.getInstance().postFrameCallback(new Choreographer.FrameCallback() 
 });
 ```
 This solution is also focused on UI rendering and does not take print time cost into consideration.
+
