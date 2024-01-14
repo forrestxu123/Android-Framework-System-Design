@@ -1,5 +1,5 @@
 # Exploring the Depths: A Comprehensive Dive into Android Framework Architecture
-**by [Jinlin Xu]
+** by [Jinlin Xu]
 
 This document serves as a comprehensive guide, delving into the details of the key components of the Android system. By explaining the fundamental principles inherent to the Android Framework System, it is designed to provide practical knowledge. Whether you're a seasoned developer, a job seeker preparing for Android domain knowledge or system design interviews, this document is crafted to be both informative and highly applicable to your daily tasks. The purpose of this document is to explore the inner workings of Android, break down complexities, and gain a deeper understanding of the Android framework.
 The key components we are going to introduce include:
