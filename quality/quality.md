@@ -1,16 +1,16 @@
 #  A Comprehensive Dive into Android Technical Quality Excellence
 This document serves as a guide for achieving technical quality excellence in Android development. It offers insights into issue identification, monitoring strategies, and problem resolution,providing developers with practical knowledge to ensure excellent outcomes. The key features we will introduce include:
 
-[- Stability:](#a)
+  [- Stability:](#a)
 
-  - [Memory Challenges](#a1)
+   - [Memory Challenges](#a1)
   
-  - [Crash Challenges](#a2)
+   - [Crash Challenges](#a2)
 
-  - Application not Response (ANR)
+   - Application not Response (ANR)
 
       
-[- Performance:](#b)
+  [- Performance:](#b)
 
     - [Rendering](#b1)
     
