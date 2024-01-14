@@ -192,8 +192,6 @@ int main() {
     return 0;
     ```
 In conclusion, a solid understanding of memory management principles in C++ is essential for developers dedicated to building robust and high-performance software. By following best practices and utilizing modern tools, developers can effectively address memory management challenges and deliver top-quality software. We will focus on these topics in later sections.
-  
- <a name="a2"></a>
 
  #### 1.1.2 Unlocking Memory Optimization
 
