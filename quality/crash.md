@@ -858,4 +858,4 @@ Choreographer.getInstance().postFrameCallback(new Choreographer.FrameCallback() 
     }
 });
 ```
-This solution is also focused on UI rendering and also does not take print time cost into consideration.
+This solution is also focused on UI rendering and does not take print time cost into consideration.
