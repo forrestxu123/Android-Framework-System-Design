@@ -596,7 +596,7 @@ Key Components:
 
 An example of the frame rendering process work flow is illustrated in the diagram below:
 
-<img src="qulity\graphicdropframe.png" alt="Rendering"/>
+<img src="quality\graphicdropframe.png" alt="Rendering"/>
 
 In the diagram, arrows represent refresh time, and the blocks represent frame time. The below is their rates definition:
  - **Refresh Rates:**
@@ -646,7 +646,7 @@ In this secton,  we provide three approach to monitor Graphic Rendering Performa
 
 To analyze frame rendering performance, we can leverage  [systrace](https://developer.android.com/topic/performance/tracing/) and [perfetto](https://perfetto.dev/). The diagram below, extracted from systrace, illustrates frame rendering:
 
-<img src=""qulity\renderthread.png" alt="Frame Rendering"/>
+<img src=""quality\renderthread.png" alt="Frame Rendering"/>
 
 - A red circle with 'f' inside indicates a dropped frame.
 - A green circle with 'f' inside signifies a correctly drawn frame.
