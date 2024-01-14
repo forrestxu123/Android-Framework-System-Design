@@ -16,7 +16,7 @@ This document serves as a guide for achieving technical quality excellence in An
     
   - Start and loading time
 
-[- Battery and network usage Optimization:] ()
+[- Battery and network usage Optimization:]()
 
 [- App Size Optimization:]()
 
