@@ -243,7 +243,7 @@ Please see [the link](https://developer.android.google.cn/studio/profile/memory-
 LeakCanary is a powerful memory leak detection library for Android, offering two main features:
 - API Check: Developers can manually check any objects that are no longer needed using the provided API. The AppWatcher.objectwatch.watch() function creates a weak reference for the specified object. If this weak reference isn't cleared after a 5-second wait and garbage collection, the watched object is considered potentially leaking, and LeakCanary logs this information.
 
-- Automatic Check: LeakCanary goes beyond manual checks by automatically detecting memory leaks in specific scenarios without requiring additional code. It achieves this by leveraging Android's lifecycle hooks. The library injects calls AppWatcher.objectwatch.watch() automatically into Activity#onDestroy(), Fragment#onDestroy(), Fragment#onDestroyView(), and ViewModel#onCleared(). This automation is based on the understanding that the referenced objects are no longer needed after these lifecycle events, simplifying the process of identifying memory leaks during the development and debugging phases.
+- Automatic Check: LeakCanary goes beyond manual checks by automatically detecting memory leaks in specific scenarios without requiring additional code. It achieves this by leveraging Android's lifecycle hooks. This automation is based on the understanding that the referenced objects are no longer needed after these lifecycle events, simplifying the process of identifying memory leaks during the development and debugging phases.
 
 Here is the princiapl of LeakCanary:
 
