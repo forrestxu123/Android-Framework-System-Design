@@ -32,6 +32,7 @@ Effective memory management is crucial for achieving optimal performance, preven
 
 #### 1.1.1 Memory Management Principles
 **Java Memory Management Principles**
+
 In the Java environment, memory management relies on a garbage collector. It is crucial for developers to understand object lifecycle management and avoid unnecessary object retention. By allowing the garbage collector to reclaim memory efficiently, developers can prevent memory leaks and maintain optimal application performance.
 Android employs a memory management strategy leveraging Young Generation garbage collection to enhance memory efficiency. Here's a high-level overview of the Young Generation garbage collection process:
 
