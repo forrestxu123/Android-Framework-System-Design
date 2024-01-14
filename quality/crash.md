@@ -78,7 +78,7 @@ Unintentional memory overwrites or corruption can occur, such as buffer overflow
 - Resource Leaks:
 Failure to release resources like file handles or network connections can lead to resource leaks, affecting overall system performance.
 
-Each item listed above can potentially lead to different issues, including OutOfMemoryError (OOM), degraded system performance, and unpredictable application behavior in some cases.
+Each item listed above can potentially lead to different issues, including Application Not Respone(ANR), OutOfMemoryError (OOM), degraded system performance, and unpredictable application behavior in some cases.
 
 In conclusion, a comprehensive grasp of these memory management principles empowers developers to create Java applications that not only prevent memory-related challenges but also maintain optimal performance. By following best practices and utilizing modern tools, developers can effectively address memory management challenges and deliver top-quality software. We will focus on these topics in later sections.
 
