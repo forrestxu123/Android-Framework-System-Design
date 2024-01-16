@@ -425,7 +425,7 @@ Let's explain the daigram:
   - App sets default uncaught exception handle:
     
      When an app is forked, it calls Thread.setDefaultUncaughtExceptionHandler(new KillApplicationHandler()) to set the default uncaught exception handler for all throwable or exceptions in the process using an instance of KillApplicationHandler. Now, when an uncaught exception occurs in any thread within the process, KillApplicationHandler.uncaughtException() will be called to handle that exception.
-  - App sets default uncaught exception handle:
+  - request ams to handle uncaught exception handle:
     
     uncaughtException() calls the ActivityManager method handleApplicationCrash() when a throwable is not caught in the current app to request ActivityManagerService(AMS) for crash handling.
   - AMS Crash Handling:
