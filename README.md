@@ -115,8 +115,6 @@ int main() {
         perror("Error opening /dev/ashmem");
         return 1;
     }
-    // Set the size of the shared memory region
-    ioctl(fd, ASHMEM_SET_SIZE, SHARED_MEMORY_SIZE);
     // Map the shared memory region into the process address space
     shared_memory = mmap(NULL, SHARED_MEMORY_SIZE, PROT_READ | PROT_WRITE, MAP_SHARED, fd, 0);
     // Create or open the semaphore
