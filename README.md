@@ -473,25 +473,7 @@ See the Media Recorder state diagram below to understand how to use the Media Re
 
   - Encoding and Decoding: Allows developers to encode and decode multimedia content, leveraging its capabilities to efficiently process different types of data including compressed data, raw audio, and raw video.
   - Surface Integration: For optimal performance with raw video data, MediaCodec recommends using a Surface. This integration is particularly beneficial for seamless interaction with Android graphic framework, enhancing overall efficiency in multimedia processing.
-- MediaPlayerService
-  - Audio/Video Playback: The service handles the playback of audio and video content, supporting a variety of formats and streaming protocols.
-  - Audio/Video Recording: MediaPlayerService supports recording audio and video from device microphones and cameras, providing functionalities for starting, stopping, and managing the recording process.
-  - Playback Control: Offers methods for controlling playback, including play, pause, stop, seek, and volume adjustments.
-  - Media Session Management: Manages media sessions, allowing multiple apps to interact with media playback and recording simultaneously.
-  - Audio Focus Handling: Coordinates with the audio framework to manage audio focus, ensuring a seamless experience when multiple apps request audio resources.
-  - Integration with Audio Framework: MediaPlayerService integrates with the underlying audio framework, allowing efficient and low-level control over audio playback and recording.
-- AudioFlingerService
-  - Audio Mixing: AudioFlingerService combines multiple audio streams from different applications and services, ensuring seamless playback.
-  - Hardware Abstraction: Interacts with the Audio Hardware Abstraction Layer (Audio HAL) to communicate with the underlying audio hardwar.
-  - Audio Routing: Directs audio streams to the appropriate output sources, such as speakers, headphones, or Bluetooth devices.
-  - Integration with Audio Policy: Collaborates with AudioPolicyService to enforce audio policies and ensure consistent audio behavior across the system.
-- AudioPolicyService
-  - Audio Routing Policies: AudioPolicyService defines policies for routing audio streams to various outputs, considering factors like device capabilities and user preferences.
-  - Dynamic Audio Routing: Handles dynamic changes in audio routing based on events such as device connections or disconnections and adapts the audio policy accordingly.
-  - Audio Stream Management: Categorizes audio streams into different types and applies specific policies for each type, ensuring a balanced and user-friendly audio experience.
-  - Policy Enforcement: Enforces policies related to volume levels, audio effects, and other audio parameters, ensuring consistency and compliance with user preferences.
-  - Integration with AudioFlinger: Works closely with AudioFlingerService to implement the defined audio policies and communicate them to the underlying audio hardware through the Audio HAL.
- 
+
 See the MediaCodec state diagram and sample code below to understand how to use the Media MediaCodec API.
 
 <img src="mediacodecapi.png" alt="MediaReCodec API"/>
@@ -566,6 +548,27 @@ public class MediaCodecExample {
 }
 
 ```
+ 
+- MediaPlayerService
+  - Audio/Video Playback: The service handles the playback of audio and video content, supporting a variety of formats and streaming protocols.
+  - Audio/Video Recording: MediaPlayerService supports recording audio and video from device microphones and cameras, providing functionalities for starting, stopping, and managing the recording process.
+  - Playback Control: Offers methods for controlling playback, including play, pause, stop, seek, and volume adjustments.
+  - Media Session Management: Manages media sessions, allowing multiple apps to interact with media playback and recording simultaneously.
+  - Audio Focus Handling: Coordinates with the audio framework to manage audio focus, ensuring a seamless experience when multiple apps request audio resources.
+  - Integration with Audio Framework: MediaPlayerService integrates with the underlying audio framework, allowing efficient and low-level control over audio playback and recording.
+- AudioFlingerService
+  - Audio Mixing: AudioFlingerService combines multiple audio streams from different applications and services, ensuring seamless playback.
+  - Hardware Abstraction: Interacts with the Audio Hardware Abstraction Layer (Audio HAL) to communicate with the underlying audio hardwar.
+  - Audio Routing: Directs audio streams to the appropriate output sources, such as speakers, headphones, or Bluetooth devices.
+  - Integration with Audio Policy: Collaborates with AudioPolicyService to enforce audio policies and ensure consistent audio behavior across the system.
+- AudioPolicyService
+  - Audio Routing Policies: AudioPolicyService defines policies for routing audio streams to various outputs, considering factors like device capabilities and user preferences.
+  - Dynamic Audio Routing: Handles dynamic changes in audio routing based on events such as device connections or disconnections and adapts the audio policy accordingly.
+  - Audio Stream Management: Categorizes audio streams into different types and applies specific policies for each type, ensuring a balanced and user-friendly audio experience.
+  - Policy Enforcement: Enforces policies related to volume levels, audio effects, and other audio parameters, ensuring consistency and compliance with user preferences.
+  - Integration with AudioFlinger: Works closely with AudioFlingerService to implement the defined audio policies and communicate them to the underlying audio hardware through the Audio HAL.
+ 
+
 
 For details about video display, please refer to the Graphics Framework section.
 
