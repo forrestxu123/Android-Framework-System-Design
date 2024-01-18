@@ -398,7 +398,7 @@ The Android Security Model serves as a strong defense, protecting user data, sys
 - Security Model:
   - Multi-party consent: No action should be executed unless all main parties agree — in the standard case, these are user, platform, and developer.
   - Security is a compatibility requirement. Devices that do not conform to CDD and do not pass CTS,VTS are not Android compatiable devices. 
-  - Factory reset restores the device to a safe state. 
+  - Factory reset restores the device to a safe state - returns a state that is covered by Verified Boot.
   - Applications are security principals - Applications is a basic elements in the security model.
 
 - Security Model design
