@@ -727,7 +727,7 @@ Key Components:
 
 An example of the frame rendering process work flow is illustrated in the diagram below:
 
-<img src="graphicdropframe.png" alt="Rendering"/>
+<img src="../graphicdropframe.png" alt="Rendering"/>
 
 In the diagram, arrows represent refresh time, and the blocks represent frame time. The below is their rates definition:
  - **Refresh Rates:**
