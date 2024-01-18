@@ -410,7 +410,7 @@ Each security layer in Android addresses specific aspects of security, such as a
     - Isolation of Components:
 Different layers in Android are designed to operate independently and are isolated from each other.
     - Adaptability to Evolving Threats:
-The utilization of diverse security layers empowers Android to evolve in response to emerging security threats. As new challenges arise, Android's architecture can be flexibly updated to integrate supplementary security measures without causing disruption to the entire system.
+The capability to adjust to new security threats originates from the utilization of diverse security layers. These layers collaborate to provide a dynamic defense mechanism. As challenges evolve, Android can flexibly update its architecture, integrating additional security measures without disrupting the entire system.
 
 Android's security architecture includes the following layers of protection:
 - Android Compatibility Test: Ensures that Android devices meet compatibility standards, providing a consistent and secure user experience.
