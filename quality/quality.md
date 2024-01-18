@@ -699,7 +699,9 @@ Effective performance optimization plays a crucial role in enhancing user experi
 In this section, we will introduce the principles of the Android Graphic Framework, guide readers on monitoring and locating graphic issues, and provide solutions to resolve these issues. The goal is to empower readers to identify, locate, and effectively resolve rendering problems, ensuring a smoother and visually pleasing user experience.
 
 #### 2.1.1  The principal of Android Graphic Framework
-The Android Graphics Framework is vital for crafting engaging visual experiences on Android devices. Its key components play a crucial role in rendering and managing graphical elements, utilizing the Surface class in Image Stream Producers for seamless interaction with SurfaceFlinger to efficiently render images. This involves features such as buffer queue reuse, collaboration with the Hardware Composer and synchronization with VSYNC for optimal performance and memory efficiency.
+The Android Graphics Framework is vital for crafting engaging visual experiences on Android devices. Its key components play a crucial role in rendering and managing graphical elements, utilizing the Surface class in Image Stream Producers for seamless interaction with SurfaceFlinger to efficiently render images. This involves features such as buffer queue reuse, collaboration with the Hardware Composer and synchronization with VSYNC for optimal performance and memory efficiency.  See the main design diagram below about Android Graphic Framework:
+
+<img src="graphic.png" alt="Android Graphic"/>
 
 Key Components:
 
@@ -719,7 +721,6 @@ Key Components:
   - Release a displayed buffer for the composer to inject the stream.
 - Gralloc: Gralloc is responsible for allocating and managing graphics memory. These buffers are seamlessly interacted with by components such as Surface, SurfaceFlinger, and Hardware Composer, ensuring a cohesive and optimized visual experience on Android devices.
 
-<img src="../graphic.png" alt="Android Graphic"/>
  <a name="e"></a>
 
 #### 2.1.2  Analysis of Graphic Rendering Performance and Issues:
