@@ -446,6 +446,10 @@ See more information below about Android Security Model design diagram.
  
 ## 3 Android Multimedia framework
 The Android Multimedia Framework delivers a comprehensive solution for managing multimedia content on Android devices. With support for a multitude of media formats, protocols, and tasks such as multimedia playback, recording, and codec operations, it ensures a flexible and enriched multimedia experience for the Android applications
+See the design diagram below for more information about Android Multimedia Framework:
+
+<img src="audio.png" alt="Android Multimedia Framework Architecture"/>
+ <a name="d"></a>
 
 Key Components:
 - Audio Track / Media Player API
@@ -564,10 +568,6 @@ public class MediaCodecExample {
 ```
 
 For details about video display, please refer to the Graphics Framework section.
-See the design diagram below for more information about Android Multimedia Framework:
-
-<img src="audio.png" alt="Android Multimedia Framework Architecture"/>
- <a name="d"></a>
 
 ## 4 Android Graphic framework
 In this section, we will introduce the principles of the Android Graphic Framework, guide readers on monitoring and locating graphic issues, and provide solutions to resolve these issues. The goal is to empower readers to identify, locate, and effectively resolve rendering problems, ensuring a smoother and visually pleasing user experience.
