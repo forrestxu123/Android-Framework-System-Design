@@ -701,7 +701,7 @@ In this section, we will introduce the principles of the Android Graphic Framewo
 #### 2.1.1  The principal of Android Graphic Framework
 The Android Graphics Framework is vital for crafting engaging visual experiences on Android devices. Its key components play a crucial role in rendering and managing graphical elements, utilizing the Surface class in Image Stream Producers for seamless interaction with SurfaceFlinger to efficiently render images. This involves features such as buffer queue reuse, collaboration with the Hardware Composer and synchronization with VSYNC for optimal performance and memory efficiency.  See the main design diagram below about Android Graphic Framework:
 
-<img src="graphic.png" alt="Android Graphic"/>
+<img src="..\graphic.png" alt="Android Graphic"/>
 
 Key Components:
 
@@ -727,7 +727,7 @@ Key Components:
 
 An example of the frame rendering process work flow is illustrated in the diagram below:
 
-<img src="..\graphicdropframe.png" alt="Rendering"/>
+<img src="graphicdropframe.png" alt="Rendering"/>
 
 In the diagram, arrows represent refresh time, and the blocks represent frame time. The below is their rates definition:
  - **Refresh Rates:**
