@@ -399,7 +399,7 @@ The Android Security Model serves as a strong defense, protecting user data, sys
   - Multi-party consent: No action should be executed unless all main parties agree — in the standard case, these are user, platform, and developer.
   - Security is a compatibility requirement. Devices that do not conform to CDD and do not pass CTS,VTS are not Android compatiable devices. 
   - Factory reset restores the device to a safe state. 
-  - Applications are security principals.
+  - Applications are security principals - Applications is a basic elements in the security model.
 
 - Security Model design
     Android's architecture is designed with multiple layers of security to provide a robust and comprehensive defense against various threats. The advantages of having multiple layers of security in Android include:
