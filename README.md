@@ -749,7 +749,9 @@ This solution is also focused on UI rendering and does not take print time cost 
  
 ## 5 Android Camera framework
 
-The Android Camera framework supports various cameras and camera features. It supports features such as camera preview, image capture, image analysis, and video recording. it also facilitates the efficient handling and processing of image data, ensuring seamless interactions between the camera hardware and software layers with optimal performance, memory, and power usage. It empowers developers with advanced camera functionalities.
+The Android Camera framework supports various cameras and camera features. It supports features such as camera preview, image capture, image analysis, and video recording. it also facilitates the efficient handling and processing of image data, ensuring seamless interactions between the camera hardware and software layers with optimal performance, memory, and power usage. It empowers developers with advanced camera functionalities.  See the design diagram below for Android Camera Framework:
+
+ <img src="camera.png" alt="Android Graphic"/>
 
 Key Components:
 - Camera 2 API:
@@ -976,10 +978,7 @@ protected void onPause() {
 }
 
 ```
- 
- See the design diagram below for more information about Android Camera Framework:
 
- <img src="camera.png" alt="Android Graphic"/>
 
  See image buffer flow diagram below for information about how image is rendered:
  <img src="camera2.png" alt="Android Graphic"/>
@@ -987,7 +986,10 @@ protected void onPause() {
  <a name="F"></a>
 ##  6 Android Sensor Framework
 
-The Android Sensor Framework provides developers with unified access to a range of sensors in Android devices, including accelerometers, gyroscopes, magnetometers, barometers, humidity, pressure, light, proximity, and heart rate sensors. It empowers developers to create applications that dynamically respond to changes in the device's environment.
+The Android Sensor Framework provides developers with unified access to a range of sensors in Android devices, including accelerometers, gyroscopes, magnetometers, barometers, humidity, pressure, light, proximity, and heart rate sensors. It empowers developers to create applications that dynamically respond to changes in the device's environment.  See the design diagram below for information about Android Sensor Framework:
+
+ <img src="sensor.png" alt="Sensor"/>
+
 
 Key Components:
 - Sensor API:
@@ -1085,7 +1087,4 @@ public class SensorActivity extends AppCompatActivity implements SensorEventList
 
 ```
   
- See the design diagram below for more information about Android Sensor Framework:
-
- <img src="sensor.png" alt="Sensor"/>
 
