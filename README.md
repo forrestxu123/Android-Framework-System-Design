@@ -446,7 +446,7 @@ See more information below about Android Security Model design diagram.
  
 ## 3 Android Multimedia framework
 The Android Multimedia Framework delivers a comprehensive solution for managing multimedia content on Android devices. With support for a multitude of media formats, protocols, and tasks such as multimedia playback, recording, and codec operations, it ensures a flexible and enriched multimedia experience for the Android applications
-See the design diagram below for more information about Android Multimedia Framework:
+See the main design diagram below about Android Multimedia Framework:
 
 <img src="audio.png" alt="Android Multimedia Framework Architecture"/>
  <a name="d"></a>
