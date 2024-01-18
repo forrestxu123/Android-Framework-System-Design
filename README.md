@@ -418,7 +418,14 @@ Android's security architecture includes the following layers of protection:
 - SELinux (Security-Enhanced Linux): Provides fine-grained access control to regulate interactions between processes and the Android system. SELinux enhances security by enforcing mandatory access controls and preventing unauthorized actions.
 - Exploit Mitigation: Incorporates techniques like Address Space Layout Randomization (ASLR) and Data Execution Prevention (DEP) to mitigate common exploit methods. These techniques make it more challenging for attackers to exploit vulnerabilities.
 - System Update: Regular updates are provided to patch vulnerabilities and enhance the overall security posture of Android devices. These updates address known vulnerabilities and introduce new security features.
-- Google Play: Ensures the security of apps distributed through the platform, protecting users from malicious applications. Apps undergo a vetting process before being made available on Google Play.
+- Google Play:
+   - Vetting Process: The Google Play Store reviews apps before they appear on Google Play to identify and remove potential threats.
+   - Google Play Protect: Regular scans on devices to identify and remove harmful apps, enhancing overall security.
+   - App Signing: Google Play manages app signing keys, improving the security of app updates.
+   - SafetyNet API: Helps developers assess the security and compatibility of the Android devices their apps run on.
+   - Security Metadata: Provides early detection of harmful apps before a full scan.
+   - Timely Updates: Ensures quick deployment of security patches for installed apps.
+  
 - Authentication: Enforces strong authentication methods, including PINs, passwords, biometrics (fingerprint, face recognition), and device-based authentication.
 - Multiple User Isolation: Supports multiple user profiles on a single device, ensuring isolation between user accounts. Each user has their own set of apps, settings, and data, enhancing privacy and security.
 - App Isolation: Ensures that apps operate in isolated environments, preventing unauthorized access to sensitive data. Each app runs independently, and its interactions with the system and other apps are restricted.
