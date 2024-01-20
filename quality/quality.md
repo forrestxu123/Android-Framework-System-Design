@@ -430,10 +430,10 @@ Let's explain the daigram:
     uncaughtException() calls the ActivityManager method handleApplicationCrash() when a throwable is not caught in the current app to request ActivityManagerService(AMS) for crash handling.
   - AMS Crash Handling:
     
-    AMS collects all crash information needs through handleApplicationCrashInner() and sends it to DropManagerService by calling the method DropManager#addData().
-  - DropManagerService creates crash log information:
+    AMS collects all crash information needs through handleApplicationCrashInner() and sends it to DropBoxManagerService by calling the method DropBoxManager#addData().
+  - DropBoxManagerService creates crash log information:
     
-    DropManagerService receives the crash information from AMS and store crash information log file into /data/system/drop folder.
+    DropBoxManagerService receives the crash information from AMS and store crash information log file into /data/system/drop folder.
   - App Self-Termination Handling:
     
     the App takes appropriate actions to terminate itself.
@@ -466,7 +466,7 @@ Let's explain the daigram:
   - AMS Crash Handling:
     
     AMS has a NativeCrashListener thread started at the System Server launch stage. It creates a UDS socket to observe the crash from the crashdump process. If it receives crash issue information from the crashdump process, it creates a NativeCrashReport thread and calls handleApplicationCrashInner() for further handling.
-  - DropManagerService creates crash log information.
+  - DropBoxManagerService creates crash log information.
     
     Similar to the handling in Java code, the crash log is put into the /data/drop folder.
 
