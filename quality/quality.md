@@ -433,7 +433,7 @@ Let's explain the daigram:
     AMS collects all crash information needs through handleApplicationCrashInner() and sends it to DropBoxManagerService by calling the method DropBoxManager#addData().
   - DropBoxManagerService creates crash log information:
     
-    DropBoxManagerService receives the crash information from AMS and store crash information log file into /data/system/drop folder.
+    DropBoxManagerService receives the crash information from AMS and store crash information log file into /data/system/dropbox folder.
   - App Self-Termination Handling:
     
     the App takes appropriate actions to terminate itself.
@@ -468,7 +468,7 @@ Let's explain the daigram:
     AMS has a NativeCrashListener thread started at the System Server launch stage. It creates a UDS socket to observe the crash from the crashdump process. If it receives crash issue information from the crashdump process, it creates a NativeCrashReport thread and calls handleApplicationCrashInner() for further handling.
   - DropBoxManagerService creates crash log information.
     
-    Similar to the handling in Java code, the crash log is put into the /data/drop folder.
+    Similar to the handling in Java code, the crash log is put into the /data/dropbox folder.
 
 Please note that the above workflow is available only for Android apps. However, we can also utilize Debugged and libAsan for our native Daemon development if necessary.
 
