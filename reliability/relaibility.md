@@ -2,10 +2,10 @@
 # Android System Reliability Architecture Recommendations
 **by [Jinlin Xu]**
 
-#1. Overview
+# 1 Overview
 The primary goal of the project is to enhance the reliability of the TikTok Android app and eliminate issues such as crashes, ANRs (Application Not Responding), and system event-related issue (e.g., network changes, battery events, memory management). These recommendations aim to ensure the reliability, monitoring, and quality of the TikTok app throughout its development and production lifecycle. The architecture includes various components to support robust issue monitoring, alerting, and the efficient identification and location of issues, along with automated updates and gradual upgrades.
 
-#2. Rquuirement Analysis
+# 2 Rquuirement Analysis
 
 Funtional requirement:
   - Tiktok reliability Client: Develop the Tiktok reliability Client to find, locate and resolve issues in earlier datage. the features include: 
