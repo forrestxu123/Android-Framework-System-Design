@@ -110,11 +110,11 @@ Android Studio Profiler is a powerful performance analysis tool integrated into 
 
 The TikTok Android App Reliability Framework is driven by the following key motivations:
 
-**Early Issue Detection and Resolution
+- **Early Issue Detection and Resolution**
 
 Supports the early detection, location, and resolution of issues during the development, testing, and release phases and ensures that potential issues are identified and addressed at the earliest stages of the app lifecycle.
 
-### Quick Issue Identification for Admin and Developers
+- **Quick Issue Identification for Admin and Developers**
 
 Helps administrators and developers by providing them with a comprehensive set of tools, insights, and alert mechanisms to become the first responders to identified issues. This includes, but is not limited to:
 
@@ -124,15 +124,15 @@ Helps administrators and developers by providing them with a comprehensive set o
 
 This approach not only accelerates the issue resolution process but also enhances the overall efficiency of the development and maintenance teams by providing multiple channels for immediate awareness and response.
 
-### Minimizing Issues on Release
+- **QMinimizing Issues on Release**
 
 The framework aims to minimize issues upon release, ensuring a smoother release and improved user satisfaction.
 
-### Module-Based Quick Upgrades
+- **QModule-Based Quick Upgrades**
 
 The framework facilitates module-based quick upgrades, allowing for rapid deployment of fixes once issues have been identified and resolved. This modular approach enables targeted updates, minimizing the impact on unaffected components and ensuring a swift response to emerging challenges.
 
-### Support for TikTok-Specific Issues in the Main Thread
+- **QSupport for TikTok-Specific Issues in the Main Thread**
 
 Provides support for identifying and resolving TikTok-specific issues occurring in the main thread, offering customized solutions for optimizing performance and reliability.
 
