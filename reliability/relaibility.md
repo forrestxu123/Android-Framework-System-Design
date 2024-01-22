@@ -4,13 +4,12 @@
 
 # 1 Overview
 
-The primary goal of the reliability framework is to enhance the TikTok Android app's reliability by addressing issues below:
-  - General app  issues such as crashes, ANRs, performance challenges, memory management issues and system event-related problems (e.g., network changes, battery events) 
-  - Tiktok specific issue (to be defined) such as: Time spent and battery usage when a specific button is clicked or a task is performed,
-
-These recommendations aim to ensure the reliability, monitoring, alerting, identification, and location of issues while maintaining the overall quality of the TikTok app throughout its lifecycle, including the stages of development, testing, app publishing, release, and upgrade. As results of the framework, it can help us minimize issues during app release and facilitate quick updates through module-based delivery.
+The primary goal of the reliability framework is to enhance the TikTok Android app's reliability by addressing the following issues:
+- General app issues such as crashes, ANRs, performance challenges, memory management issues, and system event-related problems (e.g., network changes, battery events).
+- TikTok-specific issues (to be defined) such as time spent and battery usage when a specific button is clicked or a task is performed.
+- Ensure the reliability, monitoring, alerting, identification, and location of issues while maintaining the overall quality of the TikTok app throughout its lifecycle, including the stages of development, testing, app publishing, release, and upgrade.
+As a result of the framework, it can help us minimize issues during app release and facilitate quick updates through module-based delivery.
 The flexibility of this reliability framework allows for potential extension to different operating systems, providing a versatile solution for enhancing app reliability across diverse platforms.
-
 
 # 2 Requirement Analysis
 
