@@ -456,10 +456,10 @@ Let's explain the daigram:
     
   - **ASan Issue or Crash Handling Workflow:**
     - Triggering Crash Issue Handling: Kernel or ASan triggers a crash signal, invoking debuggerd_signal_handler() in the debugged library to handle crash issue information.
-    - Debuggerd Dispatch Pseudo Thread: debuggerd_signal_handler()` creates debuggerd_dispatch_pseudo_thread, which initiates the crashdump process, transferring crash issue information via a Pipe.
-    - Log Handling: Crashdump uses UDS to send crash issue information to tombstoned daemon for logging at `/data/tombstone`. Additionally, it sends information to AMS for logging.
+    - Debuggerd Dispatch Pseudo Thread: debuggerd_signal_handler() creates debuggerd_dispatch_pseudo_thread, which initiates the crashdump process, transferring crash issue information via a Pipe.
+    - Log Handling: Crashdump uses UDS to send crash issue information to tombstoned daemon for logging at /data/tombstone. Additionally, it sends information to AMS for logging.
     - AMS Crash Handling: AMS has a NativeCrashListener thread observing crashes through a UDS socket. If it receives crash issue information from the crashdump process, it creates a NativeCrashReport thread and calls `handleApplicationCrashInner()` for further handling.
-    - DropBoxManagerService Log Creation: Similar to Java code handling, the crash log is placed in the `/data/dropbox` folder.
+    - DropBoxManagerService Log Creation: Similar to Java code handling, the crash log is placed in the /data/dropbox folder.
 
 Please note that the above workflow is available only for Android apps. However, we can also utilize debuggerd_signal_handler and libAsan for our native Daemon development if necessary.
 
