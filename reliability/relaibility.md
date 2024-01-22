@@ -140,7 +140,7 @@ Provides support for identifying and resolving TikTok-specific issues occurring,
 
 - **Android Vitals and Firebase Crashlytics** 
   - Network Cost for billions of devices.
-  - Release App focus: Their effectiveness is diminished during the development phase, where dynamic and frequent analysis is crucial for identifying and addressing issues promptly.
+  - Released App focus: Their effectiveness is limited during the development phase, where dynamic and frequent analysis is crucial for identifying and addressing issues promptly.
   - These tools may not include the vital information that TikTok needs.
 
 - **Perfetto, Systrace, and Android Studio Profiler**
