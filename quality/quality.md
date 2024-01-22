@@ -416,7 +416,7 @@ Understanding the details of crash events is crucial for developers to effective
     int result = numerator / denominator; // This line will crash and result in a segmentation fault
     ```
 
-As we can see, a common scenario for Java/Kotlin app crashes is caused by an uncaught throwable/exception and most crashes on the native side (C/C++) are related to improper memory handling. Therefore, to aid in identifying, locating, monitoring, and solving Java crash issues, it is crucial to understand how the Android system handles crashes in Java environments. The following diagram shows the main work flow related to this topic:
+As we can see, a common scenario for Java/Kotlin app crashes is caused by an uncaught throwable/exception and most crashes on the native side (C/C++) are related to improper memory handling. Therefore, to aid in identifying, locating, monitoring, and solving crash issues, it is crucial to understand how the Android system handles crashes in both Java/Native  environments. The following diagram shows the main work flow related to this topic:
 
 <img src="crash.png" alt="Crash"/>
 
@@ -470,7 +470,7 @@ Let's explain the daigram:
     
     Similar to the handling in Java code, the crash log is put into the /data/dropbox folder.
 
-Please note that the above workflow is available only for Android apps. However, we can also utilize Debugged and libAsan for our native Daemon development if necessary.
+Please note that the above workflow is available only for Android apps. However, we can also utilize debuggerd_signal_handler and libAsan for our native Daemon development if necessary.
 
 #### 1.2.2  Crash Analysis
 Crash log files play a crucial role in identifying and resolving issues in Android development. Analyzing these logs provides valuable information about the root cause of crashes, contributing to enhancements in stability and user experience. Let's proceed to analyze several crash log files using both example code and log files.
