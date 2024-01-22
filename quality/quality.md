@@ -422,21 +422,20 @@ As we can see, a common scenario for Java/Kotlin app crashes is caused by an unc
 
 Let's explain the daigram:
 - Java/Kotlin based Components (App and System Server) Crash Handling:
-1. **Setting Default Exception Handler:**
-   - The app sets a default uncaught exception handler using `Thread.setDefaultUncaughtExceptionHandler(new KillApplicationHandler())`. This handler, implemented in `KillApplicationHandler.uncaughtException()`, deals with uncaught exceptions in any thread.
+   - **Setting Default Exception Handler:**
+     The app sets a default uncaught exception handler using Thread.setDefaultUncaughtExceptionHandler(new KillApplicationHandler()). This handler, implemented in KillApplicationHandler.uncaughtException(), deals with uncaught exceptions in any thread.
 
-2. **Requesting AMS for Exception Handling:**
-   - If an uncaught exception occurs, the app calls ActivityManagerService (AMS) to handle it through `handleApplicationCrash()`.
+  - **Requesting AMS for Exception Handling:**
+    If an uncaught exception occurs, the app calls ActivityManagerService (AMS) to handle it through handleApplicationCrash().
 
-3. **AMS Crash Handling:**
-   - AMS collects crash information using `handleApplicationCrashInner()` and sends it to DropBoxManagerService. The data is stored in a crash log file at `/data/system/dropbox`.
+  - **AMS Crash Handling:**
+    AMS collects crash information using handleApplicationCrashInner() and sends it to DropBoxManagerService. The data is stored in a crash log file at /data/system/dropbox.
 
-4. **DropBoxManagerService Log Creation:**
-   - DropBoxManagerService receives crash information from AMS and creates a crash log file in the `/data/system/dropbox` folder.
+ - **DropBoxManagerService Log Creation:**
+   DropBoxManagerService receives crash information from AMS and creates a crash log file in the /data/system/dropbox folder.
 
-5. **App Self-Termination:**
-   - The app takes necessary actions to terminate itself.
-
+ - **App Self-Termination:**
+   The app takes necessary actions to terminate itself.
 
 - Native components (JNI and Daemon) Memory Issue and Crash Handling:
 
