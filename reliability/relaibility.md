@@ -71,7 +71,7 @@ The flexibility of this reliability framework allows for potential extension to 
 
 Android Vitals is an integral part of the Android operating system, providing essential tools to seamlessly monitor and analyze app performance. Key features include:
 
-- Data Collection Mechanism: Android Vitals components collect vital issue (crashes, ANRs, and other essential data) directly from users' devices, ensuring minimal impact on app runtime.
+- Data Collection Mechanism: Android Vitals components collect vital issue (crashes, ANRs, and system-level event issue) directly from users' devices, ensuring minimal impact on app runtime.
 - Comprehensive Dashboard: The Android Vitals console offers a user-friendly dashboard for developers to assess and enhance the overall app quality and user experience.
 - Playstore Reporting Rest API: Developers can leverage the Playstore Reporting Rest API to collect detailed app quality data from Android Vitals.
 
@@ -150,31 +150,10 @@ Provides support for identifying and resolving TikTok-specific issues occurring,
 
 Considering TikTok's specific requirements and motivations, the existing tools face challenges in effectively meeting these needs. As a solution, the development of a dedicated TikTok Android App Reliability Framework becomes crucial to address and overcome these challenges.
 
+## 5 Essential Knowledge for TikTok Reliability Client Design
 
-# 5 TikTok Android App Reliability Framework Design
+### 5.1 Android Issue Collection Solution
 
-The TikTok Android App Reliability Framework Design includes key components working together to ensure the app's stability. The diagram below illustrates the interaction of important elements, such as the PlayStore Server, Android Vitals Console, TikTok Reliability Consoles for Production and Development, TikTok Reliability Server with essential services, and two devices equipped with TikTok Reliability Client and Android Vitals, one for Production, the other for development. This design aims to create a comprehensive framework for reliable app deployment, real-time monitoring, and issue resolution.
-
-<img src="tiktokb.png" alt="TiktokArchitecture"/>
-
-Key Components:
-
-- **TikTok Reliability Consoles for Production and Development:**
-Consoles dedicated to monitoring and managing the reliability of the TikTok app in both the production and development environments. These consoles facilitate real-time alerts, issue tracking, and overall performance assessment during the app's release and development phases. They provide tools, insights, and alert mechanisms to assist administrators and developers in addressing identified issues promptly.
-
-- **TikTok Reliability Server:**
-  The server component responsible for collecting and managing issues from devices with the TikTok app installed. It includes essential services such as ANR Service, Crash Service, Dashboard Service, Monitoring & Alerting Service, interacting with devices to ensure a seamless process.
-
-- **TikTok Reliability Client:**
-  Devices equipped with TikTok Reliability Client support monitoring of the app's reliability in the production environment. Additionally, they play a crucial role in assisting in identifying and resolving issues during the app's early stages in the development and testing phases.
-
-- **PlayStore Server with TikTok Android App Bundle:**
-  The server responsible for distributing the TikTok app to users through the Play Store. It includes the TikTok Android App Bundle, which may consist of on-demand modules for independent upgrading, contributing to a flexible and efficient app deployment process automaticlaly.
-
-For the purpose of this document and to manage our time effectively, we will be focusing on the design of the TikTok Reliability Client. This specific component plays a crucial role in monitoring the app's reliability in the production environment and assisting in issue identification and resolution during the app's early stages in the development and testing phases.
-## 5.1  TikTok Reliability Client Design
-
-### 5.1.1 Android Crash Data Collection Mechanism
 A common scenario for Java/Kotlin app crashes is caused by an uncaught throwable/exception and most crashes on the native side (C/C++) are related to improper memory handling. Therefore it is crucial to understand how the Android system collect crashes information in both Java/Native  environments. The following diagram shows the main work flow related to this topic:
 
 <img src="../quality/crash.png" alt="Crash"/>
@@ -217,6 +196,93 @@ Let's explain the daigram:
     - AMS Crash Handling: AMS has a NativeCrashListener thread observing crashes through a UDS socket. If it receives crash issue information from the crashdump process, it creates a NativeCrashReport thread and calls handleApplicationCrashInner() for further handling.
     - DropBoxManagerService Log Creation: Similar to Java code handling, the crash log is placed in the /data/dropbox folder.
 
-Please note that the above workflow is available only for Android apps. However, we can also utilize debuggerd_signal_handler and libAsan for our native Daemon development if necessary.
+In summary, We can adopt above principals for collecting crashes information cause in Java and native side.
+### 5.2 App Access to Issues
+The DropBoxManagerService handles various issues, including crashes, ANRs, and system-level events. When AMS adds an issue message to the dropbox file, a broadcast message is sent. The following code can be used to receive and process this message in our design:
+  ```c
+  public class DropBoxReceiver extends BroadcastReceiver {
+  
+      private static final String TAG = "DropBoxReceiver";
+  
+      @Override
+      public void onReceive(Context context, Intent intent) {
+          DropBoxManager dropBoxManager = (DropBoxManager) context.getSystemService(Context.DROPBOX);
+  
+          if (dropBoxManager != null) {
+              // Get the last entry from DropBoxManager
+              DropBoxManager.Entry entry = dropBoxManager.getNextEntry(null, 0);
+  
+              while (entry != null) {
+                  // Process the entry as needed
+                  String tag = entry.getTag();
+                  long timeMillis = entry.getTimeMillis();
+                  String text = entry.getText(4096); // Adjust the size as needed
+  
+                  Log.d(TAG, "Received DropBox entry - Tag: " + tag + ", Time: " + timeMillis + ", Text: " + text);
+  
+                  // Move to the next entry
+                  entry.close();
+                  entry = dropBoxManager.getNextEntry(tag, timeMillis);
+              }
+          }
+      }
+  }
+  ```
+### 5.3 Memory Leak Issue Collection
+
+LeakCanary is a powerful memory leak detection library for Android, offering two main features:
+- API Check: Developers can manually check any objects that are no longer needed using the provided API. The AppWatcher.objectwatch.watch() function creates a weak reference for the specified object. If this weak reference isn't cleared after a 5-second wait and garbage collection, the watched object is considered potentially leaking, and LeakCanary logs this information.
+
+- Automatic Check: LeakCanary goes beyond manual checks by automatically detecting memory leaks in specific scenarios without requiring additional code. It achieves this by leveraging Android's lifecycle hooks. This automation is based on the understanding that the referenced objects are no longer needed after these lifecycle events.
+
+Here is the princiapl of LeakCanary:
+
+- ObjectWatcher and Weak References:
+  
+  When an attachedObject is watched using  AppWatcher.objectwatch.watch(attachedObject, description), LeakCanary creates a weak reference to that attachedObject.
+- Garbage Collection and Weak References:
+
+  After a waiting period of 5 seconds, LeakCanary triggers garbage collection. Weak references allow the associated objects to be collected during garbage collection if there are no strong references pointing to them.
+
+- Detection of Retained Objects:
+
+  If the weak reference held by the ObjectWatcher isn't cleared after garbage collection, it implies that the watched object has not been properly released from memory. This situation indicates a potential memory leak, as the object should have been collected if it was no longer needed.
+
+- Logging and Identification:
+
+  LeakCanary logs information about the retained object, including its type and any provided description. Developers can inspect these logs to identify and address the source of the memory leak.
+
+In summary, LeakCanary uses weak references and a systematic process of garbage collection and observation to identify objects that should have been released but are still being retained in memory, signaling a potential memory leak message.  We can adopt this principal for our design.
+
+### 5.4 Memory Leak Issue Collection
+
+
+# 6 TikTok Android App Reliability Framework Design
+
+The TikTok Android App Reliability Framework Design includes key components working together to ensure the app's stability. The diagram below illustrates the interaction of important elements, such as the PlayStore Server, Android Vitals Console, TikTok Reliability Consoles for Production and Development, TikTok Reliability Server with essential services, and two devices equipped with TikTok Reliability Client and Android Vitals, one for Production, the other for development. This design aims to create a comprehensive framework for reliable app deployment, real-time monitoring, and issue resolution.
+
+<img src="tiktokb.png" alt="TiktokArchitecture"/>
+
+Key Components:
+
+- **TikTok Reliability Consoles for Production and Development:**
+Consoles dedicated to monitoring and managing the reliability of the TikTok app in both the production and development environments. These consoles facilitate real-time alerts, issue tracking, and overall performance assessment during the app's release and development phases. They provide tools, insights, and alert mechanisms to assist administrators and developers in addressing identified issues promptly.
+
+- **TikTok Reliability Server:**
+  The server component responsible for collecting and managing issues from devices with the TikTok app installed. It includes essential services such as ANR Service, Crash Service, Dashboard Service, Monitoring & Alerting Service, interacting with devices to ensure a seamless process.
+
+- **TikTok Reliability Client:**
+  Devices equipped with TikTok Reliability Client support monitoring of the app's reliability in the production environment. Additionally, they play a crucial role in assisting in identifying and resolving issues during the app's early stages in the development and testing phases.
+
+- **PlayStore Server with TikTok Android App Bundle:**
+  The server responsible for distributing the TikTok app to users through the Play Store. It includes the TikTok Android App Bundle, which may consist of on-demand modules for independent upgrading, contributing to a flexible and efficient app deployment process automaticlaly.
+
+For the purpose of this document and to manage our time effectively, we will be focusing on the design of the TikTok Reliability Client. This specific component plays a crucial role in monitoring the app's reliability in the production environment and assisting in issue identification and resolution during the app's early stages in the development and testing phases.
+
+
+
+## 5.1  TikTok Reliability Client Design
+
+
 ### 5.1.2 Rendering Information Collection Mechanism
 
