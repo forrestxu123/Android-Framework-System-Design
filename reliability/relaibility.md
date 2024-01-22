@@ -181,7 +181,7 @@ A common scenario for Java/Kotlin app crashes is caused by an uncaught throwable
 
 Let's explain the daigram:
 - Java/Kotlin based Components (App and System Server) Crash Handling:
-   - **Setting Default Exception Handler:**
+  - **Setting Default Exception Handler:**
      The app sets a default uncaught exception handler using Thread.setDefaultUncaughtExceptionHandler(new KillApplicationHandler()). This handler, implemented in KillApplicationHandler.uncaughtException(), deals with uncaught exceptions in any thread.
 
   - **Requesting AMS for Exception Handling:**
@@ -205,7 +205,7 @@ Let's explain the daigram:
     - SIGILL (Illegal Instruction)
     - SIGSEGV (Segmentation Fault)
     - SIGSTKFLT (Stack Fault)
- - **Runtime Environment Setup:**
+  - **Runtime Environment Setup:**
     - Android loads liblinker, debugged library, and [libAsan](https://developer.android.com/ndk/guides/gwp-asan) at the app's start to enhance debugging and analysis capabilities during runtime.
     - *liblinker:* Responsible for dynamic linking, loading, and unloading of shared libraries.
     - *Debugged Library:* Provides additional debugging information for identifying and resolving issues during runtime.
