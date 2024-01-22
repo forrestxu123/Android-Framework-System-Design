@@ -197,7 +197,7 @@ Let's explain the daigram:
     - DropBoxManagerService Log Creation: Similar to Java code handling, the crash log is placed in the /data/dropbox folder.
 
 In summary, We can adopt above principals for collecting crashes information cause in Java and native side for our design.
-### 5.2 App Access to Issues
+### 5.2 App Access to Issues Log
 The DropBoxManagerService handles various issues, including crashes, ANRs, and system-level events. When AMS adds an issue message to the dropbox file, a broadcast message is sent. The following code can be used to receive and process this message in our design:
   ```c
   public class DropBoxReceiver extends BroadcastReceiver {
@@ -228,9 +228,9 @@ The DropBoxManagerService handles various issues, including crashes, ANRs, and s
       }
   }
   ```
-### 5.3 Memory Leak Issue Collection
+### 5.3 App Access to Memory Leak Issue Log
 
-LeakCanary is a powerful memory leak detection library for Android, offering two main features:
+LeakCanary is a  memory leak detection library for Android, offering two main features:
 - API Check: Developers can manually check any objects that are no longer needed using the provided API. The AppWatcher.objectwatch.watch() function creates a weak reference for the specified object. If this weak reference isn't cleared after a 5-second wait and garbage collection, the watched object is considered potentially leaking, and LeakCanary logs this information.
 
 - Automatic Check: LeakCanary goes beyond manual checks by automatically detecting memory leaks in specific scenarios without requiring additional code. It achieves this by leveraging Android's lifecycle hooks. This automation is based on the understanding that the referenced objects are no longer needed after these lifecycle events.
@@ -254,7 +254,101 @@ Here is the princiapl of LeakCanary:
 
 In summary, LeakCanary uses weak references and a systematic process of garbage collection and observation to identify objects that should have been released but are still being retained in memory, signaling a potential memory leak message.  We can adopt this principal for our design.
 
-### 5.4 Memory Leak Issue Collection
+### 5.4  Detecting UI Thread Blocking Issues
+BlockCanary is a tool to detect when the UI thread is blocked for a certain period. It provides insights into the code causing the blockage, helping developers identify performance bottlenecks and optimize their applications for better responsiveness. Here is its archtecture diagram:
+
+<img src="blockcanary.png" alt="Crash"/>
+
+Key features of BlockCanary include:
+
+Detection of UI Thread Blockages: BlockCanary monitors the UI thread and detects when it is blocked due to long-running tasks or inefficient code.
+
+Automatic Logging: When a UI thread blockage is detected, BlockCanary automatically logs information about the blocked thread, including the stack trace and duration of the blockage.
+
+**Looper with custom logging**
+
+Inspect the AOSP code snippet for Looper:
+```c
+public final class Looper {
+    private Printer mLogging;
+    // Used for customized Printer for logging
+    public void setMessageLogging(@Nullable Printer printer) {
+        mLogging = printer;
+    }
+
+    public static Looper getMainLooper() {
+        ...
+    }
+
+    public static void loop() {
+        final Looper me = myLooper();
+   	...
+
+        for (;;) {
+            if (!loopOnce(me, ident, thresholdOverride)) {
+                return;
+            }
+        }
+    }
+
+   private static boolean loopOnce(final Looper me,
+            final long ident, final int thresholdOverride) {
+        Message msg = me.mQueue.next(); // Specifically, each frame rendering involves receiving a message here
+        ...
+        final Printer logging = me.mLogging;
+        if (logging != null) {
+            logging.println(">>>>> Dispatching to " + msg.target + " "
+                    + msg.callback + ": " + msg.what);
+        }
+        ...
+        token = observer.messageDispatchStarting();
+        ...
+
+        if (logging != null) {
+            logging.println("<<<<< Finished to " + msg.target + " " + msg.callback);
+        }
+        ...
+    }
+}
+```
+In this custom logging mechanism, each frame rendering results in a message being received.
+
+As we can see, each frame rendering will cause me.mQueue.next() to receive a message. The information will be logged before and after the message is processed. This approach is utilized by monitoring tools like BlockCanary. Developing a custom logging mechanism allows us to incorporate various features, such as detecting frame drops during graphic rendering, capturing stack information when a frame is dropped, and measuring navigation time when a button is clicked. However, this solution has some limitations. It is primarily focused on UI rendering and also does not take print time cost into consideration.
+
+**Choreographer#postFrameCallback**
+
+Analyzing the Choreographer class reveals the following:
+
+- postFrameCallback (Choreographer.FrameCallback callback): Posts a frame callback to run on the next frame. The callback runs once and is automatically removed.
+- Choreographer.FrameCallback#doFrame(long frameTimeNanos): Called when a new display frame is being rendered, providing the time (in nanoseconds) when the frame started rendering.
+- The difference between two consecutive frameTimeNanos values represents the time taken to render the previous frame.
+We can utilize the following code snippet to monitor frame rendering:
+
+```c
+Choreographer.getInstance().postFrameCallback(new Choreographer.FrameCallback() {
+    private long lastFrameTimeNanos = 0;
+    @Override
+    public void doFrame(long frameTimeNanos) {
+        if (lastFrameTimeNanos == 0) {
+            lastFrameTimeNanos = frameTimeNanos;
+            Choreographer.getInstance().postFrameCallback(this);
+            return;
+        }
+        double diff = (frameTimeNanos - lastFrameTimeNanos) / 1000000.0;
+        if (diff > 16.67) {
+            int dropCount = (int) (diff / 16.7);
+            if (dropCount >= 2) {
+                Log.w(TAG, dropCount + " frames have been dropped. Time difference: " + diff + " ms");
+
+            }
+        }
+        lastFrameTimeNanos = frameTimeNanos;
+        Choreographer.getInstance().postFrameCallback(this);
+    }
+});
+```
+This solution is also focused on UI rendering and does not take print time cost into consideration.
+
 
 
 # 6 TikTok Android App Reliability Framework Design
