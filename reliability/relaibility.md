@@ -196,7 +196,7 @@ Let's explain the daigram:
     - AMS Crash Handling: AMS has a NativeCrashListener thread observing crashes through a UDS socket. If it receives crash issue information from the crashdump process, it creates a NativeCrashReport thread and calls handleApplicationCrashInner() for further handling.
     - DropBoxManagerService Log Creation: Similar to Java code handling, the crash log is placed in the /data/dropbox folder.
 
-In summary, We can adopt above principals for collecting crashes information cause in Java and native side.
+In summary, We can adopt above principals for collecting crashes information cause in Java and native side for our design.
 ### 5.2 App Access to Issues
 The DropBoxManagerService handles various issues, including crashes, ANRs, and system-level events. When AMS adds an issue message to the dropbox file, a broadcast message is sent. The following code can be used to receive and process this message in our design:
   ```c
