@@ -181,16 +181,20 @@ A common scenario for Java/Kotlin app crashes is caused by an uncaught throwable
 
 Let's explain the daigram:
 - Java/Kotlin based Components (App and System Server) Crash Handling:
-  - App sets default uncaught exception handle:
-     When an app is forked, it calls Thread.setDefaultUncaughtExceptionHandler(new KillApplicationHandler()) to set the default uncaught exception handler for all throwable or exceptions in the process using an instance of KillApplicationHandler. Now, when an uncaught exception occurs in any thread within the process, KillApplicationHandler.uncaughtException() will be called to handle that exception.
-  - request ActivityManagerService(AMS) to handle uncaught exception handle:
-    uncaughtException() calls the ActivityManager method handleApplicationCrash() when a throwable is not caught in the current app to request AMS for crash handling.
-  - AMS Crash Handling:
-    AMS collects all crash information needs through handleApplicationCrashInner() and sends it to DropBoxManagerService by calling the method DropBoxManager#addData().
-  - DropBoxManagerService creates crash log information:
-    DropBoxManagerService receives the crash information from AMS and store crash information log file into /data/system/dropbox folder.
-  - App Self-Termination Handling:
-    the App takes appropriate actions to terminate itself.
+   - **Setting Default Exception Handler:**
+     The app sets a default uncaught exception handler using Thread.setDefaultUncaughtExceptionHandler(new KillApplicationHandler()). This handler, implemented in KillApplicationHandler.uncaughtException(), deals with uncaught exceptions in any thread.
+
+  - **Requesting AMS for Exception Handling:**
+    If an uncaught exception occurs, the app calls ActivityManagerService (AMS) to handle it through handleApplicationCrash().
+
+  - **AMS Crash Handling:**
+    AMS collects crash information using handleApplicationCrashInner() and sends it to DropBoxManagerService. The data is stored in a crash log file at /data/system/dropbox.
+
+  - **DropBoxManagerService Log Creation:**
+    DropBoxManagerService receives crash information from AMS and creates a crash log file in the /data/system/dropbox folder.
+
+  - **App Self-Termination:**
+   The app takes necessary actions to terminate itself.
 
 - Native components (JNI and Daemon) Memory Issue and Crash Handling:
 
@@ -223,5 +227,41 @@ Let's explain the daigram:
   - DropBoxManagerService creates crash log information.
     
     Similar to the handling in Java code, the crash log is put into the /data/dropbox folder.
+
+
+## Native Components Memory Issue and Crash Handling:
+
+- **Signal Issuing:**
+  - Any crash in native components triggers a signal from the following list in Android:
+    - SIGABRT (Abort)
+    - SIGBUS (Bus Error)
+    - SIGFPE (Floating Point Exception)
+    - SIGILL (Illegal Instruction)
+    - SIGSEGV (Segmentation Fault)
+    - SIGSTKFLT (Stack Fault)
+
+
+### Runtime Environment Setup:
+- Android loads liblinker, debugged library, and [libAsan](https://developer.android.com/ndk/guides/gwp-asan) at the app's start to enhance debugging and analysis capabilities during runtime.
+  - **liblinker:** Responsible for dynamic linking, loading, and unloading of shared libraries.
+  - **Debugged Library:** Provides additional debugging information for identifying and resolving issues during runtime.
+  - **libAsan (Android 8.1+):** A memory error detector tool identifying issues like buffer overflows, use-after-free, and memory corruptions.
+
+### ASan Issue or Crash Handling Workflow:
+1. **Triggering Crash Issue Handling:**
+   - Kernel or ASan triggers a crash signal, invoking `debuggerd_signal_handler()` in the debugged library to handle crash issue information.
+
+2. **Debuggerd Dispatch Pseudo Thread:**
+   - `debuggerd_signal_handler()` creates `debuggerd_dispatch_pseudo_thread`, which initiates the crashdump process, transferring crash issue information via a Pipe.
+
+3. **Log Handling:**
+   - Crashdump uses UDS to send crash issue information to tombstoned daemon for logging at `/data/tombstone`. Additionally, it sends information to AMS for logging.
+
+4. **AMS Crash Handling:**
+   - AMS has a NativeCrashListener thread observing crashes through a UDS socket. If it receives crash issue information from the crashdump process, it creates a NativeCrashReport thread and calls `handleApplicationCrashInner()` for further handling.
+
+5. **DropBoxManagerService Log Creation:**
+   - Similar to Java code handling, the crash log is placed in the `/data/dropbox` folder.
+
 
 Please note that the above workflow is available only for Android apps. However, we can also utilize debuggerd_signal_handler and libAsan for our native Daemon development if necessary.
