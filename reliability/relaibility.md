@@ -155,7 +155,7 @@ Considering TikTok's specific requirements and motivations, the existing tools f
 
 The TikTok Android App Reliability Framework Design includes key components working together to ensure the app's stability. The diagram below illustrates the interaction of important elements, such as the PlayStore Server, Android Vitals Console, TikTok Reliability Consoles for Production and Development, TikTok Reliability Server with essential services, and two devices equipped with TikTok Reliability Client and Android Vitals, one for Production, the other for development. This design aims to create a comprehensive framework for reliable app deployment, real-time monitoring, and issue resolution.
 
-<img src="../quality/tiktoka.png" alt="TiktokArchitecture"/>
+<img src="tiktoka.png" alt="TiktokArchitecture"/>
 
 Key Components:
 
@@ -177,7 +177,7 @@ For the purpose of this document and to manage our time effectively, we will be 
 ### 5.1.1 Crash Data Collection Mechanism
 A common scenario for Java/Kotlin app crashes is caused by an uncaught throwable/exception and most crashes on the native side (C/C++) are related to improper memory handling. Therefore it is crucial to understand how the Android system collect crashes information in both Java/Native  environments. The following diagram shows the main work flow related to this topic:
 
-<img src="crash.png" alt="Crash"/>
+<img src="../quality/crash.png" alt="Crash"/>
 
 Let's explain the daigram:
 - Java/Kotlin based Components (App and System Server) Crash Handling:
