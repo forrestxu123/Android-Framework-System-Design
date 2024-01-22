@@ -174,7 +174,7 @@ Consoles dedicated to monitoring and managing the reliability of the TikTok app 
 For the purpose of this document and to manage our time effectively, we will be focusing on the design of the TikTok Reliability Client. This specific component plays a crucial role in monitoring the app's reliability in the production environment and assisting in issue identification and resolution during the app's early stages in the development and testing phases.
 ## 5.1  TikTok Reliability Client Design
 
-### 5.1.1 Crash Data Collection Mechanism
+### 5.1.1 Android Crash Data Collection Mechanism
 A common scenario for Java/Kotlin app crashes is caused by an uncaught throwable/exception and most crashes on the native side (C/C++) are related to improper memory handling. Therefore it is crucial to understand how the Android system collect crashes information in both Java/Native  environments. The following diagram shows the main work flow related to this topic:
 
 <img src="../quality/crash.png" alt="Crash"/>
@@ -218,3 +218,5 @@ Let's explain the daigram:
     - DropBoxManagerService Log Creation: Similar to Java code handling, the crash log is placed in the /data/dropbox folder.
 
 Please note that the above workflow is available only for Android apps. However, we can also utilize debuggerd_signal_handler and libAsan for our native Daemon development if necessary.
+### 5.1.2 Rendering Information Collection Mechanism
+
