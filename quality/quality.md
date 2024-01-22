@@ -422,7 +422,7 @@ As we can see, a common scenario for Java/Kotlin app crashes is caused by an unc
 
 Let's explain the daigram:
 - Java/Kotlin based Components (App and System Server) Crash Handling:
-   - **Setting Default Exception Handler:**
+  - **Setting Default Exception Handler:**
      The app sets a default uncaught exception handler using Thread.setDefaultUncaughtExceptionHandler(new KillApplicationHandler()). This handler, implemented in KillApplicationHandler.uncaughtException(), deals with uncaught exceptions in any thread.
 
   - **Requesting AMS for Exception Handling:**
@@ -437,8 +437,7 @@ Let's explain the daigram:
   - **App Self-Termination:**
    The app takes necessary actions to terminate itself.
 
-- **Native Components Memory Issue and Crash Handling:**
-
+- Native components (JNI and Daemon) Memory Issue and Crash Handling:
   - **Signal Issuing:**
     Any crash in native components triggers a signal from the following list in Android:
     - SIGABRT (Abort)
@@ -447,20 +446,17 @@ Let's explain the daigram:
     - SIGILL (Illegal Instruction)
     - SIGSEGV (Segmentation Fault)
     - SIGSTKFLT (Stack Fault)
- - **Runtime Environment Setup:**
+  - **Runtime Environment Setup:**
     - Android loads liblinker, debugged library, and [libAsan](https://developer.android.com/ndk/guides/gwp-asan) at the app's start to enhance debugging and analysis capabilities during runtime.
     - *liblinker:* Responsible for dynamic linking, loading, and unloading of shared libraries.
     - *Debugged Library:* Provides additional debugging information for identifying and resolving issues during runtime.
     - *libAsan (Android 8.1+):* A memory error detector tool identifying issues like buffer overflows, use-after-free, and memory corruptions.
-
-    
   - **ASan Issue or Crash Handling Workflow:**
     - Triggering Crash Issue Handling: Kernel or ASan triggers a crash signal, invoking debuggerd_signal_handler() in the debugged library to handle crash issue information.
     - Debuggerd Dispatch Pseudo Thread: debuggerd_signal_handler() creates debuggerd_dispatch_pseudo_thread, which initiates the crashdump process, transferring crash issue information via a Pipe.
     - Log Handling: Crashdump uses UDS to send crash issue information to tombstoned daemon for logging at /data/tombstone. Additionally, it sends information to AMS for logging.
-    - AMS Crash Handling: AMS has a NativeCrashListener thread observing crashes through a UDS socket. If it receives crash issue information from the crashdump process, it creates a NativeCrashReport thread and calls `handleApplicationCrashInner()` for further handling.
+    - AMS Crash Handling: AMS has a NativeCrashListener thread observing crashes through a UDS socket. If it receives crash issue information from the crashdump process, it creates a NativeCrashReport thread and calls handleApplicationCrashInner() for further handling.
     - DropBoxManagerService Log Creation: Similar to Java code handling, the crash log is placed in the /data/dropbox folder.
-
 Please note that the above workflow is available only for Android apps. However, we can also utilize debuggerd_signal_handler and libAsan for our native Daemon development if necessary.
 
 #### 1.2.2  Crash Analysis
