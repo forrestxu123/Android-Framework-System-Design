@@ -102,8 +102,6 @@ Android Studio Profiler is a powerful performance analysis tool integrated into 
 - Energy Profiling: Analyze energy consumption to optimize battery efficiency.
 - Seamless Integration: Integrated directly into Android Studio for convenient performance analysis and debugging.
 
-
-
 # 4 TikTok Android App Reliability Framework Analysis
 
 ## 4.1 Motivation
@@ -124,32 +122,27 @@ Helps administrators and developers by providing them with a comprehensive set o
 
 This approach not only accelerates the issue resolution process but also enhances the overall efficiency of the development and maintenance teams by providing multiple channels for immediate awareness and response.
 
-- **QMinimizing Issues on Release**
+- **Minimizing Issues on Release**
 
 The framework aims to minimize issues upon release, ensuring a smoother release and improved user satisfaction.
 
-- **QModule-Based Quick Upgrades**
+- **Module-Based Quick Upgrades**
 
 The framework facilitates module-based quick upgrades, allowing for rapid deployment of fixes once issues have been identified and resolved. This modular approach enables targeted updates, minimizing the impact on unaffected components and ensuring a swift response to emerging challenges.
 
-- **QSupport for TikTok-Specific Issues in the Main Thread**
+- **Support for TikTok-Specific Issues in the Main Thread**
 
 Provides support for identifying and resolving TikTok-specific issues occurring in the main thread, offering customized solutions for optimizing performance and reliability.
 
 ## 4.2 Limitations of Existing Systems
 
-### 4.2.1 Android Vitals
-
-Android Vitals, although integral to the Android operating system, has a notable limitation in its focus on released apps. This implies that its effectiveness is diminished during the development phase, where dynamic and frequent analysis is crucial for identifying and addressing issues promptly.
-
-### 4.2.2 Firebase Crashlytics
-
-...
-
-### 4.2.3 Perfetto, Systrace, and Android Studio Profiler
-
-...
-
+- **Android Vitals and Firebase Crashlytics** 
+ - Network Cost for billion of device, release App focuse 
+ - Release App focuse, their effectiveness is diminished during the development phase, where dynamic and frequent analysis is crucial for identifying and addressing issues promptly.
+ - may not includes the vitals information that Tiktok needs
+- **Perfetto, Systrace, and Android Studio Profiler**
+ - Single device only. Can only be used for debug a specfic device.
+ 
 ## 4.3 TikTok Android App Reliability Framework Rationale
 
 In light of the identified limitations in existing systems, the TikTok Android App Reliability Framework is proposed to address specific challenges and requirements unique to the development, testing, and release phases of the TikTok app. The framework aims to provide a tailored solution that overcomes the shortcomings observed in the current toolset.
