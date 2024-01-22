@@ -2,11 +2,11 @@
 # TikTok Android App Reliability Framework Recommendations
 **by [Jinlin Xu]**
 
-
-# TikTok Reliability Framework Recommendations
-
-## 1 Overview
-The primary goal of the reliability framework is to enhance the TikTok Android app's reliability by addressing issues such as crashes, ANRs, performance challenges, memory management issues, and system event-related problems (e.g., network changes, battery events). These recommendations aim to ensure the reliability, monitoring, alerting, identification, and location of issues while maintaining the overall quality of the TikTok app throughout its lifecycle, including the stages of development, testing, app publishing, release, and upgrade. As results of the framework, it can help us minimize issues during app release and facilitate quick updates through module-based delivery.
+# 1 Overview
+The primary goal of the reliability framework is to enhance the TikTok Android app's reliability by addressing issues below:
+  - General app  issues such as crashes, ANRs, performance challenges, memory management issues and system event-related problems (e.g., network changes, battery events) 
+  - Tiktok specific issue (to be defined) in main thread such as: Time spent.  battery usage when a specific button is clicked or a task is performed,
+These recommendations aim to ensure the reliability, monitoring, alerting, identification, and location of issues while maintaining the overall quality of the TikTok app throughout its lifecycle, including the stages of development, testing, app publishing, release, and upgrade. As results of the framework, it can help us minimize issues during app release and facilitate quick updates through module-based delivery.
 The flexibility of this reliability framework allows for potential extension to different operating systems, providing a versatile solution for enhancing app reliability across diverse platforms.
 
 
@@ -17,7 +17,7 @@ The flexibility of this reliability framework allows for potential extension to 
 ### 2.1.1 Tiktok Reliability Client
 
 - **Identify Issues:**
-  - Develop functionality to identify issues within the TikTok app.
+  - Develop functionality to identify issues within the TikTok app. 
   
 - **Issue Collection:**
   - Implement a mechanism to collect issues, including call stack information, from the suite of automated/manual tests in the global QA and development teams.
@@ -101,3 +101,55 @@ Android Studio Profiler is a powerful performance analysis tool integrated into 
 - Resource Allocation: Identify resource-intensive operations impacting app performance.
 - Energy Profiling: Analyze energy consumption to optimize battery efficiency.
 - Seamless Integration: Integrated directly into Android Studio for convenient performance analysis and debugging.
+
+
+
+# 4 TikTok Android App Reliability Framework Analysis
+
+## 4.1 Motivation
+
+The TikTok Android App Reliability Framework is driven by the following key motivations:
+
+### Early Issue Detection and Resolution
+
+Supports the early detection, location, and resolution of issues during the development, testing, and release phases and ensures that potential issues are identified and addressed at the earliest stages of the app lifecycle.
+
+### Quick Issue Identification for Admin and Developers
+
+Helps administrators and developers by providing them with a comprehensive set of tools, insights, and alert mechanisms to become the first responders to identified issues. This includes, but is not limited to:
+
+- **Real-time Alerts:** Provides real-time alerts through various channels such as email and phone calls, ensuring that administrators and developers are promptly notified of identified issues.
+
+- **Issue Tracking Records:** An integrated issue tracking system will record and manage identified issues, enabling a structured and traceable process for issue resolution.
+
+This approach not only accelerates the issue resolution process but also enhances the overall efficiency of the development and maintenance teams by providing multiple channels for immediate awareness and response.
+
+### Minimizing Issues on Release
+
+The framework aims to minimize issues upon release, ensuring a smoother release and improved user satisfaction.
+
+### Module-Based Quick Upgrades
+
+The framework facilitates module-based quick upgrades, allowing for rapid deployment of fixes once issues have been identified and resolved. This modular approach enables targeted updates, minimizing the impact on unaffected components and ensuring a swift response to emerging challenges.
+
+### Support for TikTok-Specific Issues in the Main Thread
+
+Provides support for identifying and resolving TikTok-specific issues occurring in the main thread, offering customized solutions for optimizing performance and reliability.
+
+## 4.2 Limitations of Existing Systems
+
+### 4.2.1 Android Vitals
+
+Android Vitals, although integral to the Android operating system, has a notable limitation in its focus on released apps. This implies that its effectiveness is diminished during the development phase, where dynamic and frequent analysis is crucial for identifying and addressing issues promptly.
+
+### 4.2.2 Firebase Crashlytics
+
+...
+
+### 4.2.3 Perfetto, Systrace, and Android Studio Profiler
+
+...
+
+## 4.3 TikTok Android App Reliability Framework Rationale
+
+In light of the identified limitations in existing systems, the TikTok Android App Reliability Framework is proposed to address specific challenges and requirements unique to the development, testing, and release phases of the TikTok app. The framework aims to provide a tailored solution that overcomes the shortcomings observed in the current toolset.
