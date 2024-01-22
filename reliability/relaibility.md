@@ -148,11 +148,28 @@ Provides support for identifying and resolving TikTok-specific issues occurring,
 
 ## 4.3 Conclusion
 
-In light of TikTok's specific requirements and motivations, the current tools present challenges in meeting these needs effectively. As a solution, the creation of a dedicated TikTok Android App Reliability Framework becomes crucial to address and overcome these challenges.
+Considering TikTok's specific requirements and motivations, the existing tools face challenges in effectively meeting these needs. As a solution, the development of a dedicated TikTok Android App Reliability Framework becomes crucial to address and overcome these challenges.
+
 
 # 5 TikTok Android App Reliability Framework Design
-The TikTok Android App Reliability Framework Design includes key components working together to ensure the app's stability. The diagram below illustrates the interaction of important elements, such as the PlayStore Server, Android Vitals Console, TikTok Reliability Consoles for Production and Development, TikTok Reliability Server with essential services, and two devices equipped with TikTok Reliability Client and Android Vitals, one for  Production, the other for development. This design aims to create a comprehensive framework for reliable app deployment, real-time monitoring, and issue resolution.
 
-  <img src="tiktoka.png" alt="TiktokAchitecture"/>
+The TikTok Android App Reliability Framework Design includes key components working together to ensure the app's stability. The diagram below illustrates the interaction of important elements, such as the PlayStore Server, Android Vitals Console, TikTok Reliability Consoles for Production and Development, TikTok Reliability Server with essential services, and two devices equipped with TikTok Reliability Client and Android Vitals, one for Production, the other for development. This design aims to create a comprehensive framework for reliable app deployment, real-time monitoring, and issue resolution.
 
+<img src="tiktoka.png" alt="TiktokArchitecture"/>
 
+Key Components:
+
+- **TikTok Reliability Consoles for Production and Development:**
+Consoles dedicated to monitoring and managing the reliability of the TikTok app in both the production and development environments. These consoles facilitate real-time alerts, issue tracking, and overall performance assessment during the app's release and development phases. They provide tools, insights, and alert mechanisms to assist administrators and developers in addressing identified issues promptly.
+
+- **TikTok Reliability Server:**
+  The server component responsible for collecting and managing issues from devices with the TikTok app installed. It includes essential services such as ANR Service, Crash Service, Dashboard Service, Monitoring & Alerting Service, interacting with devices to ensure a seamless process.
+
+- **TikTok Reliability Client:**
+  Devices equipped with TikTok Reliability Client support monitoring of the app's reliability in the production environment. Additionally, they play a crucial role in assisting in identifying and resolving issues during the app's early stages in the development and testing phases.
+
+- **PlayStore Server with TikTok Android App Bundle:**
+  The server responsible for distributing the TikTok app to users through the Play Store. It includes the TikTok Android App Bundle, which may consist of on-demand modules for independent upgrading, contributing to a flexible and efficient app deployment process automaticlaly.
+
+For the purpose of this document and to manage our time effectively, we will be focusing on the design of the TikTok Reliability Client. This specific component plays a crucial role in monitoring the app's reliability in the production environment and assisting in issue identification and resolution during the app's early stages in the development and testing phases.
+## 5.1  TikTok Reliability Client Design
