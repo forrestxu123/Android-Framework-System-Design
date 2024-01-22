@@ -173,3 +173,55 @@ Consoles dedicated to monitoring and managing the reliability of the TikTok app 
 
 For the purpose of this document and to manage our time effectively, we will be focusing on the design of the TikTok Reliability Client. This specific component plays a crucial role in monitoring the app's reliability in the production environment and assisting in issue identification and resolution during the app's early stages in the development and testing phases.
 ## 5.1  TikTok Reliability Client Design
+
+### 5.1.1 Crash Data Collection Mechanism
+A common scenario for Java/Kotlin app crashes is caused by an uncaught throwable/exception and most crashes on the native side (C/C++) are related to improper memory handling. Therefore it is crucial to understand how the Android system collect crashes information in both Java/Native  environments. The following diagram shows the main work flow related to this topic:
+
+<img src="crash.png" alt="Crash"/>
+
+Let's explain the daigram:
+- Java/Kotlin based Components (App and System Server) Crash Handling:
+  - App sets default uncaught exception handle:
+     When an app is forked, it calls Thread.setDefaultUncaughtExceptionHandler(new KillApplicationHandler()) to set the default uncaught exception handler for all throwable or exceptions in the process using an instance of KillApplicationHandler. Now, when an uncaught exception occurs in any thread within the process, KillApplicationHandler.uncaughtException() will be called to handle that exception.
+  - request ActivityManagerService(AMS) to handle uncaught exception handle:
+    uncaughtException() calls the ActivityManager method handleApplicationCrash() when a throwable is not caught in the current app to request AMS for crash handling.
+  - AMS Crash Handling:
+    AMS collects all crash information needs through handleApplicationCrashInner() and sends it to DropBoxManagerService by calling the method DropBoxManager#addData().
+  - DropBoxManagerService creates crash log information:
+    DropBoxManagerService receives the crash information from AMS and store crash information log file into /data/system/dropbox folder.
+  - App Self-Termination Handling:
+    the App takes appropriate actions to terminate itself.
+
+- Native components (JNI and Daemon) Memory Issue and Crash Handling:
+
+  Any native component crash will cause the kernel to issue a signal from the list below in Android:
+  - SIGABRT (Abort)
+  - SIGBUS (Bus Error)
+  - SIGFPE (Floating Point Exception)
+  - SIGILL (Illegal Instruction)
+  - SIGSEGV (Segmentation Fault)
+  - SIGSTKFLT (Stack Fault)
+    
+  To support users in analyzing crashes and memory issues, Android loads liblinker, debugged library, and [libAsan] (https://developer.android.com/ndk/guides/gwp-asan) when the app is started. This loading occurs as part of the Android runtime environment and aims to enhance debugging and analysis capabilities during runtime.
+   - liblinker: A part of the Android runtime environment responsible for dynamic linking, loading, and unloading of shared libraries.
+   - Debugged Library: When loaded, it provides additional debugging information, aiding developers in identifying and resolving issues during runtime.
+   - libAsan (Android 8.1+): libAsan (AddressSanitizer) is a memory error detector tool that helps identify memory-related issues such as buffer overflows, use-after-free, and other memory corruptions at runtime, providing enhanced runtime debugging capabilities.
+
+  When an ASan issue or crash occurs, the kernel and ASan tool provides detailed information about the problem, including the location in the code where the issue happened, the type of issue (e.g., buffer overflow), and other relevant details. This information is valuable for developers to identify and fix bugs that could lead to crashes or other unexpected behavior. We will discuss this information in the next section. This section focuses on how the information of ASan issues or crashes is collected (To simplify, we call it a crash issue here). Here is the main workflow related to this topic:
+  - Triggle crash issue handling:
+    
+    The kernel triggers a crash signal or ASan triggers a memory issue. It causes the current app to use the debuggerd_signal_handler() method in the debugged library to handle crash issue information.
+  - Create debuggerd dispatch pseudo thread to transfer crash issue information to the crashdump process:
+    
+    The debuggerd_signal_handler() method creates the debuggerd_dispatch_pseudo_thread. The debuggerd_dispatch_pseudo_thread creates the crashdump process and passes crash issue information to crashdump using a Pipe.
+  - Log handling:
+    
+    The crashdump uses UDS to send crash issue information to tombstoned daemon for logging and store the informatuin at /data/tombstone.  The crashdump also uses UDS to send crash issue information to AMS for logging.
+  - AMS Crash Handling:
+    
+    AMS has a NativeCrashListener thread started at the System Server launch stage. It creates a UDS socket to observe the crash from the crashdump process. If it receives crash issue information from the crashdump process, it creates a NativeCrashReport thread and calls handleApplicationCrashInner() for further handling.
+  - DropBoxManagerService creates crash log information.
+    
+    Similar to the handling in Java code, the crash log is put into the /data/dropbox folder.
+
+Please note that the above workflow is available only for Android apps. However, we can also utilize debuggerd_signal_handler and libAsan for our native Daemon development if necessary.
