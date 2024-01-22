@@ -437,37 +437,29 @@ Let's explain the daigram:
   - **App Self-Termination:**
    The app takes necessary actions to terminate itself.
 
-- Native components (JNI and Daemon) Memory Issue and Crash Handling:
+- **Native Components Memory Issue and Crash Handling:**
 
-  Any native component crash will cause the kernel to issue a signal from the list below in Android:
-  - SIGABRT (Abort)
-  - SIGBUS (Bus Error)
-  - SIGFPE (Floating Point Exception)
-  - SIGILL (Illegal Instruction)
-  - SIGSEGV (Segmentation Fault)
-  - SIGSTKFLT (Stack Fault)
-    
-  To support users in analyzing crashes and memory issues, Android loads liblinker, debugged library, and [libAsan] (https://developer.android.com/ndk/guides/gwp-asan) when the app is started. This loading occurs as part of the Android runtime environment and aims to enhance debugging and analysis capabilities during runtime.
-   - liblinker: A part of the Android runtime environment responsible for dynamic linking, loading, and unloading of shared libraries.
-   - Debugged Library: When loaded, it provides additional debugging information, aiding developers in identifying and resolving issues during runtime.
-   - libAsan (Android 8.1+): libAsan (AddressSanitizer) is a memory error detector tool that helps identify memory-related issues such as buffer overflows, use-after-free, and other memory corruptions at runtime, providing enhanced runtime debugging capabilities.
+  - **Signal Issuing:**
+    Any crash in native components triggers a signal from the following list in Android:
+    - SIGABRT (Abort)
+    - SIGBUS (Bus Error)
+    - SIGFPE (Floating Point Exception)
+    - SIGILL (Illegal Instruction)
+    - SIGSEGV (Segmentation Fault)
+    - SIGSTKFLT (Stack Fault)
+ - **Runtime Environment Setup:**
+    - Android loads liblinker, debugged library, and [libAsan](https://developer.android.com/ndk/guides/gwp-asan) at the app's start to enhance debugging and analysis capabilities during runtime.
+    - *liblinker:* Responsible for dynamic linking, loading, and unloading of shared libraries.
+    - *Debugged Library:* Provides additional debugging information for identifying and resolving issues during runtime.
+    - *libAsan (Android 8.1+):* A memory error detector tool identifying issues like buffer overflows, use-after-free, and memory corruptions.
 
-  When an ASan issue or crash occurs, the kernel and ASan tool provides detailed information about the problem, including the location in the code where the issue happened, the type of issue (e.g., buffer overflow), and other relevant details. This information is valuable for developers to identify and fix bugs that could lead to crashes or other unexpected behavior. We will discuss this information in the next section. This section focuses on how the information of ASan issues or crashes is collected (To simplify, we call it a crash issue here). Here is the main workflow related to this topic:
-  - Triggle crash issue handling:
     
-    The kernel triggers a crash signal or ASan triggers a memory issue. It causes the current app to use the debuggerd_signal_handler() method in the debugged library to handle crash issue information.
-  - Create debuggerd dispatch pseudo thread to transfer crash issue information to the crashdump process:
-    
-    The debuggerd_signal_handler() method creates the debuggerd_dispatch_pseudo_thread. The debuggerd_dispatch_pseudo_thread creates the crashdump process and passes crash issue information to crashdump using a Pipe.
-  - Log handling:
-    
-    The crashdump uses UDS to send crash issue information to tombstoned daemon for logging and store the informatuin at /data/tombstone.  The crashdump also uses UDS to send crash issue information to AMS for logging.
-  - AMS Crash Handling:
-    
-    AMS has a NativeCrashListener thread started at the System Server launch stage. It creates a UDS socket to observe the crash from the crashdump process. If it receives crash issue information from the crashdump process, it creates a NativeCrashReport thread and calls handleApplicationCrashInner() for further handling.
-  - DropBoxManagerService creates crash log information.
-    
-    Similar to the handling in Java code, the crash log is put into the /data/dropbox folder.
+  - **ASan Issue or Crash Handling Workflow:**
+    - Triggering Crash Issue Handling: Kernel or ASan triggers a crash signal, invoking debuggerd_signal_handler() in the debugged library to handle crash issue information.
+    - Debuggerd Dispatch Pseudo Thread: debuggerd_signal_handler()` creates debuggerd_dispatch_pseudo_thread, which initiates the crashdump process, transferring crash issue information via a Pipe.
+    - Log Handling: Crashdump uses UDS to send crash issue information to tombstoned daemon for logging at `/data/tombstone`. Additionally, it sends information to AMS for logging.
+    - AMS Crash Handling: AMS has a NativeCrashListener thread observing crashes through a UDS socket. If it receives crash issue information from the crashdump process, it creates a NativeCrashReport thread and calls `handleApplicationCrashInner()` for further handling.
+    - DropBoxManagerService Log Creation: Similar to Java code handling, the crash log is placed in the `/data/dropbox` folder.
 
 Please note that the above workflow is available only for Android apps. However, we can also utilize debuggerd_signal_handler and libAsan for our native Daemon development if necessary.
 
