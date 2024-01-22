@@ -260,44 +260,7 @@ Here is the princiapl of LeakCanary:
 
 In summary, LeakCanary uses weak references and a systematic process of garbage collection and observation to identify objects that should have been released but are still being retained in memory, signaling a potential memory leak message.  We can adopt this principal for our design.
 
-### 5.4  Detecting UI Thread Blocking Issues
-BlockCanary is a tool to detect when the UI thread is blocked for a certain period. It provides insights into the code causing the blockage, helping developers identify performance bottlenecks and optimize their applications for better responsiveness. Here is its archtecture diagram:
-
-<img src="blockbanary.png" alt="BlockCanary"/>
-
-We can use BlockCanary pricipal to create our customized log class below:
-```c
-class LooperMonitor implements Printer {
-    private static final int DEFAULT_BLOCK_THRESHOLD_MILLIS = 3000;  // time
-    ...
-    public LooperMonitor(BlockListener blockListener, long blockThresholdMillis, boolean stopWhenDebugging){
-	...
-    }
-
-    @Override
-    public void println(String x) {
-        if (!mPrintingStarted) {
-            mStartTimestamp = System.currentTimeMillis();
-            mStartThreadTimestamp = SystemClock.currentThreadTimeMillis();
-            mPrintingStarted = true;
-            startDump();
-        } else {
-            final long endTime = System.currentTimeMillis();
-            mPrintingStarted = false;
-            if (isBlock(endTime)) {
-                notifyBlockEvent(endTime);
-            }
-            stopDump();
-        }
-    }
-    private boolean isBlock(long endTime) {
-        return endTime - mStartTimestamp > mBlockThresholdMillis;
-    }
-}
-```
-The solution provided minimizes performance impact when there is an issue and has zero performance impact when there is no issue.
-
-### 5.5  Detecting Rendering Issues
+### 5.4  Detecting Rendering Issues
 
 Analyzing the Choreographer class reveals the following:
 
@@ -346,9 +309,92 @@ Choreographer.getInstance().postFrameCallback(new Choreographer.FrameCallback() 
 ```
 The solution provided will be adopted in our design to get rendering information. The solution provided performance impact when the system has many rendering issue.
 
-### 5.6  Detecting Tiktok customized Issues
+### 5.5  Detecting task performance Issue
+
+### 5.5.1 Detecting UI Thread Blocking Issues
+BlockCanary is a tool to detect when the UI thread is blocked for a certain period. It provides insights into the code causing the blockage, helping developers identify performance bottlenecks and optimize their applications for better responsiveness. Here is its archtecture diagram:
+
+<img src="blockbanary.png" alt="BlockCanary"/>
+
+We can use BlockCanary principal to create our customized log class below:
+```c
+class LooperMonitor implements Printer {
+    private static final int DEFAULT_BLOCK_THRESHOLD_MILLIS = 3000;  // time
+    ...
+    public LooperMonitor(BlockListener blockListener, long blockThresholdMillis, boolean stopWhenDebugging){
+	...
+    }
+
+    @Override
+    public void println(String x) {
+        if (!mPrintingStarted) {
+            mStartTimestamp = System.currentTimeMillis();
+            mStartThreadTimestamp = SystemClock.currentThreadTimeMillis();
+            mPrintingStarted = true;
+            startDump();
+        } else {
+            final long endTime = System.currentTimeMillis();
+            mPrintingStarted = false;
+            if (isBlock(endTime)) {
+                notifyBlockEvent(endTime);
+            }
+            stopDump();
+        }
+    }
+    private boolean isBlock(long endTime) {
+        return endTime - mStartTimestamp > mBlockThresholdMillis;
+    }
+}
+```
+The solution provided minimizes performance impact when there is an issue and has zero performance impact when there is no issue.
 
 
+### 5.5.2   Detecting Tiktok customized Issues 
+Based code below: 
+```c
+public final class Looper {
+    private Printer mLogging;
+    // Used for customized Printer for logging
+    public void setMessageLogging(@Nullable Printer printer) {
+        mLogging = printer;
+    }
+
+    public static Looper getMainLooper() {
+        ...
+    }
+
+    public static void loop() {
+        final Looper me = myLooper();
+   	...
+
+        for (;;) {
+            if (!loopOnce(me, ident, thresholdOverride)) {
+                return;
+            }
+        }
+    }
+
+   private static boolean loopOnce(final Looper me,
+            final long ident, final int thresholdOverride) {
+        Message msg = me.mQueue.next(); // Specifically, each frame rendering involves receiving a message here
+        ...
+        final Printer logging = me.mLogging;
+        if (logging != null) {
+            logging.println(">>>>> Dispatching to " + msg.target + " "
+                    + msg.callback + ": " + msg.what);
+        }
+        ...
+        token = observer.messageDispatchStarting();
+        ...
+
+        if (logging != null) {
+            logging.println("<<<<< Finished to " + msg.target + " " + msg.callback);
+        }
+        ...
+    }
+}
+```
+, we can override println(String x) in section 5.5.1 to parse x to get msg.target , msg.callback and msg.what that can unique identify the task for performance analysis.
 
 # 6 TikTok Android App Reliability Framework Design
 
