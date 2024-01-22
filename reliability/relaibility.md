@@ -154,28 +154,28 @@ Considering TikTok's specific requirements and motivations, the existing tools f
 
 ### 5.1 Android Issue Collection Solution
 
-A common scenario for Java/Kotlin app crashes is caused by an uncaught throwable/exception and most crashes on the native side (C/C++) are related to improper memory handling. Therefore it is crucial to understand how the Android system collect crashes information in both Java/Native  environments. The following diagram shows the main work flow related to this topic:
+A common scenario for Java/Kotlin app crashes is caused by an uncaught throwable/exception, and most crashes on the native side (C/C++) are related to improper memory handling. Therefore, it is crucial to understand how the Android system collects crash information in both Java/Native environments. The following diagram shows the main workflow related to this topic:
 
 <img src="../quality/crash.png" alt="Crash"/>
 
-Let's explain the daigram:
-- Java/Kotlin based Components (App and System Server) Crash Handling:
+Let's explain the diagram:
+- **Java/Kotlin based Components (App and System Server) Crash Handling:**
   - **Setting Default Exception Handler:**
-     The app sets a default uncaught exception handler using Thread.setDefaultUncaughtExceptionHandler(new KillApplicationHandler()). This handler, implemented in KillApplicationHandler.uncaughtException(), deals with uncaught exceptions in any thread.
+     The app sets a default uncaught exception handler using `Thread.setDefaultUncaughtExceptionHandler(new KillApplicationHandler())`. This handler, implemented in `KillApplicationHandler.uncaughtException()`, deals with uncaught exceptions in any thread.
 
   - **Requesting AMS for Exception Handling:**
-    If an uncaught exception occurs, the app calls ActivityManagerService (AMS) to handle it through handleApplicationCrash().
+    If an uncaught exception occurs, the app calls ActivityManagerService (AMS) to handle it through `handleApplicationCrash()`.
 
   - **AMS Crash Handling:**
-    AMS collects crash information using handleApplicationCrashInner() and sends it to DropBoxManagerService. The data is stored in a crash log file at /data/system/dropbox.
+    AMS collects crash information using `handleApplicationCrashInner()` and sends it to DropBoxManagerService. The data is stored in a crash log file at `/data/system/dropbox`.
 
   - **DropBoxManagerService Log Creation:**
-    DropBoxManagerService receives crash information from AMS and creates a crash log file in the /data/system/dropbox folder.
+    DropBoxManagerService receives crash information from AMS and creates a crash log file in the `/data/system/dropbox` folder.
 
   - **App Self-Termination:**
    The app takes necessary actions to terminate itself.
 
-- Native components (JNI and Daemon) Memory Issue and Crash Handling:
+- **Native Components (JNI and Daemon) Memory Issue and Crash Handling:**
   - **Signal Issuing:**
     Any crash in native components triggers a signal from the following list in Android:
     - SIGABRT (Abort)
@@ -190,45 +190,49 @@ Let's explain the daigram:
     - *Debugged Library:* Provides additional debugging information for identifying and resolving issues during runtime.
     - *libAsan (Android 8.1+):* A memory error detector tool identifying issues like buffer overflows, use-after-free, and memory corruptions.
   - **ASan Issue or Crash Handling Workflow:**
-    - Triggering Crash Issue Handling: Kernel or ASan triggers a crash signal, invoking debuggerd_signal_handler() in the debugged library to handle crash issue information.
-    - Debuggerd Dispatch Pseudo Thread: debuggerd_signal_handler() creates debuggerd_dispatch_pseudo_thread, which initiates the crashdump process, transferring crash issue information via a Pipe.
-    - Log Handling: Crashdump uses UDS to send crash issue information to tombstoned daemon for logging at /data/tombstone. Additionally, it sends information to AMS for logging.
-    - AMS Crash Handling: AMS has a NativeCrashListener thread observing crashes through a UDS socket. If it receives crash issue information from the crashdump process, it creates a NativeCrashReport thread and calls handleApplicationCrashInner() for further handling.
-    - DropBoxManagerService Log Creation: Similar to Java code handling, the crash log is placed in the /data/dropbox folder.
+    - Triggering Crash Issue Handling: Kernel or ASan triggers a crash signal, invoking `debuggerd_signal_handler()` in the debugged library to handle crash issue information.
+    - Debuggerd Dispatch Pseudo Thread: `debuggerd_signal_handler()` creates `debuggerd_dispatch_pseudo_thread`, which initiates the crashdump process, transferring crash issue information via a Pipe.
+    - Log Handling: Crashdump uses UDS to send crash issue information to tombstoned daemon for logging at `/data/tombstone`. Additionally, it sends information to AMS for logging.
+    - AMS Crash Handling: AMS has a NativeCrashListener thread observing crashes through a UDS socket. If it receives crash issue information from the crashdump process, it creates a NativeCrashReport thread and calls `handleApplicationCrashInner()` for further handling.
+    - DropBoxManagerService Log Creation: Similar to Java code handling, the crash log is placed in the `/data/dropbox` folder.
 
-In summary, we can adopt the above principal for collecting crash information caused on both the Java and native sides for our design. The solution provided minimizes performance impact when there is an issue and has zero performance impact when there is no issue.
+In summary, we can adopt the above principal for collecting crash information caused on both the Java and native sides for our design. The solution provided minimizes the performance impact when there is an issue and has zero performance impact when there is no issue.
+
+
 ### 5.2 App Access to Issues Log
-The DropBoxManagerService handles various issues, including crashes, ANRs, and system-level events. When AMS adds an issue message to the dropbox file, a broadcast message is sent. The following code can be used to receive and process this message in our design:
-  ```c
-  public class DropBoxReceiver extends BroadcastReceiver {
-  
-      private static final String TAG = "DropBoxReceiver";
-  
-      @Override
-      public void onReceive(Context context, Intent intent) {
-          DropBoxManager dropBoxManager = (DropBoxManager) context.getSystemService(Context.DROPBOX);
-  
-          if (dropBoxManager != null) {
-              // Get the last entry from DropBoxManager
-              DropBoxManager.Entry entry = dropBoxManager.getNextEntry(null, 0);
-  
-              while (entry != null) {
-                  // Process the entry as needed
-                  String tag = entry.getTag();
-                  long timeMillis = entry.getTimeMillis();
-                  String text = entry.getText(4096); // Adjust the size as needed
-  
-                  Log.d(TAG, "Received DropBox entry - Tag: " + tag + ", Time: " + timeMillis + ", Text: " + text);
-  
-                  // Move to the next entry
-                  entry.close();
-                  entry = dropBoxManager.getNextEntry(tag, timeMillis);
-              }
-          }
-      }
-  }
-  ```
-The solution provided minimizes performance impact when there is an issue and has zero performance impact when there is no issue.
+
+The DropBoxManagerService handles various issues, including crashes, ANRs, and system-level events. When AMS adds an issue message to the Dropbox file, a broadcast message is sent. The following code can be used as an example of receive and process this message:
+
+```java
+public class DropBoxReceiver extends BroadcastReceiver {
+
+    private static final String TAG = "DropBoxReceiver";
+
+    @Override
+    public void onReceive(Context context, Intent intent) {
+        DropBoxManager dropBoxManager = (DropBoxManager) context.getSystemService(Context.DROPBOX);
+
+        if (dropBoxManager != null) {
+            // Get the last entry from DropBoxManager
+            DropBoxManager.Entry entry = dropBoxManager.getNextEntry(null, 0);
+
+            while (entry != null) {
+                // Process the entry as needed
+                String tag = entry.getTag();
+                long timeMillis = entry.getTimeMillis();
+                String text = entry.getText(4096); // Adjust the size as needed
+
+                Log.d(TAG, "Received DropBox entry - Tag: " + tag + ", Time: " + timeMillis + ", Text: " + text);
+
+                // Move to the next entry
+                entry.close();
+                entry = dropBoxManager.getNextEntry(tag, timeMillis);
+            }
+        }
+    }
+}
+```
+In summary, we can adopt the above principal for collecting various issues. This solution provides minimizes performance impact when there is an issue and has zero performance impact when there is no issue.
 
 ### 5.3 App Access to Memory Leak Issue Log
 
@@ -340,7 +344,9 @@ Choreographer.getInstance().postFrameCallback(new Choreographer.FrameCallback() 
     }
 });
 ```
-The solution provided performance impact when the system has many rendering issue.
+The solution provided will be adopted in our design to get rendering information. The solution provided performance impact when the system has many rendering issue.
+
+### 5.6  Detecting Tiktok customized Issues
 
 
 
