@@ -65,7 +65,7 @@ The flexibility of this reliability framework allows for potential extension to 
 - **Access Control:**
   - Implement robust access control mechanisms to restrict system usage to authorized personnel only.
 
-# 3 Existing Systems
+# 3 Existing Reliabilty Systems
 
 ## 3.1 Android Vitals
 
