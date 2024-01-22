@@ -153,6 +153,6 @@ In light of TikTok's specific requirements and motivations, the current tools pr
 # 5 TikTok Android App Reliability Framework Design
 The TikTok Android App Reliability Framework Design includes key components working together to ensure the app's stability. The diagram below illustrates the interaction of important elements, such as the PlayStore Server, Android Vitals Console, TikTok Reliability Consoles for Production and Development, TikTok Reliability Server with essential services, and two devices equipped with TikTok Reliability Client and Android Vitals. This design aims to create a comprehensive framework for reliable app deployment, real-time monitoring, and issue resolution.
 
-  <img src="TiktokA.png" alt="TiktokAchitecture"/>
+  <img src="tiktoka.png" alt="TiktokAchitecture"/>
 
 
