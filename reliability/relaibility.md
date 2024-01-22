@@ -10,7 +10,6 @@ The primary goal of the reliability framework is to enhance the TikTok Android a
 - Ensure the reliability, monitoring, alerting, identification, and location of issues while maintaining the overall quality of the TikTok app throughout its lifecycle, including the stages of development, testing, app publishing, release, and upgrade.
 
 As a result of the framework, it can help us minimize issues during app release and facilitate quick updates through module-based delivery.
-
 The flexibility of this reliability framework allows for potential extension to different operating systems, providing a versatile solution for enhancing app reliability across diverse platforms.
 
 # 2 Requirement Analysis
