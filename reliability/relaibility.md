@@ -148,7 +148,7 @@ Provides support for identifying and resolving TikTok-specific issues occurring,
 
 ## 4.3 Conclusion
 
-Examining TikTok's scenario, we find certain challenges in ensuring the reliable functioning of the Android app. Considering our motivations and requirements, the existing tools don't quite meet these needs. Therefore, it's crucial  for us to create a special TikTok Android App Reliability Framework to help us resolve these challenges.
+In light of TikTok's specific requirements and motivations, the current tools present challenges in meeting these needs effectively. As a solution, the creation of a dedicated TikTok Android App Reliability Framework becomes crucial to address and overcome these challenges.
 
 # 5 TikTok Android App Reliability Framework Design
 
