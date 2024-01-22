@@ -216,4 +216,5 @@ Let's explain the daigram:
     - Log Handling: Crashdump uses UDS to send crash issue information to tombstoned daemon for logging at /data/tombstone. Additionally, it sends information to AMS for logging.
     - AMS Crash Handling: AMS has a NativeCrashListener thread observing crashes through a UDS socket. If it receives crash issue information from the crashdump process, it creates a NativeCrashReport thread and calls handleApplicationCrashInner() for further handling.
     - DropBoxManagerService Log Creation: Similar to Java code handling, the crash log is placed in the /data/dropbox folder.
+
 Please note that the above workflow is available only for Android apps. However, we can also utilize debuggerd_signal_handler and libAsan for our native Daemon development if necessary.
