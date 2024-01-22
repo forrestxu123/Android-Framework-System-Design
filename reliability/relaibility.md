@@ -151,6 +151,7 @@ Provides support for identifying and resolving TikTok-specific issues occurring,
 Considering TikTok's specific requirements and motivations, the existing tools face challenges in effectively meeting these needs. As a solution, the development of a dedicated TikTok Android App Reliability Framework becomes crucial to address and overcome these challenges.
 
 ## 5 Essential Knowledge for TikTok Reliability Client Design
+This section introduces the knowledge of the solutions that can be used by our design. The solutions provided in this section minimize the performance impact when there is an issue and have zero performance impact when there is no issue.
 
 ### 5.1 Android Issue Collection Solution
 
@@ -196,9 +197,6 @@ Let's explain the diagram:
     - AMS Crash Handling: AMS has a NativeCrashListener thread observing crashes through a UDS socket. If it receives crash issue information from the crashdump process, it creates a NativeCrashReport thread and calls `handleApplicationCrashInner()` for further handling.
     - DropBoxManagerService Log Creation: Similar to Java code handling, the crash log is placed in the `/data/dropbox` folder.
 
-In summary, we can adopt the above principal for collecting crash information caused on both the Java and native sides for our design. The solution provided minimizes the performance impact when there is an issue and has zero performance impact when there is no issue.
-
-
 ### 5.2 App Access to Issues Log
 
 The DropBoxManagerService handles various issues, including crashes, ANRs, and system-level events. When AMS adds an issue message to the Dropbox file, a broadcast message is sent. The following code can be used as an example of receive and process this message:
@@ -232,7 +230,6 @@ public class DropBoxReceiver extends BroadcastReceiver {
     }
 }
 ```
-In summary, we can adopt the above principal for collecting various issues. This solution provides minimizes performance impact when there is an issue and has zero performance impact when there is no issue.
 
 ### 5.3 App Access to Memory Leak Issue Log
 
@@ -258,16 +255,16 @@ Here is the princiapl of LeakCanary:
 
   LeakCanary logs information about the retained object, including its type and any provided description. Developers can inspect these logs to identify and address the source of the memory leak.
 
-In summary, LeakCanary uses weak references and a systematic process of garbage collection and observation to identify objects that should have been released but are still being retained in memory, signaling a potential memory leak message.  We can adopt this principal for our design.
+In summary, the princiapl of LeakCanary uses weak references and garbage collection to identify objects that should have been released but are still being retained in memory. The objects could be potential memory leaks.
 
 ### 5.4  Detecting Rendering Issues
 
-Analyzing the Choreographer class reveals the following:
+To ensure optimal performance and responsiveness in your application, it's crucial to monitor rendering issues. Analyzing the Choreographer class provides valuable insights into the rendering process. The Choreographer class exposes two key components:
 
 - postFrameCallback (Choreographer.FrameCallback callback): Posts a frame callback to run on the next frame. The callback runs once and is automatically removed.
 - Choreographer.FrameCallback#doFrame(long frameTimeNanos): Called when a new display frame is being rendered, providing the time (in nanoseconds) when the frame started rendering.
-- The difference between two consecutive frameTimeNanos values represents the time taken to render the previous frame.
-We can utilize the following code snippet to monitor frame rendering:
+
+To effectively monitor frame rendering and identify potential issues, we can leverage the following code snippet. This snippet utilizes the Choreographer API to log dropped frames, obtain stack traces for all threads, and gather additional information such as CPU time and battery usage.
 
 ```c
 Choreographer.getInstance().postFrameCallback(new Choreographer.FrameCallback() {
@@ -346,7 +343,6 @@ class LooperMonitor implements Printer {
     }
 }
 ```
-The solution provided minimizes performance impact when there is an issue and has zero performance impact when there is no issue.
 
 
 ### 5.5.2   Detecting Tiktok customized Issues 
@@ -423,5 +419,5 @@ For the purpose of this document and to manage our time effectively, we will be 
 ## 5.1  TikTok Reliability Client Design
 
 
-### 5.1.2 Rendering Information Collection Mechanism
+
 
