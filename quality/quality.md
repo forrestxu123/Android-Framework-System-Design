@@ -431,10 +431,10 @@ Let's explain the daigram:
   - **AMS Crash Handling:**
     AMS collects crash information using handleApplicationCrashInner() and sends it to DropBoxManagerService. The data is stored in a crash log file at /data/system/dropbox.
 
- - **DropBoxManagerService Log Creation:**
-   DropBoxManagerService receives crash information from AMS and creates a crash log file in the /data/system/dropbox folder.
+  - **DropBoxManagerService Log Creation:**
+    DropBoxManagerService receives crash information from AMS and creates a crash log file in the /data/system/dropbox folder.
 
- - **App Self-Termination:**
+  - **App Self-Termination:**
    The app takes necessary actions to terminate itself.
 
 - Native components (JNI and Daemon) Memory Issue and Crash Handling:
