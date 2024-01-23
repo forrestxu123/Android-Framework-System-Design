@@ -404,7 +404,7 @@ Consoles dedicated to monitoring and managing the reliability of the TikTok app 
   The server component responsible for collecting and managing issues from devices with the TikTok app installed. It includes essential services such as ANR Service, Crash Service, Dashboard Service, Monitoring & Alerting Service, interacting with devices to ensure a seamless process.
 
 - **TikTok Reliability Client:**
-  Devices equipped with TikTok Reliability Client support monitoring of the app's reliability in the production environment. Additionally, they play a crucial role in assisting in identifying and resolving issues during the app's early stages in the development and testing phases.
+  Devices installed with TikTok Reliability Client support monitoring of the app's reliability in the production environment. They also used for finding, locating and resolving issues during the app's early stages in the development and testing phases.
 
 - **PlayStore Server with TikTok Android App Bundle:**
   The server responsible for distributing the TikTok app to users through the Play Store. It includes the TikTok Android App Bundle, which may consist of on-demand modules for independent upgrading, contributing to a flexible and efficient app deployment process automaticlaly.
@@ -412,8 +412,15 @@ Consoles dedicated to monitoring and managing the reliability of the TikTok app 
 For the purpose of this document and to manage our time effectively, we will be focusing on the design of the TikTok Reliability Client. This specific component plays a crucial role in monitoring the app's reliability in the production environment and assisting in issue identification and resolution during the app's early stages in the development and testing phases.
 
 
-
 ## 6.1  TikTok Reliability Client Design
+
+TikTok Reliability Client is a software framework integrated with the TikTok App. It provides the following features:
+- Find TikTok app issues on the device
+- Collect issues from different sources
+- The issue output file is used for developers to analyze; ideally, the output can be compatible with Android Profiler.
+- Send the issue output file to the TikTok Reliability Server.
+See design diagram below:
+<img src="tiktokclientdesign.png" alt="TiktokClientArchitecture"/>
 
 
 
