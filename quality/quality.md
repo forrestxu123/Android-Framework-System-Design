@@ -771,10 +771,97 @@ To analyze frame rendering performance, we can leverage  [systrace](https://deve
 - A green circle with 'f' inside signifies a correctly drawn frame.
 - The line between 'deliverInputEvent' and 'UI Thread' is color-coded based on the states introduced in section 2.1.2, representing different states of the render thread .
 
+**Detecting Rendering Issues using Choreographer#postFrameCallback**
 
-**Looper with custom logging**
+To ensure optimal performance and responsiveness in your application, it's crucial to monitor rendering issues. Analyzing the Choreographer class provides valuable insights into the rendering process. The Choreographer class exposes two key components:
 
-Inspect the AOSP code snippet for Looper:
+- postFrameCallback (Choreographer.FrameCallback callback): Posts a frame callback to run on the next frame. The callback runs once and is automatically removed.
+- Choreographer.FrameCallback#doFrame(long frameTimeNanos): Called when a new display frame is being rendered, providing the time (in nanoseconds) when the frame started rendering.
+
+To effectively monitor frame rendering and identify potential issues, we can leverage the following code snippet. This snippet utilizes the Choreographer API to log dropped frames, obtain stack traces for all threads, and gather additional information such as CPU time and battery usage.
+
+```c
+Choreographer.getInstance().postFrameCallback(new Choreographer.FrameCallback() {
+    private long lastFrameTimeNanos = 0;
+    @Override
+    public void doFrame(long frameTimeNanos) {
+        if (lastFrameTimeNanos == 0) {
+            lastFrameTimeNanos = frameTimeNanos;
+            Choreographer.getInstance().postFrameCallback(this);
+            return;
+        }
+        double diff = (frameTimeNanos - lastFrameTimeNanos) / 1000000.0;
+        if (diff > 16.67) {
+            int dropCount = (int) (diff / 16.7);
+            if (dropCount >= 2) {
+                Log.w(TAG, dropCount + " frames have been dropped. Time difference: " + diff + " ms");
+                 // Obtain stack traces for all threads
+                Map<Thread, StackTraceElement[]> allStackTraces = Thread.getAllStackTraces();
+                
+                // Log stack traces
+                for (Map.Entry<Thread, StackTraceElement[]> entry : allStackTraces.entrySet()) {
+                    Thread thread = entry.getKey();
+                    StackTraceElement[] stackTrace = entry.getValue();
+                    Log.w(TAG, "Thread: " + thread.getName());
+                    for (StackTraceElement element : stackTrace) {
+                        Log.w(TAG, "   " + element.toString());
+                    }
+                }
+
+                // Obtain CPU time
+                // Obtain Battery usage
+              ...
+            }
+        }
+        lastFrameTimeNanos = frameTimeNanos;
+        Choreographer.getInstance().postFrameCallback(this);
+    }
+});
+```
+The solution provided will be adopted in our design to get rendering information. 
+
+
+### 2.2  Detecting task performance Issue
+
+### 2.2.1 Detecting UI Thread Blocking Issues
+BlockCanary is a tool to detect when the UI thread is blocked for a certain period. It provides insights into the code causing the blockage, helping developers identify performance bottlenecks and optimize their applications for better responsiveness. Here is its archtecture diagram:
+
+<img src="blockbanary.png" alt="BlockCanary"/>
+
+We can use BlockCanary principal to create our customized log class below:
+```c
+class LooperMonitor implements Printer {
+    private static final int DEFAULT_BLOCK_THRESHOLD_MILLIS = 3000;  // time
+    ...
+    public LooperMonitor(BlockListener blockListener, long blockThresholdMillis, boolean stopWhenDebugging){
+	...
+    }
+
+    @Override
+    public void println(String x) {
+        if (!mPrintingStarted) {
+            mStartTimestamp = System.currentTimeMillis();
+            mStartThreadTimestamp = SystemClock.currentThreadTimeMillis();
+            mPrintingStarted = true;
+            startDump();
+        } else {
+            final long endTime = System.currentTimeMillis();
+            mPrintingStarted = false;
+            if (isBlock(endTime)) {
+                notifyBlockEvent(endTime);
+            }
+            stopDump();
+        }
+    }
+    private boolean isBlock(long endTime) {
+        return endTime - mStartTimestamp > mBlockThresholdMillis;
+    }
+}
+```
+
+
+### 2.2.2   Detecting customized Issues 
+Based code below: 
 ```c
 public final class Looper {
     private Printer mLogging;
@@ -818,41 +905,4 @@ public final class Looper {
     }
 }
 ```
-In this custom logging mechanism, each frame rendering results in a message being received.
-
-As we can see, each frame rendering will cause me.mQueue.next() to receive a message. The information will be logged before and after the message is processed. This approach is utilized by monitoring tools like BlockCanary. Developing a custom logging mechanism allows us to incorporate various features, such as detecting frame drops during graphic rendering, capturing stack information when a frame is dropped, and measuring navigation time when a button is clicked. However, this solution has some limitations. It is primarily focused on UI rendering and also does not take print time cost into consideration.
-
-**Choreographer#postFrameCallback**
-
-Analyzing the Choreographer class reveals the following:
-
-- postFrameCallback (Choreographer.FrameCallback callback): Posts a frame callback to run on the next frame. The callback runs once and is automatically removed.
-- Choreographer.FrameCallback#doFrame(long frameTimeNanos): Called when a new display frame is being rendered, providing the time (in nanoseconds) when the frame started rendering.
-- The difference between two consecutive frameTimeNanos values represents the time taken to render the previous frame.
-We can utilize the following code snippet to monitor frame rendering:
-
-```c
-Choreographer.getInstance().postFrameCallback(new Choreographer.FrameCallback() {
-    private long lastFrameTimeNanos = 0;
-    @Override
-    public void doFrame(long frameTimeNanos) {
-        if (lastFrameTimeNanos == 0) {
-            lastFrameTimeNanos = frameTimeNanos;
-            Choreographer.getInstance().postFrameCallback(this);
-            return;
-        }
-        double diff = (frameTimeNanos - lastFrameTimeNanos) / 1000000.0;
-        if (diff > 16.67) {
-            int dropCount = (int) (diff / 16.7);
-            if (dropCount >= 2) {
-                Log.w(TAG, dropCount + " frames have been dropped. Time difference: " + diff + " ms");
-
-            }
-        }
-        lastFrameTimeNanos = frameTimeNanos;
-        Choreographer.getInstance().postFrameCallback(this);
-    }
-});
-```
-This solution is also focused on UI rendering and does not take print time cost into consideration.
-
+we can override println(String x) in section 5.5.1 to parse x to get msg.target , msg.callback and msg.what that can unique identify the task for performance analysis.
