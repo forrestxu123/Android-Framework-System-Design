@@ -159,16 +159,16 @@ A common scenario for Java/Kotlin app crashes is caused by an uncaught throwable
 Let's explain the diagram:
 - **Java/Kotlin based Components (App and System Server) Crash Handling:**
   - **Setting Default Exception Handler:**
-     The app sets a default uncaught exception handler using `Thread.setDefaultUncaughtExceptionHandler(new KillApplicationHandler())`. This handler, implemented in `KillApplicationHandler.uncaughtException()`, deals with uncaught exceptions in any thread.
+     The app sets a default uncaught exception handler using Thread.setDefaultUncaughtExceptionHandler(new KillApplicationHandler()). This handler, implemented in KillApplicationHandler.uncaughtException(), deals with uncaught exceptions in any thread.
 
   - **Requesting AMS for Exception Handling:**
-    If an uncaught exception occurs, the app calls ActivityManagerService (AMS) to handle it through `handleApplicationCrash()`.
+    If an uncaught exception occurs, the app calls ActivityManagerService (AMS) to handle it through handleApplicationCrash().
 
   - **AMS Crash Handling:**
-    AMS collects crash information using `handleApplicationCrashInner()` and sends it to DropBoxManagerService. The data is stored in a crash log file at `/data/system/dropbox`.
+    AMS collects crash information using handleApplicationCrashInner() and sends it to DropBoxManagerService. The data is stored in a crash log file at /data/system/dropbox.
 
   - **DropBoxManagerService Log Creation:**
-    DropBoxManagerService receives crash information from AMS and creates a crash log file in the `/data/system/dropbox` folder.
+    DropBoxManagerService receives crash information from AMS and creates a crash log file in the /data/system/dropbox folder.
 
   - **App Self-Termination:**
    The app takes necessary actions to terminate itself.
@@ -188,11 +188,11 @@ Let's explain the diagram:
     - *Debugged Library:* Provides additional debugging information for identifying and resolving issues during runtime.
     - *libAsan (Android 8.1+):* A memory error detector tool identifying issues like buffer overflows, use-after-free, and memory corruptions.
   - **ASan Issue or Crash Handling Workflow:**
-    - Triggering Crash Issue Handling: Kernel or ASan triggers a crash signal, invoking `debuggerd_signal_handler()` in the debugged library to handle crash issue information.
-    - Debuggerd Dispatch Pseudo Thread: `debuggerd_signal_handler()` creates `debuggerd_dispatch_pseudo_thread`, which initiates the crashdump process, transferring crash issue information via a Pipe.
-    - Log Handling: Crashdump uses UDS to send crash issue information to tombstoned daemon for logging at `/data/tombstone`. Additionally, it sends information to AMS for logging.
-    - AMS Crash Handling: AMS has a NativeCrashListener thread observing crashes through a UDS socket. If it receives crash issue information from the crashdump process, it creates a NativeCrashReport thread and calls `handleApplicationCrashInner()` for further handling.
-    - DropBoxManagerService Log Creation: Similar to Java code handling, the crash log is placed in the `/data/dropbox` folder.
+    - Triggering Crash Issue Handling: Kernel or ASan triggers a crash signal, invoking debuggerd_signal_handler() in the debugged library to handle crash issue information.
+    - Debuggerd Dispatch Pseudo Thread: debuggerd_signal_handler() creates debuggerd_dispatch_pseudo_thread, which initiates the crashdump process, transferring crash issue information via a Pipe.
+    - Log Handling: Crashdump uses UDS to send crash issue information to tombstoned daemon for logging at /data/tombstone. Additionally, it sends information to AMS for logging.
+    - AMS Crash Handling: AMS has a NativeCrashListener thread observing crashes through a UDS socket. If it receives crash issue information from the crashdump process, it creates a NativeCrashReport thread and calls handleApplicationCrashInner() for further handling.
+    - DropBoxManagerService Log Creation: Similar to Java code handling, the crash log is placed in the /data/dropbox folder.
 
 ## 5.2 App Access to Issues Log
 
