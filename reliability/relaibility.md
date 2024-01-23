@@ -147,10 +147,10 @@ Provides support for identifying and resolving TikTok-specific issues occurring,
 
 Considering TikTok's specific requirements and motivations, the existing tools face challenges in effectively meeting these needs. As a solution, the development of a dedicated TikTok Android App Reliability Framework becomes crucial to address and overcome these challenges.
 
-## 5 Essential Knowledge for TikTok Reliability Client Design
+# 5 Essential Knowledge for TikTok Reliability Client Design
 This section introduces the knowledge of the solutions that can be used by our design. The solutions provided in this section minimize the performance impact when there is an issue and have zero performance impact when there is no issue.
 
-### 5.1 Android Issue Collection Solution
+## 5.1 Android Issue Collection Solution
 
 A common scenario for Java/Kotlin app crashes is caused by an uncaught throwable/exception, and most crashes on the native side (C/C++) are related to improper memory handling. Therefore, it is crucial to understand how the Android system collects crash information in both Java/Native environments. The following diagram shows the main workflow related to this topic:
 
@@ -194,7 +194,7 @@ Let's explain the diagram:
     - AMS Crash Handling: AMS has a NativeCrashListener thread observing crashes through a UDS socket. If it receives crash issue information from the crashdump process, it creates a NativeCrashReport thread and calls `handleApplicationCrashInner()` for further handling.
     - DropBoxManagerService Log Creation: Similar to Java code handling, the crash log is placed in the `/data/dropbox` folder.
 
-### 5.2 App Access to Issues Log
+## 5.2 App Access to Issues Log
 
 The DropBoxManagerService handles various issues, including crashes, ANRs, and system-level events. When AMS adds an issue message to the Dropbox file, a broadcast message is sent. The following code can be used as an example of receive and process this message:
 
@@ -228,7 +228,7 @@ public class DropBoxReceiver extends BroadcastReceiver {
 }
 ```
 
-### 5.3 App Access to Memory Leak Issue Log
+## 5.3 App Access to Memory Leak Issue Log
 
 LeakCanary is a  memory leak detection library for Android, offering two main features:
 - API Check: Developers can manually check any objects that are no longer needed using the provided API. The AppWatcher.objectwatch.watch() function creates a weak reference for the specified object. If this weak reference isn't cleared after a 5-second wait and garbage collection, the watched object is considered potentially leaking, and LeakCanary logs this information.
@@ -254,7 +254,7 @@ Here is the princiapl of LeakCanary:
 
 In summary, the princiapl of LeakCanary uses weak references and garbage collection to identify objects that should have been released but are still being retained in memory. The objects could be potential memory leaks.
 
-### 5.4  Detecting Rendering Issues
+## 5.4  Detecting Rendering Issues
 
 To ensure optimal performance and responsiveness in your application, it's crucial to monitor rendering issues. Analyzing the Choreographer class provides valuable insights into the rendering process. The Choreographer class exposes two key components:
 
@@ -303,7 +303,7 @@ Choreographer.getInstance().postFrameCallback(new Choreographer.FrameCallback() 
 ```
 The solution provided will be adopted in our design to get rendering information. 
 
-### 5.5  Detecting task performance Issue
+## 5.5  Detecting task performance Issue
 
 ### 5.5.1 Detecting UI Thread Blocking Issues
 BlockCanary is a tool to detect when the UI thread is blocked for a certain period. It provides insights into the code causing the blockage, helping developers identify performance bottlenecks and optimize their applications for better responsiveness. Here is its archtecture diagram:
