@@ -45,9 +45,6 @@ The flexibility of this reliability framework allows for potential extension to 
 - **Monitoring & Alerting Service:**
   - Implement a monitoring and alerting service for the development/QA team to identify, locate, and resolve issues efficiently.
 
-- **Reliability REST API:**
-  - Provide a reliability REST API to enable the development/QA team to incorporate additional features for issue analysis.
-
 ## 2.2 Non-Functional Requirements
 
 ### 2.2.1 Scalability
