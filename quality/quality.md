@@ -826,7 +826,7 @@ The solution provided will be adopted in our design to get rendering information
 ### 2.2.1 Detecting UI Thread Blocking Issues
 BlockCanary is a tool to detect when the UI thread is blocked for a certain period. It provides insights into the code causing the blockage, helping developers identify performance bottlenecks and optimize their applications for better responsiveness. Here is its archtecture diagram:
 
-<img src="..\liability\blockbanary.png" alt="BlockCanary"/>
+<img src="..\reliability\blockbanary.png" alt="BlockCanary"/>
 
 We can use BlockCanary principal to create our customized log class below:
 ```c
