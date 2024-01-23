@@ -304,7 +304,7 @@ Choreographer.getInstance().postFrameCallback(new Choreographer.FrameCallback() 
     }
 });
 ```
-The solution provided will be adopted in our design to get rendering information. The solution provided performance impact when the system has many rendering issue.
+The solution provided will be adopted in our design to get rendering information. 
 
 ### 5.5  Detecting task performance Issue
 
