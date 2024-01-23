@@ -600,7 +600,7 @@ See the lined sample code snippets [MyBroadcastReceiver.kt](MyBroadcastReceiver.
 
 **Registering Crash Signal Handlers Approach**
 
-By leveraging signal handlers, developers can inject their crash reporting logic to transmit the log to a monitoring service. This approach is valuable for addressing native crashes and adapting crash reporting to meet specific development needs.
+By leveraging signal handlers in native C/C++, developers can inject their crash reporting logic to transmit the log to a monitoring service. This approach is valuable for addressing native crashes and adapting crash reporting to meet specific development needs.
 
 #### 1.2.4  Strategies to Prevent Crashes
 In this section, we'll In this section, we'll focus on coding best practices and a solutions to enhance stability.
