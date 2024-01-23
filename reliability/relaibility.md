@@ -407,7 +407,7 @@ Consoles dedicated to monitoring and managing the reliability of the TikTok app 
   Devices installed with TikTok Reliability Client support monitoring of the app's reliability in the production environment. They also used for finding, locating and resolving issues during the app's early stages in the development and testing phases.
 
 - **PlayStore Server with TikTok Android App Bundle:**
-  The server responsible for distributing the TikTok app to users through the Play Store. It includes the TikTok Android App Bundle, which may consist of on-demand modules for independent upgrading, contributing to a flexible and efficient app deployment process automaticlaly.
+  The server responsible for distributing the TikTok app to users through the Play Store. It includes the TikTok Android App Bundle, which may consist of on-demand modules for independent upgrading, contributing to a flexible and efficient app deployment process automatically.
 
 For the purpose of this document and to manage our time effectively, we will be focusing on the design of the TikTok Reliability Client. This specific component plays a crucial role in monitoring the app's reliability in the production environment and assisting in issue identification and resolution during the app's early stages in the development and testing phases.
 
@@ -419,9 +419,16 @@ TikTok Reliability Client is a software framework integrated with the TikTok App
 - Collect issues from different sources
 - The issue output file is used for developers to analyze; ideally, the output can be compatible with Android Profiler.
 - Send the issue output file to the TikTok Reliability Server.
+
 See design diagram below:
 <img src="tiktokclientdesign.png" alt="TiktokClientArchitecture"/>
 
+Key Components:
+- Tiktok Reliability Manager: issue manager, issue collection from different source, create issue output file and send the issue output file to the TikTok Reliability Server.
+- tiktok_signal_handler() : handle signal handle and send the native issue to the Tiktok Reliability Manager
+- LeakCanary: Use the principle of LeakCanary to find possible memory in Java and send the issue to Tiktok Reliability Manager. See more information at section 5.3. 
+- BlockCanary:  Use the principle  of BlockCanary to find UI thread blocking issues and send the issue to Tiktok Reliability Manager. See more information at section 5.5.1  
+- Handler Collection: Use the principal of BlockCanary to find TiKtok customized Issue and send the issue to Tiktok Reliability Manager.  See more information at section 5.5.2
+- Rendering Collection: use the sufaceflinger callback Choreographer#FrameCallbackdo#Frame() to find rendering Issue and send the issue to Tiktok Reliability Manager.  See more information at section 5.4.
 
-
-
+In conclusion, the TikTok Reliability Client stands as a crucial element within our app reliability framework. Through its components, including TikTok Reliability Manager, signal handlers, and specialized collectors like LeakCanary and BlockCanary, the client actively addresses and resolves issues encountered during different stages of development. This collective effort significantly contributes to enhancing the overall stability and performance of the TikTok app.
