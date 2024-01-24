@@ -427,7 +427,7 @@ Key Components:
 - Tiktok Reliability Manager: issue manager, issue collection from different source, create issue output file and send the issue output file to the TikTok Reliability Server.
 - tiktok_signal_handler() : handle signal handle and send the native issue to the Tiktok Reliability Manager
 - LeakCanary: Use the principle of LeakCanary to find possible memory in Java and send the issue to Tiktok Reliability Manager. See more information at section 5.3. 
-- BlockCanary:  Use the principle  of BlockCanary to find UI thread blocking issues and send the issue to Tiktok Reliability Manager. See more information at section 5.5.1  
+- BlockCanary:  Use the principle  of BlockCanary to find UI thread blocking issues and send the issue to Tiktok Reliability Manager. It is very useful to find ANRs issue. See more information at section 5.5.1  
 - Handler Collection: Use the principal of BlockCanary to find TiKtok customized Issue and send the issue to Tiktok Reliability Manager.  See more information at section 5.5.2
 - Rendering Collection: use the sufaceflinger callback Choreographer#FrameCallbackdo#Frame() to find rendering Issue and send the issue to Tiktok Reliability Manager.  See more information at section 5.4.
 
