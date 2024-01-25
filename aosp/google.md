@@ -25,4 +25,4 @@ Telephony2gUpdater.java:
 We can follow 
 https://source.android.com/docs/setup/contribute/life-of-a-patch
 https://source.android.com/docs/setup/contribute/submit-patches
-to submit the patch and manage the patch.
+to manage the patch.
