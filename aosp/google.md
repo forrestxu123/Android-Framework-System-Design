@@ -10,7 +10,7 @@ Telephony2gUpdater.java:
 
     - **Suggestions for Removing Unnecessary Code:**
       
-     The return of getAvailableSubscriptionInfoList() or getCompleteActiveSubscriptionIdList() is flagged as @NonNull. Therefore, "if (subscriptionInfoList == null) {...}" is not necessary and can be removed. The best practice for setting a collection return in an API is to return an empty collection rather than null.
+     The return of getAvailableSubscriptionInfoList() or getCompleteActiveSubscriptionIdList() is flagged as @NonNull. Therefore, "if (subscriptionInfoList == null) {...}" is not necessary and can be removed. The best practice for setting a collection return in an API is to return an empty collection rather than null to avoid NullPointerExceptions, simplify client Code, and  promote consistency in API usage..
 
  - Code Logic: 
    - Two constructors:  The constructors initialize the following fields:
