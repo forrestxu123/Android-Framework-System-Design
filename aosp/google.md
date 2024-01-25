@@ -2,12 +2,10 @@ PhoneInterfaceManager.java:
 PhoneInterfaceManager is a system service. The changes made is for  Telephony2gUpdater available to receive a broadcast receiver message and act as a listener for subscription changes.
 Telephony2gUpdater.java:
   - My comments about the code:
-    -  goAsync()
-      
+    - goAsync()    
   Calling goAsync() in onReceive()  keeps the broadcast active after returning from onReceive(). However, even with this approach the system expects you to finish with the broadcast very quickly (under 10 seconds). 
   It does allow you to move work to another thread to avoid glitching the main thread. suggestion use Scheduling a job with the JobScheduler or workmanager if the time can no be controlled.
-  
-    -  the return of getCompleteActiveSubscriptionIdList() or getCompleteActiveSubscriptionIdList() all flaged as @NonNull, therfore "if (subscriptionInfoList == null) {...} "is not necessary. we can remove it.
+    - the return of getCompleteActiveSubscriptionIdList() or getCompleteActiveSubscriptionIdList() all flaged as @NonNull, therfore "if (subscriptionInfoList == null) {...} "is not necessary. we can remove it.
  - Code Logic: 
    - Two constructors:  The constructors initialize the following fields:
       - mExecutor: An Executor used to execute logic on a separate thread.
