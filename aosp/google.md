@@ -1,4 +1,5 @@
 PhoneInterfaceManager.java:
+
 PhoneInterfaceManager is a system service. The changes made is for  Telephony2gUpdater available to receive a broadcast receiver message and act as a listener for subscription changes.
 
 Telephony2gUpdater.java:
