@@ -8,9 +8,9 @@ Telephony2gUpdater.java:
   It does allow you to move work to another thread to avoid glitching the main thread. suggestion use Scheduling a job with the JobScheduler or workmanager if the time can no be controlled.
   
    -  the return of getCompleteActiveSubscriptionIdList() or getCompleteActiveSubscriptionIdList() all flaged as @NonNull, therfore:
-   if (subscriptionInfoList == null) {
-              return;
-   } is not necessary. we can remove it.
+     
+   if (subscriptionInfoList == null) {...} is not necessary. we can remove it.
+   
  - Code Logic: 
    - Two constructors:  The constructors initialize the following fields:
       - mExecutor: An Executor used to execute logic on a separate thread.
