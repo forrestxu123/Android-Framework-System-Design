@@ -7,7 +7,7 @@ Telephony2gUpdater.java:
   Calling goAsync() in onReceive()  keeps the broadcast active after returning from onReceive(). However, even with this approach the system expects you to finish with the broadcast very quickly (under 10 seconds). 
   It does allow you to move work to another thread to avoid glitching the main thread. suggestion use Scheduling a job with the JobScheduler or workmanager if the time can no be controlled.
   
-    -  the return of getCompleteActiveSubscriptionIdList() or getCompleteActiveSubscriptionIdList() all flaged as @NonNull, therfore:
+   -  the return of getCompleteActiveSubscriptionIdList() or getCompleteActiveSubscriptionIdList() all flaged as @NonNull, therfore:
    if (subscriptionInfoList == null) {
               return;
    } is not necessary. we can remove it.
