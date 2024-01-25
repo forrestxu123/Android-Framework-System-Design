@@ -7,7 +7,7 @@ Telephony2gUpdater.java:
     - goAsync()    
   Calling goAsync() in onReceive()  keeps the broadcast active after returning from onReceive(). However, even with this approach the system expects you to finish with the broadcast very quickly (under 10 seconds). 
   It does allow app to move work to another thread to avoid glitching the main thread. suggestion use Scheduling a job with the JobScheduler or workmanager if the time can no be controlled.
-    - the return of getCompleteActiveSubscriptionIdList() or getCompleteActiveSubscriptionIdList() all flaged as @NonNull, therfore "if (subscriptionInfoList == null) {...} "is not necessary. we can remove it.
+    - the return of getCompleteActiveSubscriptionIdList() or getCompleteActiveSubscriptionIdList() all flaged as @NonNull, therfore "if (subscriptionInfoList == null) {...} "is not necessary. we can remove it. The best practice for setting the return in an API is to return empty values rather than null. it can avoid NullPointerExceptions. 
  - Code Logic: 
    - Two constructors:  The constructors initialize the following fields:
       - mExecutor: An Executor used to execute logic on a separate thread.
