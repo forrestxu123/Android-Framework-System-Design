@@ -4,10 +4,14 @@ PhoneInterfaceManager is a system service. The changes made is for  Telephony2gU
 
 Telephony2gUpdater.java:
   - My comments about the code:
-    - goAsync()    
-  Calling goAsync() in onReceive()  keeps the broadcast active after returning from onReceive(). However, even with this approach the system expects you to finish with the broadcast very quickly (under 10 seconds). 
-  It does allow app to move work to another thread to avoid glitching the main thread. suggestion use Scheduling a job with the JobScheduler or workmanager if the time can no be controlled.
-    - the return of getCompleteActiveSubscriptionIdList() or getCompleteActiveSubscriptionIdList() all flaged as @NonNull, therfore "if (subscriptionInfoList == null) {...} "is not necessary. we can remove it. The best practice for setting the return in an API is to return empty values rather than null. it can avoid NullPointerExceptions. 
+     - **Suggestions for Improvement:**
+       
+     Regarding the use of goAsync() in onReceive(): Calling goAsync() in onReceive() keeps the broadcast active after returning from onReceive. However, even with this approach, the system expects you to finish with the broadcast very quickly (under 10 seconds). It does allow the app to move work to another thread to avoid glitching the main thread. I suggest considering scheduling a job with JobScheduler or WorkManager if the time cannot be controlled.
+
+    - **Suggestions for Removing Unnecessary Code:**
+      
+     The return of getCompleteActiveSubscriptionIdList() or getCompleteActiveSubscriptionIdList() is flagged as @NonNull. Therefore, "if (subscriptionInfoList == null) {...}" is not necessary and can be removed. The best practice for setting a collection return in an API is to return an empty collection rather than null.
+
  - Code Logic: 
    - Two constructors:  The constructors initialize the following fields:
       - mExecutor: An Executor used to execute logic on a separate thread.
