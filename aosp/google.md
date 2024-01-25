@@ -6,11 +6,11 @@ Telephony2gUpdater.java:
   - My comments about the code:
      - **Suggestions for Improvement:**
        
-     Regarding the use of goAsync() in onReceive(): Calling goAsync() in onReceive() keeps the broadcast active after returning from onReceive. However, even with this approach, the system expects you to finish with the broadcast very quickly (under 10 seconds). It does allow the app to move work to another thread to avoid glitching the main thread. I suggest considering scheduling a job with JobScheduler or WorkManager if the time cannot be controlled.
+     Regarding the use of goAsync() in onReceive(): Calling goAsync() in onReceive() keeps the broadcast active after returning from onReceive. However, even with this approach, the system expects you to finish with the broadcast very quickly (under 10 seconds). I suggest considering scheduling a job with JobScheduler or WorkManager if the time cannot be controlled.
 
     - **Suggestions for Removing Unnecessary Code:**
       
-     The return of getAvailableSubscriptionInfoList() or getCompleteActiveSubscriptionIdList() is flagged as @NonNull. Therefore, "if (subscriptionInfoList == null) {...}" is not necessary and can be removed. The best practice for setting a collection return in an API is to return an empty collection rather than null to avoid NullPointerExceptions, simplify client Code, and  promote consistency in API usage..
+    The return types of getAvailableSubscriptionInfoList() or getCompleteActiveSubscriptionIdList() are flagged as @NonNull. Therefore, the check if (subscriptionInfoList == null) {...} is not necessary and can be removed. The best practice for setting a collection return in an API is to provide an empty collection instead of null. This practice helps avoid NullPointerExceptions, simplifies client code, and promotes consistency in API usage.
 
  - Code Logic: 
    - Two constructors:  The constructors initialize the following fields:
